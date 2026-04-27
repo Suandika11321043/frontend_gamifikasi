@@ -1,0 +1,123 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.dashboard-wrapper {
+    display: flex;
+    min-height: 100vh;
+    background: #f3f4f6;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* ── Main ────────────────────────────────────── */
+.dashboard-main {
+    flex: 1;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.dashboard-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a1a2e;
+}
+
+.admin-badge {
+    background: #0f3460;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 999px;
+}
+
+/* ── Stat Cards ──────────────────────────────── */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.stat-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.stat-icon {
+    font-size: 32px;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a1a2e;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: #6b7280;
+    margin-top: 2px;
+}
+
+/* ── Table Section ───────────────────────────── */
+.dashboard-section h2 {
+    font-size: 17px;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 12px;
+}
+
+.table-wrapper {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+thead {
+    background: #1a1a2e;
+    color: #e2e8f0;
+}
+
+thead th {
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+}
+
+tbody tr:nth-child(even) {
+    background: #f9fafb;
+}
+
+tbody td {
+    padding: 12px 16px;
+    color: #374151;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.empty-row {
+    text-align: center;
+    color: #9ca3af;
+    padding: 32px !important;
+}

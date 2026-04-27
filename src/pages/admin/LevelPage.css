@@ -1,0 +1,179 @@
+/* reuse layout dari DashboardPage.css */
+.btn-primary {
+    padding: 9px 20px;
+    background: #0f3460;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-primary:hover {
+    background: #16213e;
+}
+
+.btn-secondary {
+    padding: 9px 20px;
+    background: transparent;
+    color: #374151;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-secondary:hover {
+    background: #f3f4f6;
+}
+
+.btn-edit {
+    padding: 5px 14px;
+    background: #e0f2fe;
+    color: #0369a1;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-edit:hover {
+    background: #bae6fd;
+}
+
+.btn-delete {
+    padding: 5px 14px;
+    background: #fee2e2;
+    color: #b91c1c;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-delete:hover {
+    background: #fca5a5;
+}
+
+.btn-danger {
+    padding: 9px 20px;
+    background: #e53e3e;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-danger:hover {
+    background: #c53030;
+}
+
+.badge-cell {
+    font-size: 22px;
+}
+
+.action-cell {
+    display: flex;
+    gap: 8px;
+}
+
+/* ── Modal ───────────────────────────────────── */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.modal-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 32px;
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.modal-confirm {
+    max-width: 360px;
+    text-align: center;
+}
+
+.modal-confirm p {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.modal-card h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a1a2e;
+}
+
+.modal-error {
+    background: #fee2e2;
+    color: #b91c1c;
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #fca5a5;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.form-group input {
+    padding: 10px 14px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #1a1a2e;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+    border-color: #0f3460;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.modal-confirm .modal-actions {
+    justify-content: center;
+}
