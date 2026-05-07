@@ -1,0 +1,333 @@
+/* ============================================================
+   common.css  –  shared UI primitives (buttons, modal, form)
+   Import this file anywhere you need these utilities.
+   ============================================================ */
+
+/* ── Buttons ───────────────────────────────────────────────── */
+
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 20px;
+    background: #0f3460;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    white-space: nowrap;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: #1a5276;
+}
+
+.btn-primary:active:not(:disabled) {
+    transform: scale(0.97);
+}
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 20px;
+    background: #f3f4f6;
+    color: #374151;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    white-space: nowrap;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: #e5e7eb;
+    border-color: #9ca3af;
+}
+
+.btn-secondary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-danger {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 20px;
+    background: #dc2626;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    white-space: nowrap;
+}
+
+.btn-danger:hover:not(:disabled) {
+    background: #b91c1c;
+}
+
+.btn-danger:active:not(:disabled) {
+    transform: scale(0.97);
+}
+
+/* ── Table action buttons (smaller) ───────────────────────── */
+
+.btn-detail,
+.btn-edit,
+.btn-delete {
+    padding: 5px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-detail {
+    background: #f0fdf4;
+    color: #15803d;
+}
+
+.btn-detail:hover {
+    background: #bbf7d0;
+}
+
+.btn-edit {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.btn-edit:hover {
+    background: #bfdbfe;
+}
+
+.btn-delete {
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+.btn-delete:hover {
+    background: #fecaca;
+}
+
+/* ── Modal overlay ─────────────────────────────────────────── */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(3px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 16px;
+    animation: fadeIn 0.18s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* ── Modal card ────────────────────────────────────────────── */
+
+.modal-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 28px 32px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    animation: slideUp 0.2s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0;
+}
+
+/* Variant: detail */
+.modal-detail {
+    max-width: 420px;
+}
+
+/* Variant: confirm */
+.modal-confirm {
+    max-width: 380px;
+}
+
+.modal-confirm p {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0;
+}
+
+/* ── Modal actions row ─────────────────────────────────────── */
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+/* ── Error message inside modal ────────────────────────────── */
+
+.modal-error {
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 9px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    margin: 0;
+}
+
+/* ── Form group ────────────────────────────────────────────── */
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.form-group input {
+    padding: 9px 12px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #374151;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background: #fafafa;
+}
+
+.form-group input:focus {
+    border-color: #0f3460;
+    box-shadow: 0 0 0 3px rgba(15, 52, 96, 0.1);
+    background: #fff;
+}
+
+/* ── Avatar utilities ──────────────────────────────────────── */
+
+.avatar-img,
+.avatar-initials {
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    flex-shrink: 0;
+}
+
+/* size: sm (default – table row) */
+.avatar--sm.avatar-img,
+.avatar--sm.avatar-initials {
+    width: 38px;
+    height: 38px;
+}
+
+.avatar--sm.avatar-img {
+    border: 2px solid #e2e8f0;
+}
+
+.avatar--sm.avatar-initials {
+    background: #0f3460;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* size: md (preview in form) */
+.avatar--md.avatar-img,
+.avatar--md.avatar-initials {
+    width: 64px;
+    height: 64px;
+}
+
+.avatar--md.avatar-img {
+    border: 2px solid #d1d5db;
+}
+
+.avatar--md.avatar-initials {
+    background: #0f3460;
+    color: #fff;
+    font-size: 24px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* size: lg (detail modal) */
+.avatar--lg.avatar-img,
+.avatar--lg.avatar-initials {
+    width: 80px;
+    height: 80px;
+}
+
+.avatar--lg.avatar-img {
+    border: 3px solid #0f3460;
+}
+
+.avatar--lg.avatar-initials {
+    background: #0f3460;
+    color: #fff;
+    font-size: 34px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* input[type=file] styling */
+.input-file {
+    font-size: 13px;
+    color: #374151;
+}

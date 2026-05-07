@@ -1,0 +1,275 @@
+/* ===========================
+   Layout
+=========================== */
+.landing-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    position: relative;
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ===========================
+   Background Decorations
+=========================== */
+.landing-decoration {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.07;
+    pointer-events: none;
+}
+
+.landing-decoration--1 {
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, #e94560, transparent);
+    top: -150px;
+    right: -150px;
+}
+
+.landing-decoration--2 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, #0f3460, transparent);
+    bottom: -100px;
+    left: -100px;
+    opacity: 0.15;
+}
+
+.landing-decoration--3 {
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, #533483, transparent);
+    top: 60%;
+    right: 10%;
+    opacity: 0.12;
+}
+
+/* ===========================
+   Content
+=========================== */
+.landing-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem;
+    text-align: center;
+}
+
+/* ===========================
+   Header
+=========================== */
+.landing-badge {
+    display: inline-block;
+    background: rgba(233, 69, 96, 0.2);
+    color: #e94560;
+    border: 1px solid rgba(233, 69, 96, 0.4);
+    border-radius: 999px;
+    padding: 0.35rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.5rem;
+}
+
+.landing-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0;
+    line-height: 1.15;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+}
+
+.landing-subtitle {
+    font-size: clamp(0.95rem, 2vw, 1.2rem);
+    color: rgba(255, 255, 255, 0.65);
+    margin: 0;
+    max-width: 420px;
+}
+
+/* ===========================
+   Play Button
+=========================== */
+.play-btn {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(145deg, #e94560, #c73652);
+    box-shadow:
+        0 0 0 0 rgba(233, 69, 96, 0.5),
+        0 8px 40px rgba(233, 69, 96, 0.4),
+        0 20px 60px rgba(0, 0, 0, 0.4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    animation: pulse 2.5s infinite;
+    margin: 1.5rem 0 0.5rem;
+}
+
+.play-btn:hover {
+    transform: scale(1.07);
+    box-shadow:
+        0 0 0 12px rgba(233, 69, 96, 0.15),
+        0 12px 50px rgba(233, 69, 96, 0.55),
+        0 24px 70px rgba(0, 0, 0, 0.4);
+    animation: none;
+}
+
+.play-btn:active {
+    transform: scale(0.97);
+}
+
+/* Ripple ring */
+.play-btn__ripple {
+    position: absolute;
+    inset: -16px;
+    border-radius: 50%;
+    border: 3px solid rgba(233, 69, 96, 0.35);
+    animation: ripple 2.5s infinite;
+    pointer-events: none;
+}
+
+.play-btn__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+}
+
+.play-btn__icon svg {
+    width: 72px;
+    height: 72px;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
+    margin-left: 8px;
+    /* optical centering for play arrow */
+}
+
+.play-btn__label {
+    font-size: 0.9rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    color: rgba(255, 255, 255, 0.9);
+    text-transform: uppercase;
+}
+
+/* ===========================
+   Hint text
+=========================== */
+.landing-hint {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.4);
+    margin: 0;
+    letter-spacing: 0.03em;
+}
+
+/* ===========================
+   Info Cards
+=========================== */
+.landing-cards {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 0.5rem;
+}
+
+.info-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 1rem 1.5rem;
+    backdrop-filter: blur(8px);
+    min-width: 100px;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.info-card:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-4px);
+}
+
+.info-card__icon {
+    font-size: 1.8rem;
+}
+
+.info-card__label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+    letter-spacing: 0.03em;
+}
+
+/* ===========================
+   Animations
+=========================== */
+@keyframes pulse {
+
+    0%,
+    100% {
+        box-shadow:
+            0 0 0 0 rgba(233, 69, 96, 0.5),
+            0 8px 40px rgba(233, 69, 96, 0.4),
+            0 20px 60px rgba(0, 0, 0, 0.4);
+    }
+
+    50% {
+        box-shadow:
+            0 0 0 18px rgba(233, 69, 96, 0),
+            0 8px 40px rgba(233, 69, 96, 0.4),
+            0 20px 60px rgba(0, 0, 0, 0.4);
+    }
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: scale(1.35);
+        opacity: 0;
+    }
+}
+
+/* ===========================
+   Responsive
+=========================== */
+@media (max-width: 480px) {
+    .play-btn {
+        width: 150px;
+        height: 150px;
+    }
+
+    .play-btn__icon svg {
+        width: 56px;
+        height: 56px;
+    }
+
+    .landing-cards {
+        gap: 0.6rem;
+    }
+
+    .info-card {
+        padding: 0.8rem 1rem;
+        min-width: 85px;
+    }
+}

@@ -1,0 +1,225 @@
+/* ===========================
+   Wrapper
+=========================== */
+.ds-wrapper {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    padding: 2rem 1.5rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #fff;
+}
+
+/* ===========================
+   Header
+=========================== */
+.ds-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.ds-back-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.8);
+    padding: 0.45rem 1rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    white-space: nowrap;
+}
+
+.ds-back-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.ds-title {
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 800;
+    margin: 0;
+}
+
+/* ===========================
+   Toolbar
+=========================== */
+.ds-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.ds-search {
+    flex: 1;
+    max-width: 380px;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.07);
+    color: #fff;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.ds-search::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.ds-search:focus {
+    border-color: #e94560;
+}
+
+.ds-count {
+    font-size: 0.83rem;
+    color: rgba(255, 255, 255, 0.45);
+    white-space: nowrap;
+}
+
+/* ===========================
+   Error / Empty
+=========================== */
+.ds-error {
+    color: #f87171;
+    background: rgba(248, 113, 113, 0.1);
+    border: 1px solid rgba(248, 113, 113, 0.3);
+    border-radius: 8px;
+    padding: 0.7rem 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.ds-empty {
+    color: rgba(255, 255, 255, 0.4);
+    text-align: center;
+    padding: 3rem 0;
+    font-size: 0.95rem;
+}
+
+/* ===========================
+   Siswa Cards Grid
+=========================== */
+.ds-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-width: 700px;
+}
+
+.siswa-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    padding: 0.85rem 1.2rem;
+    backdrop-filter: blur(8px);
+    transition: background 0.2s ease, transform 0.2s ease;
+    cursor: pointer;
+}
+
+.siswa-card:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(4px);
+}
+
+.siswa-card__rank {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.35);
+    min-width: 32px;
+    text-align: center;
+}
+
+.siswa-card__rank--top1 {
+    font-size: 1.4rem;
+}
+
+.siswa-card__rank--top2 {
+    font-size: 1.3rem;
+}
+
+.siswa-card__rank--top3 {
+    font-size: 1.2rem;
+}
+
+.siswa-card__info {
+    flex: 1;
+    min-width: 0;
+}
+
+.siswa-card__name {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.siswa-card__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.15rem;
+    flex-wrap: wrap;
+}
+
+.siswa-card__group {
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0;
+}
+
+.siswa-card__rank-badge {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #fde68a;
+    background: rgba(251, 191, 36, 0.18);
+    border: 1px solid rgba(251, 191, 36, 0.35);
+    border-radius: 999px;
+    padding: 0.1rem 0.5rem;
+}
+
+.siswa-card__stats {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.25rem;
+}
+
+.siswa-card__points {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #fbbf24;
+    background: rgba(251, 191, 36, 0.12);
+    border-radius: 999px;
+    padding: 0.15rem 0.65rem;
+    white-space: nowrap;
+}
+
+.siswa-card__stars {
+    font-size: 0.78rem;
+    text-align: right;
+    min-height: 1.1em;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* ===========================
+   Responsive
+=========================== */
+@media (max-width: 480px) {
+    .ds-wrapper {
+        padding: 1.2rem 1rem;
+    }
+
+    .ds-search {
+        max-width: 100%;
+    }
+}

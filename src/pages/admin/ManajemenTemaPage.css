@@ -1,0 +1,249 @@
+/* ManajemenTemaPage-specific styles
+   (buttons, modals, form-group utilities live in components/common.css) */
+
+/* ── Toolbar ─────────────────────────────────────────────────── */
+
+.tema-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.tema-search {
+    flex: 1;
+    max-width: 360px;
+    padding: 9px 14px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #374151;
+    outline: none;
+    transition: border-color 0.2s;
+    background: #fff;
+}
+
+.tema-search:focus {
+    border-color: #0f3460;
+    box-shadow: 0 0 0 3px rgba(15, 52, 96, 0.08);
+}
+
+.tema-count {
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+/* ── Loading / Empty states ──────────────────────────────────── */
+
+.tema-loading {
+    text-align: center;
+    color: #9ca3af;
+    font-size: 14px;
+    padding: 40px 0;
+}
+
+.tema-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 60px 20px;
+    color: #9ca3af;
+}
+
+.tema-empty-icon {
+    font-size: 48px;
+}
+
+.tema-empty p {
+    font-size: 14px;
+    color: #6b7280;
+    text-align: center;
+}
+
+/* ── Card grid ───────────────────────────────────────────────── */
+
+.tema-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.tema-card {
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 24px 20px 18px;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.tema-card:hover {
+    box-shadow: 0 6px 20px rgba(15, 52, 96, 0.12);
+    transform: translateY(-2px);
+}
+
+.tema-card-icon-wrap {
+    display: flex;
+    justify-content: center;
+}
+
+.tema-card-body {
+    text-align: center;
+    flex: 1;
+}
+
+.tema-card-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0 0 6px;
+}
+
+.tema-card-desc {
+    font-size: 13px;
+    color: #6b7280;
+    margin: 0;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.tema-no-desc {
+    color: #d1d5db;
+}
+
+.tema-card-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    padding-top: 4px;
+    border-top: 1px solid #f3f4f6;
+}
+
+/* ── Topic icon ──────────────────────────────────────────────── */
+
+.topic-icon-img,
+.topic-icon-placeholder {
+    border-radius: 12px;
+    object-fit: cover;
+    display: block;
+    flex-shrink: 0;
+}
+
+/* size: sm (table / small use) */
+.topic-icon--sm.topic-icon-img,
+.topic-icon--sm.topic-icon-placeholder {
+    width: 40px;
+    height: 40px;
+}
+
+.topic-icon--sm.topic-icon-placeholder {
+    font-size: 18px;
+}
+
+/* size: md (form preview) */
+.topic-icon--md.topic-icon-img,
+.topic-icon--md.topic-icon-placeholder {
+    width: 64px;
+    height: 64px;
+}
+
+.topic-icon--md.topic-icon-placeholder {
+    font-size: 26px;
+}
+
+/* size: lg (card) */
+.topic-icon--lg.topic-icon-img,
+.topic-icon--lg.topic-icon-placeholder {
+    width: 72px;
+    height: 72px;
+    border-radius: 16px;
+}
+
+.topic-icon--lg.topic-icon-placeholder {
+    font-size: 30px;
+}
+
+/* size: xl (detail modal) */
+.topic-icon--xl.topic-icon-img,
+.topic-icon--xl.topic-icon-placeholder {
+    width: 96px;
+    height: 96px;
+    border-radius: 20px;
+}
+
+.topic-icon--xl.topic-icon-placeholder {
+    font-size: 40px;
+}
+
+.topic-icon-placeholder {
+    background: linear-gradient(135deg, #0f3460, #1a5276);
+    color: #ffffff;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ── Detail modal ────────────────────────────────────────────── */
+
+.detail-icon-wrap {
+    display: flex;
+    justify-content: center;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 10px 16px;
+    align-items: start;
+}
+
+.detail-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+    padding-top: 2px;
+}
+
+.detail-value {
+    font-size: 14px;
+    color: #1a1a2e;
+    line-height: 1.5;
+}
+
+/* ── Form textarea ───────────────────────────────────────────── */
+
+.form-textarea {
+    padding: 9px 12px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #374151;
+    font-family: inherit;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background: #fafafa;
+}
+
+.form-textarea:focus {
+    border-color: #0f3460;
+    box-shadow: 0 0 0 3px rgba(15, 52, 96, 0.1);
+    background: #fff;
+}
+
+/* ── Icon preview in form ────────────────────────────────────── */
+
+.icon-preview-wrap {
+    display: flex;
+    margin-bottom: 8px;
+}
