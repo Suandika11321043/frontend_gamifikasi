@@ -1,0 +1,295 @@
+/* ===========================
+   Wrapper
+=========================== */
+.lt-wrapper {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    padding: 2rem 1.5rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+}
+
+/* ===========================
+   Background Decorations
+=========================== */
+.lt-decoration {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.lt-decoration--1 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, #e94560, transparent);
+    top: -180px;
+    right: -120px;
+    opacity: 0.07;
+}
+
+.lt-decoration--2 {
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, #533483, transparent);
+    bottom: -100px;
+    left: -80px;
+    opacity: 0.1;
+}
+
+/* ===========================
+   Container
+=========================== */
+.lt-container {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+/* ===========================
+   Header
+=========================== */
+.lt-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.lt-back-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.8);
+    padding: 0.45rem 1rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    white-space: nowrap;
+}
+
+.lt-back-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* Student info strip */
+.lt-student-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 0.55rem 1rem;
+}
+
+.lt-student-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: linear-gradient(135deg, #e94560, #533483);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1rem;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.lt-student-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.lt-student-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+}
+
+.lt-student-meta {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0.1rem 0 0;
+}
+
+/* ===========================
+   Page title
+=========================== */
+.lt-title {
+    font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+    font-weight: 800;
+    margin: 0 0 0.3rem;
+}
+
+.lt-subtitle {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0 0 1.5rem;
+}
+
+/* ===========================
+   Toolbar
+=========================== */
+.lt-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.lt-search {
+    flex: 1;
+    max-width: 380px;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.07);
+    color: #fff;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.lt-search::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+}
+
+.lt-search:focus {
+    border-color: #e94560;
+}
+
+.lt-count {
+    font-size: 0.83rem;
+    color: rgba(255, 255, 255, 0.4);
+    white-space: nowrap;
+}
+
+/* ===========================
+   Error / Empty
+=========================== */
+.lt-error {
+    color: #f87171;
+    background: rgba(248, 113, 113, 0.1);
+    border: 1px solid rgba(248, 113, 113, 0.3);
+    border-radius: 8px;
+    padding: 0.7rem 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.lt-empty {
+    color: rgba(255, 255, 255, 0.4);
+    text-align: center;
+    padding: 3rem 0;
+    font-size: 0.95rem;
+}
+
+/* ===========================
+   Topics Grid
+=========================== */
+.lt-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.lt-topic-card {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    padding: 1rem 1.1rem;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+    backdrop-filter: blur(8px);
+}
+
+.lt-topic-card:hover {
+    background: rgba(233, 69, 96, 0.12);
+    border-color: rgba(233, 69, 96, 0.4);
+    transform: translateY(-3px);
+}
+
+.lt-topic-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.lt-topic-placeholder {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #e94560, #533483);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.lt-topic-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.lt-topic-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lt-topic-desc {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.45);
+    margin: 0.2rem 0 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lt-topic-arrow {
+    font-size: 1.4rem;
+    color: rgba(255, 255, 255, 0.3);
+    flex-shrink: 0;
+    transition: color 0.2s ease;
+}
+
+.lt-topic-card:hover .lt-topic-arrow {
+    color: #e94560;
+}
+
+/* ===========================
+   Responsive
+=========================== */
+@media (max-width: 480px) {
+    .lt-wrapper {
+        padding: 1.2rem 1rem;
+    }
+
+    .lt-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .lt-search {
+        max-width: 100%;
+    }
+}
