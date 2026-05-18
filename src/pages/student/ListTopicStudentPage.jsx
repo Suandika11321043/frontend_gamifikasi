@@ -86,7 +86,9 @@ function ListTopicStudentPage() {
                             </div>
                             <div>
                                 <p className="lt-student-name">{siswa.name}</p>
-                                <p className="lt-student-meta">{siswa.group} · ⭐ {siswa.totalPoints ?? 0} · Level {siswa.level ?? 1}</p>
+                                <p className="lt-student-meta">
+                                    {siswa.group} · ⭐ {siswa.totalStars ?? 0} · Skor {siswa.totalEarnedScore ?? 0} · Rank {siswa.rankName ?? 'BEGINNER'}
+                                </p>
                             </div>
                         </div>
                     )}
