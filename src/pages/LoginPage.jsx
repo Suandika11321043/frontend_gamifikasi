@@ -37,19 +37,27 @@ function LoginPage() {
 
     return (
         <div className="login-wrapper">
+            {/* Floating decorations */}
+            <span className="login-deco login-deco--star1">⭐</span>
+            <span className="login-deco login-deco--star2">🌟</span>
+            <span className="login-deco login-deco--balloon">🎈</span>
+            <span className="login-deco login-deco--rainbow">🌈</span>
+            <span className="login-deco login-deco--cloud">☁️</span>
+
             <div className="login-card">
-                <h1 className="login-title">Selamat Datang</h1>
-                <p className="login-subtitle">Masuk ke akun Anda</p>
+                <div className="login-mascot">🦁</div>
+                <h1 className="login-title">Halo, Sobat!</h1>
+                <p className="login-subtitle">Yuk masuk dan mulai belajar seru! 🎉</p>
 
                 <form className="login-form" onSubmit={handleSubmit} noValidate>
-                    {error && <p className="login-error">{error}</p>}
+                    {error && <p className="login-error">⚠️ {error}</p>}
 
                     <div className="form-group">
-                        <label htmlFor="username">Username</label>
+                        <label htmlFor="username">👤 Username</label>
                         <input
                             id="username"
                             type="text"
-                            placeholder="Masukkan username"
+                            placeholder="Tulis username kamu..."
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             autoComplete="username"
@@ -58,11 +66,11 @@ function LoginPage() {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="password">Password</label>
+                        <label htmlFor="password">🔒 Password</label>
                         <input
                             id="password"
                             type="password"
-                            placeholder="Masukkan password"
+                            placeholder="Tulis password kamu..."
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             autoComplete="current-password"
@@ -71,7 +79,7 @@ function LoginPage() {
                     </div>
 
                     <button type="submit" className="login-btn" disabled={loading}>
-                        {loading ? 'Memuat...' : 'Masuk'}
+                        {loading ? '⏳ Sebentar ya...' : '🚀 Ayo Masuk!'}
                     </button>
                 </form>
             </div>

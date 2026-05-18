@@ -10,6 +10,13 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 const emptyForm = { name: '', group: '', totalPoints: '', level: '' }
 
+const RANK_LABELS = {
+    BEGINNER: 'Pemula',
+    INTERMEDIATE: 'Menengah',
+    ADVANCED: 'Mahir',
+    EXPERT: 'Ahli',
+}
+
 async function apiFetch(path, options = {}) {
     const token = localStorage.getItem('token')
     const headers = {
@@ -164,7 +171,7 @@ function DaftarSiswaPage() {
                                 <th>Nama</th>
                                 <th>Kelompok</th>
                                 <th>Total Poin</th>
-                                <th>Level</th>
+                                <th>Rank</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -183,10 +190,10 @@ function DaftarSiswaPage() {
                                         <td>{siswa.name}</td>
                                         <td>{siswa.group}</td>
                                         <td>
-                                            <span className="poin-badge">{siswa.totalPoints}</span>
+                                            <span className="poin-badge">{siswa.totalEarnedScore ?? 0}</span>
                                         </td>
                                         <td>
-                                            <span className="level-badge-num">Level {siswa.level}</span>
+                                            <span className="level-badge-num">{RANK_LABELS[siswa.rankName] ?? siswa.rankName ?? '-'}</span>
                                         </td>
                                         <td className="action-cell">
                                             <button className="btn-detail" onClick={() => setDetailSiswa(siswa)}>
@@ -298,11 +305,11 @@ function DaftarSiswaPage() {
                         <span className="detail-value">{detailSiswa.group}</span>
                         <span className="detail-label">Total Poin</span>
                         <span className="detail-value">
-                            <span className="poin-badge">{detailSiswa.totalPoints}</span>
+                            <span className="poin-badge">{detailSiswa.totalEarnedScore ?? 0}</span>
                         </span>
-                        <span className="detail-label">Level</span>
+                        <span className="detail-label">Rank</span>
                         <span className="detail-value">
-                            <span className="level-badge-num">Level {detailSiswa.level}</span>
+                            <span className="level-badge-num">{RANK_LABELS[detailSiswa.rankName] ?? detailSiswa.rankName ?? '-'}</span>
                         </span>
                     </div>
                     <div className="modal-actions">

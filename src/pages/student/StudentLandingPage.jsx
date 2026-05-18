@@ -15,6 +15,12 @@ function StudentLandingPage() {
             <div className="landing-decoration landing-decoration--2" />
             <div className="landing-decoration landing-decoration--3" />
 
+            {/* Floating emoji decorations */}
+            <em className="landing-emoji landing-emoji--1">🌟</em>
+            <em className="landing-emoji landing-emoji--2">🎈</em>
+            <em className="landing-emoji landing-emoji--3">🦋</em>
+            <em className="landing-emoji landing-emoji--4">🍭</em>
+
             <div className="landing-content">
                 <div className="landing-header">
                     <span className="landing-badge">🎮 Gamifikasi Belajar</span>

@@ -46,6 +46,30 @@ async function apiFetch(path, options = {}) {
     return data
 }
 
+function getMediaType(url) {
+    if (!url) return null
+    const path = url.toLowerCase().split('?')[0]
+    if (/\.(mp3|wav|ogg|aac|m4a|flac)$/.test(path)) return 'audio'
+    return 'image'
+}
+
+function MediaCell({ url }) {
+    if (!url) return <span className="no-media">—</span>
+    const type = getMediaType(url)
+    if (type === 'audio') {
+        return (
+            <audio controls className="opsi-audio-preview">
+                <source src={url} />
+            </audio>
+        )
+    }
+    return (
+        <a href={url} target="_blank" rel="noreferrer" className="opsi-img-link">
+            <img src={url} alt="media" className="opsi-img-thumb" />
+        </a>
+    )
+}
+
 function TypeBadge({ type }) {
     const config = QUESTION_TYPES.find((t) => t.value === type) || { label: type, color: '#374151', bg: '#f3f4f6' }
     return (
@@ -435,9 +459,8 @@ function SoalByTemaPage() {
                                                                 </span>
                                                             </td>
                                                         )}
-                                                        <td>{opt.mediaOpsi
-                                                            ? <span className="media-badge" title="Ada media">🖼</span>
-                                                            : <span className="no-media">—</span>}
+                                                        <td className="opsi-media-cell">
+                                                            <MediaCell url={opt.mediaOpsi} />
                                                         </td>
                                                         <td>
                                                             <div className="action-cell">
@@ -485,8 +508,8 @@ function SoalByTemaPage() {
                                 </div>
                             )}
                             <div className="form-group">
-                                <label>Media / Gambar (opsional)</label>
-                                <input type="file" accept="image/*" className="input-file"
+                                <label>Media / Gambar / Suara (opsional)</label>
+                                <input type="file" accept="image/*,audio/*" className="input-file"
                                     onChange={(e) => setMediaOpsiFile(e.target.files[0] || null)} />
                                 {mediaOpsiFile && <span className="file-selected">✓ {mediaOpsiFile.name}</span>}
                             </div>

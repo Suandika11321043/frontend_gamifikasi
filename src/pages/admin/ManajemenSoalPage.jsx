@@ -31,6 +31,17 @@ function TopicIcon({ icon, name, size = 'sm' }) {
     )
 }
 
+function SkeletonCard() {
+    return (
+        <div className="tema-card soal-skeleton-card" aria-hidden="true">
+            <div className="soal-skeleton soal-skeleton-icon" />
+            <div className="soal-skeleton soal-skeleton-title" />
+            <div className="soal-skeleton soal-skeleton-desc" />
+            <div className="soal-skeleton soal-skeleton-btn" />
+        </div>
+    )
+}
+
 function ManajemenSoalPage() {
     const navigate = useNavigate()
     const [temaList, setTemaList] = useState([])
@@ -64,37 +75,88 @@ function ManajemenSoalPage() {
 
             <main className="dashboard-main">
                 <header className="dashboard-header">
-                    <h1>Manajemen Soal</h1>
+                    <div>
+                        <h1>Manajemen Soal</h1>
+                        <p className="soal-subtitle">Pilih tema di bawah untuk mengelola soal-soalnya</p>
+                    </div>
+                    {!loading && (
+                        <div className="soal-stats-badge">
+                            <span className="soal-stats-num">{temaList.length}</span>
+                            <span className="soal-stats-label">Total Tema</span>
+                        </div>
+                    )}
                 </header>
-                <p className="soal-subtitle">Pilih tema untuk mengelola soal</p>
 
-                <div className="tema-toolbar">
-                    <input
-                        className="tema-search"
-                        type="text"
-                        placeholder="Cari tema..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
-                    <span className="tema-count">{filtered.length} tema</span>
+                <div className="soal-toolbar-row">
+                    <div className="soal-search-wrap">
+                        <span className="soal-search-icon" aria-hidden="true">🔍</span>
+                        <input
+                            className="tema-search soal-search-input"
+                            type="text"
+                            placeholder="Cari nama atau deskripsi tema..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            aria-label="Cari tema"
+                        />
+                        {search && (
+                            <button
+                                className="soal-search-clear"
+                                onClick={() => setSearch('')}
+                                title="Hapus pencarian"
+                                aria-label="Hapus pencarian"
+                            >
+                                ✕
+                            </button>
+                        )}
+                    </div>
+                    {!loading && (
+                        <span className="tema-count">
+                            {filtered.length} dari {temaList.length} tema
+                        </span>
+                    )}
                 </div>
 
-                {fetchError && <p className="modal-error">{fetchError}</p>}
+                {fetchError && (
+                    <div className="soal-error-banner" role="alert">
+                        <span aria-hidden="true">⚠️</span>
+                        <span>{fetchError}</span>
+                        <button className="btn-back" onClick={fetchTema}>Coba lagi</button>
+                    </div>
+                )}
 
                 {loading ? (
-                    <p className="tema-loading">Memuat tema...</p>
+                    <div className="tema-grid soal-tema-grid" aria-label="Memuat data...">
+                        {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
+                    </div>
                 ) : filtered.length === 0 ? (
                     <div className="tema-empty">
-                        <span className="tema-empty-icon">📂</span>
-                        <p>Tidak ada tema ditemukan.</p>
+                        <span className="tema-empty-icon">{search ? '🔍' : '📂'}</span>
+                        <p>
+                            {search
+                                ? `Tidak ada tema yang cocok dengan "${search}"`
+                                : 'Belum ada tema tersedia.'}
+                        </p>
+                        {search && (
+                            <button
+                                className="btn-primary"
+                                style={{ marginTop: 8 }}
+                                onClick={() => setSearch('')}
+                            >
+                                Hapus Pencarian
+                            </button>
+                        )}
                     </div>
                 ) : (
-                    <div className="tema-grid">
+                    <div className="tema-grid soal-tema-grid">
                         {filtered.map((tema) => (
                             <div
                                 key={tema.id}
                                 className="tema-card soal-tema-card"
                                 onClick={() => navigate(`/admin/soal/${tema.id}`)}
+                                role="button"
+                                tabIndex={0}
+                                aria-label={`Kelola soal untuk tema ${tema.nameTopic}`}
+                                onKeyDown={(e) => e.key === 'Enter' && navigate(`/admin/soal/${tema.id}`)}
                             >
                                 <div className="tema-card-icon-wrap">
                                     <TopicIcon icon={tema.icon} name={tema.nameTopic} size="lg" />
@@ -102,8 +164,11 @@ function ManajemenSoalPage() {
                                 <div className="tema-card-body">
                                     <h3 className="tema-card-name">{tema.nameTopic}</h3>
                                     <p className="tema-card-desc">
-                                        {tema.description || <span className="tema-no-desc">—</span>}
+                                        {tema.description || <span className="tema-no-desc">Belum ada deskripsi</span>}
                                     </p>
+                                    {tema.totalQuestions != null && (
+                                        <span className="soal-q-count">{tema.totalQuestions} soal</span>
+                                    )}
                                 </div>
                                 <div className="tema-card-actions">
                                     <button

@@ -15,7 +15,7 @@ function Modal({ onClose, title, className = '', children }) {
                 onClick={(e) => e.stopPropagation()}
             >
                 {title && <h2 className="modal-title">{title}</h2>}
-                {children}
+                <div className="modal-body">{children}</div>
             </div>
         </div>
     )
