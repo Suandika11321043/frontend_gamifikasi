@@ -1,29 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import './ListTopicStudentPage.css'
+import { apiFetch, BASE_URL } from '../../utils/apiFetch'
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL
-
-async function apiFetch(path) {
-    const token = localStorage.getItem('token')
-    const headers = token ? { Authorization: `Bearer ${token}` } : {}
-    const res = await fetch(`${BASE_URL}${path}`, { headers })
-    const data = await res.json().catch(() => ({}))
-    if (!res.ok) throw new Error(data.message || 'Terjadi kesalahan.')
-    return data
-}
-
-function TopicIcon({ icon, name }) {
-    if (icon) {
-        const src = icon.startsWith('http') ? icon : `${BASE_URL}/uploads/${icon}`
-        return <img src={src} alt={name} className="lt-topic-icon" />
-    }
-    return (
-        <div className="lt-topic-placeholder">
-            {(name ?? '?').charAt(0).toUpperCase()}
-        </div>
-    )
-}
+import TopicIcon from '../../components/common/TopicIcon'
 
 function ListTopicStudentPage() {
     const { studentId } = useParams()
@@ -34,6 +14,7 @@ function ListTopicStudentPage() {
     const [loading, setLoading] = useState(true)
     const [fetchError, setFetchError] = useState('')
     const [search, setSearch] = useState('')
+    const [progressMap, setProgressMap] = useState({})
 
     const fetchData = useCallback(async () => {
         setLoading(true)
@@ -44,7 +25,17 @@ function ListTopicStudentPage() {
                 apiFetch('/topics'),
             ])
             setSiswa(siswaData)
-            setTopics(Array.isArray(topicsData) ? topicsData : [])
+            const list = Array.isArray(topicsData) ? topicsData : []
+            setTopics(list)
+            // Fetch progress for each topic in parallel
+            const results = await Promise.allSettled(
+                list.map((t) => apiFetch(`/quiz/scores/students/${studentId}/topics/${t.id}`))
+            )
+            const pMap = {}
+            list.forEach((t, i) => {
+                if (results[i].status === 'fulfilled') pMap[t.id] = results[i].value
+            })
+            setProgressMap(pMap)
         } catch (err) {
             setFetchError(err.message)
         } finally {
@@ -128,11 +119,23 @@ function ListTopicStudentPage() {
                                 tabIndex={0}
                                 onKeyDown={(e) => e.key === 'Enter' && navigate(`/student/siswa/${studentId}/topics/${topic.id}/quiz`)}
                             >
-                                <TopicIcon icon={topic.icon} name={topic.nameTopic} />
+                                <TopicIcon icon={topic.icon} name={topic.nameTopic} className="lt-topic-icon" placeholderClassName="lt-topic-placeholder" />
                                 <div className="lt-topic-body">
                                     <p className="lt-topic-name">{topic.nameTopic}</p>
                                     {topic.description && (
                                         <p className="lt-topic-desc">{topic.description}</p>
+                                    )}
+                                    {progressMap[topic.id] ? (
+                                        <div className="lt-topic-progress">
+                                            <span className="lt-topic-stars">
+                                                {[1, 2, 3].map((s) => (
+                                                    <span key={s} className={s <= (progressMap[topic.id].starCount ?? 0) ? 'lt-star--on' : 'lt-star--off'}>★</span>
+                                                ))}
+                                            </span>
+                                            <span className="lt-topic-score-pill">{progressMap[topic.id].totalEarnedScore ?? 0} poin</span>
+                                        </div>
+                                    ) : (
+                                        <span className="lt-topic-new">Belum dimulai</span>
                                     )}
                                 </div>
                                 <span className="lt-topic-arrow">›</span>

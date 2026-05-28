@@ -1,0 +1,218 @@
+/* ── Sidebar base ─────────────────────────────────────── */
+.sidebar {
+    width: 240px;
+    min-height: 100vh;
+    background: #1a1a2e;
+    display: flex;
+    flex-direction: column;
+    padding: 16px 12px;
+    gap: 8px;
+    flex-shrink: 0;
+    transition: width 0.25s ease, transform 0.25s ease;
+    overflow: hidden;
+}
+
+.sidebar--collapsed {
+    width: 60px;
+}
+
+/* ── Mobile sidebar (overlay) ─────────────────────────── */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 300;
+        transform: translateX(-100%);
+        width: 260px !important;
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .sidebar--mobile-open {
+        transform: translateX(0);
+    }
+}
+
+/* ── Header (brand + toggle button) ──────────────────── */
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4px 16px;
+    border-bottom: 1px solid #2d2d4e;
+    min-height: 44px;
+}
+
+.sidebar--collapsed .sidebar-header {
+    justify-content: center;
+}
+
+.sidebar-brand {
+    font-size: 18px;
+    font-weight: 700;
+    color: #e2e8f0;
+    letter-spacing: 1px;
+    white-space: nowrap;
+}
+
+.sidebar-toggle {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s;
+    flex-shrink: 0;
+}
+
+.sidebar-toggle:hover {
+    background: #0f3460;
+    color: #ffffff;
+}
+
+/* ── Nav ──────────────────────────────────────────────── */
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.nav-item {
+    display: block;
+    padding: 10px 14px;
+    border-radius: 8px;
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.2s, color 0.2s;
+}
+
+.nav-item:hover,
+.nav-item.active {
+    background: #0f3460;
+    color: #ffffff;
+}
+
+/* ── Nav group ────────────────────────────────────────── */
+.nav-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-group-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 10px;
+    border-radius: 8px;
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.2s, color 0.2s;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.nav-group-toggle:hover,
+.nav-group-toggle.active {
+    background: #0f3460;
+    color: #ffffff;
+}
+
+.sidebar--collapsed .nav-group-toggle {
+    justify-content: center;
+    padding: 10px;
+}
+
+.nav-group-icon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.nav-group-label {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.nav-arrow {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    color: #64748b;
+}
+
+/* ── Sub items ────────────────────────────────────────── */
+.nav-sub {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 2px;
+    padding-left: 12px;
+}
+
+.nav-sub-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 6px;
+    color: #64748b;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background 0.2s, color 0.2s;
+    border-left: 2px solid #2d2d4e;
+    white-space: nowrap;
+}
+
+.nav-sub-item:hover,
+.nav-sub-item.active {
+    background: #16213e;
+    color: #e2e8f0;
+    border-left-color: #0f3460;
+}
+
+.nav-sub-icon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* ── Logout ───────────────────────────────────────────── */
+.logout-btn {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: transparent;
+    border: 1.5px solid #e53e3e;
+    color: #fc8181;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.logout-btn:hover {
+    background: #e53e3e;
+    color: #ffffff;
+}

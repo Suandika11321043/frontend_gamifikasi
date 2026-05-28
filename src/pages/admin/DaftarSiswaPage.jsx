@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from 'react'
-import Sidebar from '../../components/Sidebar'
-import AvatarImg from '../../components/AvatarImg'
-import Modal from '../../components/Modal'
-import '../../components/common.css'
+import { Search, X, Eye, Pencil, Trash2, UserPlus } from 'lucide-react'
+import AdminLayout from '../../components/layout/AdminLayout'
+import AvatarImg from '../../components/common/AvatarImg'
+import Modal from '../../components/common/Modal'
+import '../../styles/common.css'
 import '../../pages/admin/DashboardPage.css'
 import './DaftarSiswaPage.css'
-
-const BASE_URL = import.meta.env.VITE_API_BASE_URL
+import { apiFetch } from '../../utils/apiFetch'
 
 const emptyForm = { name: '', group: '', totalPoints: '', level: '' }
 
@@ -17,17 +17,6 @@ const RANK_LABELS = {
     EXPERT: 'Ahli',
 }
 
-async function apiFetch(path, options = {}) {
-    const token = localStorage.getItem('token')
-    const headers = {
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        ...options.headers,
-    }
-    const res = await fetch(`${BASE_URL}${path}`, { ...options, headers })
-    const data = await res.json().catch(() => ({}))
-    if (!res.ok) throw new Error(data.message || 'Terjadi kesalahan.')
-    return data
-}
 
 function DaftarSiswaPage() {
     const [siswaList, setSiswaList] = useState([])
@@ -140,79 +129,92 @@ function DaftarSiswaPage() {
     }
 
     return (
-        <div className="dashboard-wrapper">
-            <Sidebar activePath="/admin/siswa" />
-
-            <main className="dashboard-main">
-                <header className="dashboard-header">
+        <AdminLayout activePath="/admin/siswa">
+            <header className="dashboard-header">
+                <div>
                     <h1>Daftar Siswa</h1>
-                    <button className="btn-primary" onClick={openAdd}>+ Tambah Siswa</button>
-                </header>
+                    <p className="page-subtitle">{siswaList.length} siswa terdaftar</p>
+                </div>
+                <button className="btn-primary" onClick={openAdd}>
+                    <UserPlus size={16} />
+                    Tambah Siswa
+                </button>
+            </header>
 
-                <div className="siswa-toolbar">
+            <div className="page-toolbar">
+                <div className="search-wrapper">
+                    <span className="search-icon"><Search size={15} /></span>
                     <input
-                        className="siswa-search"
+                        className="search-input"
                         type="text"
                         placeholder="Cari nama atau kelompok..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
+                        aria-label="Cari siswa"
                     />
-                    <span className="siswa-count">{filtered.length} siswa</span>
+                    {search && (
+                        <button className="search-clear" onClick={() => setSearch('')} title="Hapus pencarian">
+                            <X size={14} />
+                        </button>
+                    )}
                 </div>
+                <span className="count-badge">{filtered.length} dari {siswaList.length} siswa</span>
+            </div>
 
-                {fetchError && <p className="modal-error">{fetchError}</p>}
+            {fetchError && <p className="modal-error">{fetchError}</p>}
 
-                <div className="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Avatar</th>
-                                <th>Nama</th>
-                                <th>Kelompok</th>
-                                <th>Total Poin</th>
-                                <th>Rank</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {loading ? (
-                                <tr><td colSpan={7} className="empty-row">Memuat data...</td></tr>
-                            ) : filtered.length === 0 ? (
-                                <tr><td colSpan={7} className="empty-row">Tidak ada siswa ditemukan.</td></tr>
-                            ) : (
-                                filtered.map((siswa, idx) => (
-                                    <tr key={siswa.id}>
-                                        <td>{idx + 1}</td>
-                                        <td>
-                                            <AvatarImg avatar={siswa.avatar} name={siswa.name} />
-                                        </td>
-                                        <td>{siswa.name}</td>
-                                        <td>{siswa.group}</td>
-                                        <td>
-                                            <span className="poin-badge">{siswa.totalEarnedScore ?? 0}</span>
-                                        </td>
-                                        <td>
-                                            <span className="level-badge-num">{RANK_LABELS[siswa.rankName] ?? siswa.rankName ?? '-'}</span>
-                                        </td>
-                                        <td className="action-cell">
-                                            <button className="btn-detail" onClick={() => setDetailSiswa(siswa)}>
-                                                Detail
+            <div className="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Avatar</th>
+                            <th>Nama</th>
+                            <th>Kelompok</th>
+                            <th>Total Poin</th>
+                            <th>Rank</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {loading ? (
+                            <tr><td colSpan={7} className="empty-row">Memuat data...</td></tr>
+                        ) : filtered.length === 0 ? (
+                            <tr><td colSpan={7} className="empty-row">Tidak ada siswa ditemukan.</td></tr>
+                        ) : (
+                            filtered.map((siswa, idx) => (
+                                <tr key={siswa.id}>
+                                    <td>{idx + 1}</td>
+                                    <td>
+                                        <AvatarImg avatar={siswa.avatar} name={siswa.name} />
+                                    </td>
+                                    <td>{siswa.name}</td>
+                                    <td>{siswa.group}</td>
+                                    <td>
+                                        <span className="poin-badge">{siswa.totalEarnedScore ?? 0}</span>
+                                    </td>
+                                    <td>
+                                        <span className="level-badge-num">{RANK_LABELS[siswa.rankName] ?? siswa.rankName ?? '-'}</span>
+                                    </td>
+                                    <td>
+                                        <div className="action-cell">
+                                            <button className="btn-icon btn-icon-detail" onClick={() => setDetailSiswa(siswa)} title="Detail siswa">
+                                                <Eye size={15} />
                                             </button>
-                                            <button className="btn-edit" onClick={() => openEdit(siswa)}>
-                                                Edit
+                                            <button className="btn-icon btn-icon-edit" onClick={() => openEdit(siswa)} title="Edit siswa">
+                                                <Pencil size={15} />
                                             </button>
-                                            <button className="btn-delete" onClick={() => setDeleteId(siswa.id)}>
-                                                Hapus
+                                            <button className="btn-icon btn-icon-delete" onClick={() => setDeleteId(siswa.id)} title="Hapus siswa">
+                                                <Trash2 size={15} />
                                             </button>
-                                        </td>
-                                    </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-            </main>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
+                    </tbody>
+                </table>
+            </div>
 
             {/* Modal Tambah / Edit */}
             {showModal && (
@@ -338,7 +340,7 @@ function DaftarSiswaPage() {
                     </div>
                 </Modal>
             )}
-        </div>
+        </AdminLayout>
     )
 }
 

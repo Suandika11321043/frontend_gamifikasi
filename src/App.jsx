@@ -1,4 +1,5 @@
 ﻿import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import LoadingOverlay from './components/common/LoadingOverlay'
 import LoginPage from './pages/LoginPage'
 import DashboardPage from './pages/admin/DashboardPage'
 import DaftarSiswaPage from './pages/admin/DaftarSiswaPage'
@@ -9,11 +10,12 @@ import StudentLandingPage from './pages/student/StudentLandingPage'
 import DaftarSiswaStudentPage from './pages/student/DaftarSiswaStudentPage'
 import ListTopicStudentPage from './pages/student/ListTopicStudentPage'
 import QuizStudentPage from './pages/student/QuizStudentPage'
-import './App.css'
+import './styles/App.css'
 
 function App() {
   return (
     <BrowserRouter>
+      <LoadingOverlay />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />

@@ -1,38 +1,16 @@
 import { useState, useEffect, useCallback } from 'react'
-import Sidebar from '../../components/Sidebar'
-import Modal from '../../components/Modal'
-import '../../components/common.css'
+import { Search, X, Eye, Pencil, Trash2, FolderPlus } from 'lucide-react'
+import AdminLayout from '../../components/layout/AdminLayout'
+import Modal from '../../components/common/Modal'
+import '../../styles/common.css'
 import '../../pages/admin/DashboardPage.css'
 import './ManajemenTemaPage.css'
-
-const BASE_URL = import.meta.env.VITE_API_BASE_URL
+import { apiFetch } from '../../utils/apiFetch'
 
 const emptyForm = { nameTopic: '', description: '' }
 
-async function apiFetch(path, options = {}) {
-    const token = localStorage.getItem('token')
-    const headers = {
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        ...options.headers,
-    }
-    const res = await fetch(`${BASE_URL}${path}`, { ...options, headers })
-    if (res.status === 204) return null
-    const data = await res.json().catch(() => ({}))
-    if (!res.ok) throw new Error(data.message || 'Terjadi kesalahan.')
-    return data
-}
 
-function TopicIcon({ icon, name, size = 'sm' }) {
-    const sizeClass = `topic-icon--${size}`
-    if (icon) {
-        return <img src={icon} alt={name} className={`topic-icon-img ${sizeClass}`} />
-    }
-    return (
-        <div className={`topic-icon-placeholder ${sizeClass}`}>
-            {(name ?? '?').charAt(0).toUpperCase()}
-        </div>
-    )
-}
+import TopicIcon from '../../components/common/TopicIcon'
 
 function ManajemenTemaPage() {
     const [temaList, setTemaList] = useState([])
@@ -149,64 +127,75 @@ function ManajemenTemaPage() {
     }
 
     return (
-        <div className="dashboard-wrapper">
-            <Sidebar activePath="/admin/tema" />
-
-            <main className="dashboard-main">
-                <header className="dashboard-header">
+        <AdminLayout activePath="/admin/tema">
+            <header className="dashboard-header">
+                <div>
                     <h1>Manajemen Tema</h1>
-                    <button className="btn-primary" onClick={openAdd}>+ Tambah Tema</button>
-                </header>
+                    <p className="page-subtitle">{temaList.length} tema tersedia</p>
+                </div>
+                <button className="btn-primary" onClick={openAdd}>
+                    <FolderPlus size={16} />
+                    Tambah Tema
+                </button>
+            </header>
 
-                <div className="tema-toolbar">
+            <div className="page-toolbar">
+                <div className="search-wrapper">
+                    <span className="search-icon"><Search size={15} /></span>
                     <input
-                        className="tema-search"
+                        className="search-input"
                         type="text"
                         placeholder="Cari nama atau deskripsi tema..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
+                        aria-label="Cari tema"
                     />
-                    <span className="tema-count">{filtered.length} tema</span>
+                    {search && (
+                        <button className="search-clear" onClick={() => setSearch('')} title="Hapus pencarian">
+                            <X size={14} />
+                        </button>
+                    )}
                 </div>
+                <span className="count-badge">{filtered.length} dari {temaList.length} tema</span>
+            </div>
 
-                {fetchError && <p className="modal-error">{fetchError}</p>}
+            {fetchError && <p className="modal-error">{fetchError}</p>}
 
-                {loading ? (
-                    <p className="tema-loading">Memuat data...</p>
-                ) : filtered.length === 0 ? (
-                    <div className="tema-empty">
-                        <span className="tema-empty-icon">📂</span>
-                        <p>Belum ada tema. Klik <strong>+ Tambah Tema</strong> untuk memulai.</p>
-                    </div>
-                ) : (
-                    <div className="tema-grid">
-                        {filtered.map((tema) => (
-                            <div key={tema.id} className="tema-card">
-                                <div className="tema-card-icon-wrap">
-                                    <TopicIcon icon={tema.icon} name={tema.nameTopic} size="lg" />
-                                </div>
-                                <div className="tema-card-body">
-                                    <h3 className="tema-card-name">{tema.nameTopic}</h3>
-                                    <p className="tema-card-desc">
-                                        {tema.description || <span className="tema-no-desc">—</span>}
-                                    </p>
-                                </div>
-                                <div className="tema-card-actions">
-                                    <button className="btn-detail" onClick={() => setDetailTema(tema)}>
-                                        Detail
-                                    </button>
-                                    <button className="btn-edit" onClick={() => openEdit(tema)}>
-                                        Edit
-                                    </button>
-                                    <button className="btn-delete" onClick={() => setDeleteId(tema.id)}>
-                                        Hapus
-                                    </button>
-                                </div>
+            {loading ? (
+                <p className="tema-loading">Memuat data...</p>
+            ) : filtered.length === 0 ? (
+                <div className="tema-empty">
+                    <span className="tema-empty-icon">📂</span>
+                    <p>Belum ada tema. Klik <strong>+ Tambah Tema</strong> untuk memulai.</p>
+                </div>
+            ) : (
+                <div className="tema-grid">
+                    {filtered.map((tema) => (
+                        <div key={tema.id} className="tema-card">
+                            <div className="tema-card-icon-wrap">
+                                <TopicIcon icon={tema.icon} name={tema.nameTopic} size="lg" />
                             </div>
-                        ))}
-                    </div>
-                )}
-            </main>
+                            <div className="tema-card-body">
+                                <h3 className="tema-card-name">{tema.nameTopic}</h3>
+                                <p className="tema-card-desc">
+                                    {tema.description || <span className="tema-no-desc">—</span>}
+                                </p>
+                            </div>
+                            <div className="tema-card-actions">
+                                <button className="btn-icon btn-icon-detail" onClick={() => setDetailTema(tema)} title="Detail tema">
+                                    <Eye size={15} />
+                                </button>
+                                <button className="btn-icon btn-icon-edit" onClick={() => openEdit(tema)} title="Edit tema">
+                                    <Pencil size={15} />
+                                </button>
+                                <button className="btn-icon btn-icon-delete" onClick={() => setDeleteId(tema.id)} title="Hapus tema">
+                                    <Trash2 size={15} />
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
 
             {/* Modal Tambah / Edit */}
             {showModal && (
@@ -309,7 +298,7 @@ function ManajemenTemaPage() {
                     </div>
                 </Modal>
             )}
-        </div>
+        </AdminLayout>
     )
 }
 
