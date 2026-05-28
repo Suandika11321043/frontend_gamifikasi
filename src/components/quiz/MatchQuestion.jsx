@@ -1,0 +1,210 @@
+import { useState, useEffect, useRef } from 'react'
+
+export default function MatchQuestion({ question, answer, onAnswer }) {
+    const pertanyaan = question.options.filter((o) => o.tipeItem === 'PERTANYAAN')
+    const jawaban = question.options.filter((o) => o.tipeItem === 'JAWABAN')
+    const matchAnswer = answer || {}
+
+    const containerRef = useRef(null)
+    const leftRefs = useRef({})
+    const rightRefs = useRef({})
+
+    const [dragging, setDragging] = useState(null)
+    const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+    const [, forceRender] = useState(0)
+
+    useEffect(() => {
+        forceRender((n) => n + 1)
+        const onResize = () => forceRender((n) => n + 1)
+        window.addEventListener('resize', onResize)
+        return () => window.removeEventListener('resize', onResize)
+    }, [])
+
+    const getNode = (el, side) => {
+        if (!el || !containerRef.current) return null
+        const cRect = containerRef.current.getBoundingClientRect()
+        const eRect = el.getBoundingClientRect()
+        return {
+            x: (side === 'right' ? eRect.right : eRect.left) - cRect.left,
+            y: (eRect.top + eRect.height / 2) - cRect.top,
+        }
+    }
+
+    const clientToRel = (cx, cy) => {
+        if (!containerRef.current) return { x: 0, y: 0 }
+        const r = containerRef.current.getBoundingClientRect()
+        return { x: cx - r.left, y: cy - r.top }
+    }
+
+    const doMatch = (pId, jId) => {
+        const newMatch = { ...matchAnswer }
+        Object.keys(newMatch).forEach((k) => { if (newMatch[k] === jId) delete newMatch[k] })
+        newMatch[pId] = jId
+        onAnswer(question.questionId, newMatch)
+        setDragging(null)
+    }
+
+    const removeMatch = (pId) => {
+        const newMatch = { ...matchAnswer }
+        delete newMatch[pId]
+        onAnswer(question.questionId, Object.keys(newMatch).length > 0 ? newMatch : undefined)
+    }
+
+    const onMouseDown = (e, pId) => {
+        e.preventDefault()
+        setMousePos(clientToRel(e.clientX, e.clientY))
+        setDragging(pId)
+    }
+    const onMouseMove = (e) => {
+        if (dragging == null) return
+        setMousePos(clientToRel(e.clientX, e.clientY))
+    }
+    const onMouseUpAnswer = (jId) => { if (dragging != null) doMatch(dragging, jId) }
+    const cancelDrag = () => setDragging(null)
+
+    const onTouchStart = (e, pId) => {
+        const t = e.touches[0]
+        setMousePos(clientToRel(t.clientX, t.clientY))
+        setDragging(pId)
+    }
+    const onTouchMove = (e) => {
+        if (dragging == null) return
+        e.preventDefault()
+        const t = e.touches[0]
+        setMousePos(clientToRel(t.clientX, t.clientY))
+    }
+    const onTouchEndContainer = (e) => {
+        if (dragging == null) return
+        const t = e.changedTouches[0]
+        const el = document.elementFromPoint(t.clientX, t.clientY)
+        const target = el?.closest('[data-jid]')
+        if (target) doMatch(dragging, parseInt(target.dataset.jid, 10))
+        else setDragging(null)
+    }
+
+    const curve = (a, b) => {
+        const mx = (a.x + b.x) / 2
+        return `M ${a.x} ${a.y} C ${mx} ${a.y}, ${mx} ${b.y}, ${b.x} ${b.y}`
+    }
+
+    const LINE_COLORS = ['#6366f1', '#f59e0b', '#10b981', '#ef4444', '#8b5cf6', '#ec4899']
+    const colorOf = (pId) => LINE_COLORS[pertanyaan.findIndex((p) => p.optionId === pId) % LINE_COLORS.length]
+
+    const lines = Object.entries(matchAnswer).map(([pIdStr, jId]) => {
+        const pId = Number(pIdStr)
+        const from = getNode(leftRefs.current[pId], 'right')
+        const to = getNode(rightRefs.current[jId], 'left')
+        return from && to ? { pId, jId, from, to, color: colorOf(pId) } : null
+    }).filter(Boolean)
+
+    const dragFrom = dragging != null ? getNode(leftRefs.current[dragging], 'right') : null
+
+    if (pertanyaan.length === 0 || jawaban.length === 0) {
+        return <p className="quiz-empty-type">Data soal tidak lengkap.</p>
+    }
+
+    return (
+        <div
+            className={`match-line-wrap${dragging != null ? ' match-line-wrap--active' : ''}`}
+            ref={containerRef}
+            onMouseMove={onMouseMove}
+            onMouseUp={cancelDrag}
+            onMouseLeave={cancelDrag}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEndContainer}
+        >
+            <p className="match-line-hint">
+                {dragging != null
+                    ? '👉 Lepaskan di jawaban yang cocok'
+                    : '✋ Tahan & seret dari pertanyaan ke jawaban'}
+            </p>
+
+            <svg className="match-line-svg" aria-hidden="true">
+                {lines.map(({ pId, from, to, color }) => (
+                    <g key={pId}>
+                        <path d={curve(from, to)} stroke="#fff" strokeWidth="7" fill="none" strokeLinecap="round" opacity="0.6" />
+                        <path d={curve(from, to)} stroke={color} strokeWidth="3" fill="none" strokeLinecap="round" />
+                        <circle cx={from.x} cy={from.y} r="5" fill={color} />
+                        <circle cx={to.x} cy={to.y} r="5" fill={color} />
+                    </g>
+                ))}
+                {dragFrom && dragging != null && (
+                    <path
+                        d={curve(dragFrom, mousePos)}
+                        stroke={colorOf(dragging)}
+                        strokeWidth="3"
+                        strokeDasharray="8 5"
+                        fill="none"
+                        strokeLinecap="round"
+                        opacity="0.8"
+                    />
+                )}
+            </svg>
+
+            <div className="match-line-cols">
+                <div className="match-line-col">
+                    <p className="match-line-col-label">💬 Pertanyaan</p>
+                    {pertanyaan.map((p, idx) => {
+                        const isMatched = matchAnswer[p.optionId] !== undefined
+                        const isDragging = dragging === p.optionId
+                        const color = colorOf(p.optionId)
+                        return (
+                            <div
+                                key={p.optionId}
+                                ref={(el) => { leftRefs.current[p.optionId] = el }}
+                                className={`match-line-item match-line-item--left${isMatched ? ' match-line-item--matched' : ''}${isDragging ? ' match-line-item--active' : ''}`}
+                                style={(isMatched || isDragging) ? { '--mc': color } : undefined}
+                                onMouseDown={(e) => onMouseDown(e, p.optionId)}
+                                onTouchStart={(e) => onTouchStart(e, p.optionId)}
+                            >
+                                <span className="match-line-num">{idx + 1}</span>
+                                {p.mediaOpsi && <img src={p.mediaOpsi} alt={p.teksOpsi} className="match-line-media" />}
+                                <span className="match-line-text">{p.teksOpsi}</span>
+                                {isMatched && (
+                                    <button
+                                        className="match-line-del"
+                                        onMouseDown={(e) => e.stopPropagation()}
+                                        onTouchStart={(e) => e.stopPropagation()}
+                                        onClick={() => removeMatch(p.optionId)}
+                                        aria-label="Lepas pasangan"
+                                    >✕</button>
+                                )}
+                                <span
+                                    className="match-line-node match-line-node--r"
+                                    style={(isMatched || isDragging) ? { background: color, borderColor: color } : undefined}
+                                />
+                            </div>
+                        )
+                    })}
+                </div>
+
+                <div className="match-line-col">
+                    <p className="match-line-col-label">✅ Jawaban</p>
+                    {jawaban.map((j) => {
+                        const matchedPId = pertanyaan.find((p) => matchAnswer[p.optionId] === j.optionId)?.optionId
+                        const isMatched = matchedPId !== undefined
+                        const isTarget = dragging != null && !isMatched
+                        const color = isMatched ? colorOf(matchedPId) : undefined
+                        return (
+                            <div
+                                key={j.optionId}
+                                ref={(el) => { rightRefs.current[j.optionId] = el }}
+                                className={`match-line-item match-line-item--right${isMatched ? ' match-line-item--matched' : ''}${isTarget ? ' match-line-item--target' : ''}`}
+                                style={isMatched ? { '--mc': color } : undefined}
+                                data-jid={j.optionId}
+                                onMouseUp={() => onMouseUpAnswer(j.optionId)}
+                            >
+                                <span
+                                    className="match-line-node match-line-node--l"
+                                    style={isMatched ? { background: color, borderColor: color } : undefined}
+                                />
+                                {j.mediaOpsi && <img src={j.mediaOpsi} alt={j.teksOpsi} className="match-line-media" />}
+                                <span className="match-line-text">{j.teksOpsi}</span>
+                            </div>
+                        )
+                    })}
+                </div>
+            </div>
+        </div>
+    )
+}

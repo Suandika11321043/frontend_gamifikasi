@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { useAuth } from '../hooks/useAuth'
 import { login } from '../services/authService'
 import './LoginPage.css'
 
@@ -9,6 +10,10 @@ function LoginPage() {
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
+    const location = useLocation()
+    const { saveToken } = useAuth()
+
+    const wasExpired = location.state?.expired === true
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -24,7 +29,7 @@ function LoginPage() {
             const data = await login(username, password)
 
             if (data.token) {
-                localStorage.setItem('token', data.token)
+                saveToken(data.token)
             }
 
             navigate('/dashboard')
@@ -50,6 +55,9 @@ function LoginPage() {
                 <p className="login-subtitle">Yuk masuk dan mulai belajar seru! 🎉</p>
 
                 <form className="login-form" onSubmit={handleSubmit} noValidate>
+                    {wasExpired && !error && (
+                        <p className="login-error">⏰ Sesi kamu telah berakhir. Silakan login kembali.</p>
+                    )}
                     {error && <p className="login-error">⚠️ {error}</p>}
 
                     <div className="form-group">

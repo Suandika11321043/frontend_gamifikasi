@@ -247,3 +247,25 @@
     display: flex;
     margin-bottom: 8px;
 }
+
+/* ── Responsive card grid ────────────────────────────────────── */
+
+@media (max-width: 640px) {
+    .tema-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 14px;
+    }
+
+    .tema-card {
+        padding: 18px 14px 14px;
+    }
+
+    .tema-card-actions {
+        gap: 6px;
+    }
+
+    .detail-grid {
+        grid-template-columns: 90px 1fr;
+        gap: 8px 10px;
+    }
+}

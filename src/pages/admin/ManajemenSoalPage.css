@@ -617,6 +617,46 @@
     padding-top: 16px;
 }
 
+/* ── Puzzle config section ───────────────────────────────────── */
+
+.puzzle-config-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 4px 0;
+}
+
+.puzzle-current-info {
+    background: #f0fdf4;
+    border: 1.5px solid #a7f3d0;
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.puzzle-current-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.puzzle-grid-label {
+    font-size: 0.88rem;
+    color: #374151;
+    margin: 0;
+}
+
+.puzzle-preview-img {
+    max-width: 100%;
+    max-height: 200px;
+    object-fit: contain;
+    border-radius: 10px;
+    border: 1.5px solid #d1fae5;
+}
+
 /* ── Responsive breakpoints ──────────────────────────────────── */
 
 @media (max-width: 900px) {
@@ -659,4 +699,63 @@
     .qtype-filter {
         justify-content: flex-start;
     }
+}
+
+/* ── Timer badge (table) ─────────────────────────────────────── */
+
+.timer-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #fff7ed;
+    color: #c2410c;
+    border: 1px solid #fed7aa;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 2px 8px;
+    white-space: nowrap;
+}
+
+/* ── Timer input in form ─────────────────────────────────────── */
+
+.timer-input-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.timer-input-icon {
+    color: #9ca3af;
+    flex-shrink: 0;
+}
+
+.timer-input {
+    width: 110px;
+    padding: 8px 10px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #374151;
+    outline: none;
+    background: #fafafa;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.timer-input:focus {
+    border-color: #0f3460;
+    box-shadow: 0 0 0 3px rgba(15, 52, 96, 0.1);
+    background: #fff;
+}
+
+.timer-unit {
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.form-hint {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-top: 3px;
 }

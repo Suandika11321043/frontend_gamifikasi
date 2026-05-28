@@ -1,18 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import AvatarImg from '../../components/AvatarImg'
+import AvatarImg from '../../components/common/AvatarImg'
 import './DaftarSiswaStudentPage.css'
-
-const BASE_URL = import.meta.env.VITE_API_BASE_URL
-
-async function apiFetch(path) {
-    const token = localStorage.getItem('token')
-    const headers = token ? { Authorization: `Bearer ${token}` } : {}
-    const res = await fetch(`${BASE_URL}${path}`, { headers })
-    const data = await res.json().catch(() => ({}))
-    if (!res.ok) throw new Error(data.message || 'Terjadi kesalahan.')
-    return data
-}
+import { apiFetch, BASE_URL } from '../../utils/apiFetch'
 
 function DaftarSiswaStudentPage() {
     const navigate = useNavigate()

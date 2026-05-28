@@ -342,3 +342,141 @@
     font-size: 13px;
     color: #374151;
 }
+
+/* ── Icon action buttons ───────────────────────────────────── */
+
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    flex-shrink: 0;
+}
+
+.btn-icon:active {
+    transform: scale(0.92);
+}
+
+.btn-icon-detail {
+    background: #f0fdf4;
+    color: #15803d;
+}
+
+.btn-icon-detail:hover {
+    background: #bbf7d0;
+}
+
+.btn-icon-edit {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.btn-icon-edit:hover {
+    background: #bfdbfe;
+}
+
+.btn-icon-delete {
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+.btn-icon-delete:hover {
+    background: #fecaca;
+}
+
+/* ── Page toolbar (search + count) ────────────────────────── */
+
+.page-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    max-width: 400px;
+    min-width: 180px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 11px;
+    color: #9ca3af;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    width: 100%;
+    padding: 9px 36px 9px 36px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #374151;
+    outline: none;
+    background: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-input:focus {
+    border-color: #0f3460;
+    box-shadow: 0 0 0 3px rgba(15, 52, 96, 0.08);
+}
+
+.search-clear {
+    position: absolute;
+    right: 8px;
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 2px;
+    border-radius: 4px;
+    transition: color 0.2s;
+}
+
+.search-clear:hover {
+    color: #374151;
+}
+
+.count-badge {
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 640px) {
+    .page-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-wrapper {
+        max-width: 100%;
+    }
+
+    .btn-primary,
+    .btn-secondary,
+    .btn-danger {
+        padding: 9px 14px;
+        font-size: 13px;
+    }
+
+    .modal-card {
+        padding: 20px 16px;
+    }
+}
