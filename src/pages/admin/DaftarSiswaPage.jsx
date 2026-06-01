@@ -8,7 +8,7 @@ import '../../pages/admin/DashboardPage.css'
 import './DaftarSiswaPage.css'
 import { apiFetch } from '../../utils/apiFetch'
 
-const emptyForm = { name: '', group: '', totalPoints: '', level: '' }
+const emptyForm = { name: '', group: '', totalPoints: '' }
 
 const RANK_LABELS = {
     BEGINNER: 'Pemula',
@@ -67,7 +67,6 @@ function DaftarSiswaPage() {
             name: siswa.name ?? '',
             group: siswa.group ?? '',
             totalPoints: siswa.totalPoints ?? '',
-            level: siswa.level ?? '',
         })
         setAvatarFile(null)
         setAvatarPreview(siswa.avatar ? `${BASE_URL}/uploads/${siswa.avatar}` : null)
@@ -89,8 +88,8 @@ function DaftarSiswaPage() {
     }
 
     const handleSave = async () => {
-        if (!form.name.trim() || !form.group.trim() || !form.level.toString().trim()) {
-            setError('Nama, kelompok, dan level wajib diisi.')
+        if (!form.name.trim() || !form.group.trim()) {
+            setError('Nama dan kelompok wajib diisi.')
             return
         }
         setSaving(true)
@@ -100,7 +99,6 @@ function DaftarSiswaPage() {
             fd.append('name', form.name)
             fd.append('group', form.group)
             fd.append('totalPoints', form.totalPoints)
-            fd.append('level', form.level)
             if (avatarFile) fd.append('avatar', avatarFile)
 
             if (editId !== null) {
@@ -172,15 +170,14 @@ function DaftarSiswaPage() {
                             <th>Nama</th>
                             <th>Kelompok</th>
                             <th>Total Poin</th>
-                            <th>Rank</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         {loading ? (
-                            <tr><td colSpan={7} className="empty-row">Memuat data...</td></tr>
+                            <tr><td colSpan={6} className="empty-row">Memuat data...</td></tr>
                         ) : filtered.length === 0 ? (
-                            <tr><td colSpan={7} className="empty-row">Tidak ada siswa ditemukan.</td></tr>
+                            <tr><td colSpan={6} className="empty-row">Tidak ada siswa ditemukan.</td></tr>
                         ) : (
                             filtered.map((siswa, idx) => (
                                 <tr key={siswa.id}>
@@ -192,9 +189,6 @@ function DaftarSiswaPage() {
                                     <td>{siswa.group}</td>
                                     <td>
                                         <span className="poin-badge">{siswa.totalEarnedScore ?? 0}</span>
-                                    </td>
-                                    <td>
-                                        <span className="level-badge-num">{RANK_LABELS[siswa.rankName] ?? siswa.rankName ?? '-'}</span>
                                     </td>
                                     <td>
                                         <div className="action-cell">
@@ -253,16 +247,6 @@ function DaftarSiswaPage() {
                         />
                     </div>
                     <div className="form-group">
-                        <label>Level</label>
-                        <input
-                            name="level"
-                            type="number"
-                            value={form.level}
-                            onChange={handleChange}
-                            placeholder="contoh: 1"
-                        />
-                    </div>
-                    <div className="form-group">
                         <label>Avatar</label>
                         {avatarPreview && (
                             <AvatarImg
@@ -308,10 +292,6 @@ function DaftarSiswaPage() {
                         <span className="detail-label">Total Poin</span>
                         <span className="detail-value">
                             <span className="poin-badge">{detailSiswa.totalEarnedScore ?? 0}</span>
-                        </span>
-                        <span className="detail-label">Rank</span>
-                        <span className="detail-value">
-                            <span className="level-badge-num">{RANK_LABELS[detailSiswa.rankName] ?? detailSiswa.rankName ?? '-'}</span>
                         </span>
                     </div>
                     <div className="modal-actions">

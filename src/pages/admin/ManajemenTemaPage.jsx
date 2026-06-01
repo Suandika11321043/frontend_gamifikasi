@@ -7,7 +7,7 @@ import '../../pages/admin/DashboardPage.css'
 import './ManajemenTemaPage.css'
 import { apiFetch } from '../../utils/apiFetch'
 
-const emptyForm = { nameTopic: '', description: '' }
+const emptyForm = { nameTopic: '', description: '', active: true }
 
 
 import TopicIcon from '../../components/common/TopicIcon'
@@ -63,6 +63,7 @@ function ManajemenTemaPage() {
         setForm({
             nameTopic: tema.nameTopic ?? '',
             description: tema.description ?? '',
+            active: tema.isActive !== false,
         })
         setIconFile(null)
         setIconPreview(tema.icon ?? null)
@@ -99,6 +100,7 @@ function ManajemenTemaPage() {
             const fd = new FormData()
             fd.append('nameTopic', form.nameTopic)
             fd.append('description', form.description)
+            fd.append('isActive', form.active ? 'true' : 'false')
             if (iconFile) fd.append('icon', iconFile)
 
             if (editId !== null) {
@@ -123,6 +125,20 @@ function ManajemenTemaPage() {
         } catch (err) {
             setError(err.message)
             setDeleteId(null)
+        }
+    }
+
+    const handleToggleActive = async (tema) => {
+        const newActive = tema.isActive === false
+        const endpoint = tema.isActive !== false ? `/topics/${tema.id}/deactivate` : `/topics/${tema.id}/activate`
+        // Optimistic update — geser toggle langsung sebelum server merespons
+        setTemaList((prev) => prev.map((t) => t.id === tema.id ? { ...t, isActive: newActive } : t))
+        try {
+            await apiFetch(endpoint, { method: 'PATCH' })
+        } catch (err) {
+            // Revert jika gagal
+            setTemaList((prev) => prev.map((t) => t.id === tema.id ? { ...t, isActive: tema.isActive } : t))
+            setError(err.message)
         }
     }
 
@@ -171,7 +187,7 @@ function ManajemenTemaPage() {
             ) : (
                 <div className="tema-grid">
                     {filtered.map((tema) => (
-                        <div key={tema.id} className="tema-card">
+                        <div key={tema.id} className={`tema-card${tema.isActive === false ? ' tema-card-inactive' : ''}`}>
                             <div className="tema-card-icon-wrap">
                                 <TopicIcon icon={tema.icon} name={tema.nameTopic} size="lg" />
                             </div>
@@ -181,16 +197,29 @@ function ManajemenTemaPage() {
                                     {tema.description || <span className="tema-no-desc">—</span>}
                                 </p>
                             </div>
-                            <div className="tema-card-actions">
-                                <button className="btn-icon btn-icon-detail" onClick={() => setDetailTema(tema)} title="Detail tema">
-                                    <Eye size={15} />
-                                </button>
-                                <button className="btn-icon btn-icon-edit" onClick={() => openEdit(tema)} title="Edit tema">
-                                    <Pencil size={15} />
-                                </button>
-                                <button className="btn-icon btn-icon-delete" onClick={() => setDeleteId(tema.id)} title="Hapus tema">
-                                    <Trash2 size={15} />
-                                </button>
+                            <div className="tema-card-footer">
+                                <label className="tema-toggle" title={tema.isActive === false ? 'Aktifkan tema' : 'Nonaktifkan tema'}>
+                                    <input
+                                        type="checkbox"
+                                        checked={tema.isActive !== false}
+                                        onChange={() => handleToggleActive(tema)}
+                                    />
+                                    <span className="tema-toggle-slider" />
+                                    <span className="tema-toggle-label">
+                                        {tema.isActive === false ? 'Nonaktif' : 'Aktif'}
+                                    </span>
+                                </label>
+                                <div className="tema-card-actions">
+                                    <button className="btn-icon btn-icon-detail" onClick={() => setDetailTema(tema)} title="Detail tema">
+                                        <Eye size={15} />
+                                    </button>
+                                    <button className="btn-icon btn-icon-edit" onClick={() => openEdit(tema)} title="Edit tema">
+                                        <Pencil size={15} />
+                                    </button>
+                                    <button className="btn-icon btn-icon-delete" onClick={() => setDeleteId(tema.id)} title="Hapus tema">
+                                        <Trash2 size={15} />
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     ))}
@@ -205,39 +234,54 @@ function ManajemenTemaPage() {
                 >
                     {error && <p className="modal-error">{error}</p>}
 
-                    <div className="form-group">
-                        <label>Nama Tema</label>
-                        <input
-                            name="nameTopic"
-                            value={form.nameTopic}
-                            onChange={handleChange}
-                            placeholder="contoh: Pahlawan"
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Deskripsi</label>
-                        <textarea
-                            name="description"
-                            value={form.description}
-                            onChange={handleChange}
-                            placeholder="Deskripsi singkat tentang tema ini..."
-                            rows={3}
-                            className="form-textarea"
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Ikon Tema</label>
-                        {iconPreview && (
-                            <div className="icon-preview-wrap">
-                                <TopicIcon icon={iconPreview} name={form.nameTopic || '?'} size="md" />
+                    <div className="tema-modal-fields">
+                        <div className="form-group">
+                            <label>Nama Tema</label>
+                            <input
+                                name="nameTopic"
+                                value={form.nameTopic}
+                                onChange={handleChange}
+                                placeholder="contoh: Pahlawan"
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Deskripsi</label>
+                            <textarea
+                                name="description"
+                                value={form.description}
+                                onChange={handleChange}
+                                placeholder="Deskripsi singkat tentang tema ini..."
+                                rows={3}
+                                className="form-textarea"
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Ikon Tema</label>
+                            <div className="tema-field-right">
+                                {iconPreview && (
+                                    <div className="icon-preview-wrap">
+                                        <TopicIcon icon={iconPreview} name={form.nameTopic || '?'} size="md" />
+                                    </div>
+                                )}
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleIconChange}
+                                    className="input-file"
+                                />
                             </div>
-                        )}
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleIconChange}
-                            className="input-file"
-                        />
+                        </div>
+                        <div className="form-group">
+                            <label>Status Tema</label>
+                            <select
+                                className="form-select"
+                                value={form.active ? 'aktif' : 'nonaktif'}
+                                onChange={(e) => setForm((prev) => ({ ...prev, active: e.target.value === 'aktif' }))}
+                            >
+                                <option value="aktif">Aktif</option>
+                                <option value="nonaktif">Nonaktif</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div className="modal-actions">
@@ -267,6 +311,23 @@ function ManajemenTemaPage() {
                         <span className="detail-label">Deskripsi</span>
                         <span className="detail-value">
                             {detailTema.description || <span style={{ color: '#9ca3af' }}>—</span>}
+                        </span>
+                        <span className="detail-label">Status</span>
+                        <span className="detail-value">
+                            <label className="tema-toggle">
+                                <input
+                                    type="checkbox"
+                                    checked={detailTema.isActive !== false}
+                                    onChange={() => {
+                                        handleToggleActive(detailTema)
+                                        setDetailTema((prev) => ({ ...prev, isActive: !prev.isActive }))
+                                    }}
+                                />
+                                <span className="tema-toggle-slider" />
+                                <span className="tema-toggle-label">
+                                    {detailTema.isActive === false ? 'Nonaktif' : 'Aktif'}
+                                </span>
+                            </label>
                         </span>
                     </div>
                     <div className="modal-actions">

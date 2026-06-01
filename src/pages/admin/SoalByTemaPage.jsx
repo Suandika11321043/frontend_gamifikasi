@@ -494,19 +494,23 @@ function SoalByTemaPage() {
                         <textarea name="contentInstruction" value={form.contentInstruction} onChange={handleQChange}
                             placeholder="Tuliskan instruksi atau pertanyaan..." rows={3} className="form-textarea" />
                     </div>
-                    <div className="form-group">
-                        <label>Gambar (opsional)</label>
-                        {imagePreview && <img src={imagePreview} alt="preview" className="media-preview-img" />}
-                        <input type="file" accept="image/*" className="input-file"
-                            onChange={(e) => { const f = e.target.files[0]; if (f) { setImageFile(f); setImagePreview(URL.createObjectURL(f)) } }} />
-                    </div>
-                    <div className="form-group">
-                        <label>Audio (opsional)</label>
-                        {audioFile ? <p className="file-selected">✓ {audioFile.name}</p>
-                            : existingAudio ? <audio controls src={existingAudio} className="audio-preview" /> : null}
-                        <input type="file" accept="audio/*" className="input-file"
-                            onChange={(e) => { const f = e.target.files[0]; if (f) setAudioFile(f) }} />
-                    </div>
+                    {form.questionType !== 'PUZZLE' && (
+                        <>
+                            <div className="form-group">
+                                <label>Gambar (opsional)</label>
+                                {imagePreview && <img src={imagePreview} alt="preview" className="media-preview-img" />}
+                                <input type="file" accept="image/*" className="input-file"
+                                    onChange={(e) => { const f = e.target.files[0]; if (f) { setImageFile(f); setImagePreview(URL.createObjectURL(f)) } }} />
+                            </div>
+                            <div className="form-group">
+                                <label>Audio (opsional)</label>
+                                {audioFile ? <p className="file-selected">✓ {audioFile.name}</p>
+                                    : existingAudio ? <audio controls src={existingAudio} className="audio-preview" /> : null}
+                                <input type="file" accept="audio/*" className="input-file"
+                                    onChange={(e) => { const f = e.target.files[0]; if (f) setAudioFile(f) }} />
+                            </div>
+                        </>
+                    )}
                     <div className="form-group">
                         <label>Batas Waktu (opsional)</label>
                         <div className="timer-input-row">

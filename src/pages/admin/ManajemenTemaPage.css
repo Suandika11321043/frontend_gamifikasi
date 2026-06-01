@@ -1,6 +1,131 @@
 /* ManajemenTemaPage-specific styles
    (buttons, modals, form-group utilities live in components/common.css) */
 
+/* ── Modal Form Horizontal Layout ───────────────────────────── */
+.tema-modal-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 4px 0 8px;
+}
+
+.tema-modal-fields .form-group {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 16px;
+    margin: 0;
+}
+
+.tema-modal-fields .form-group>label:first-child {
+    width: 116px;
+    min-width: 116px;
+    text-align: right;
+    padding-top: 9px;
+    color: #374151;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.tema-modal-fields .form-group>input,
+.tema-modal-fields .form-group>textarea,
+.tema-modal-fields .form-group>.tema-toggle,
+.tema-modal-fields .form-group>.tema-field-right {
+    flex: 1;
+    min-width: 0;
+}
+
+.tema-field-right {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+}
+
+/* Responsive — stack vertically on narrow screens */
+@media (max-width: 520px) {
+    .tema-modal-fields .form-group {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .tema-modal-fields .form-group>label:first-child {
+        width: auto;
+        min-width: auto;
+        text-align: left;
+        padding-top: 0;
+    }
+}
+
+/* ── Toggle Switch ───────────────────────────────────────────── */
+.tema-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px 12px;
+    border-top: 1px solid #f3f4f6;
+    margin-top: auto;
+}
+
+.tema-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.tema-toggle input {
+    display: none;
+}
+
+.tema-toggle-slider {
+    position: relative;
+    width: 40px;
+    height: 22px;
+    background: #d1d5db;
+    border-radius: 999px;
+    transition: background 0.25s;
+    flex-shrink: 0;
+}
+
+.tema-toggle-slider::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    transition: transform 0.25s;
+}
+
+.tema-toggle input:checked+.tema-toggle-slider {
+    background: #16a34a;
+}
+
+.tema-toggle input:checked+.tema-toggle-slider::after {
+    transform: translateX(18px);
+}
+
+.tema-toggle-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #6b7280;
+    min-width: 52px;
+}
+
+.tema-toggle input:checked~.tema-toggle-label {
+    color: #16a34a;
+}
+
+.tema-card-inactive {
+    opacity: 0.72;
+}
+
 /* ── Toolbar ─────────────────────────────────────────────────── */
 
 .tema-toolbar {
