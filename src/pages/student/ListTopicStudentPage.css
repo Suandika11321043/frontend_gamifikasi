@@ -219,141 +219,248 @@
 =========================== */
 .lt-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+    gap: 1.2rem;
 }
 
+/* ── Card ─────────────────── */
 .lt-topic-card {
     display: flex;
-    align-items: center;
-    gap: 0.9rem;
+    flex-direction: column;
     background: #ffffff;
-    border: 2.5px solid #a7f3d0;
-    border-radius: 20px;
-    padding: 1.1rem 1.2rem;
+    border-radius: 24px;
+    overflow: hidden;
     cursor: pointer;
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, border-color 0.2s ease;
-    box-shadow: 0 5px 0 #a7f3d0, 0 8px 20px rgba(16, 185, 129, 0.08);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+    box-shadow: 0 6px 0 #a7f3d0, 0 10px 28px rgba(16, 185, 129, 0.1);
 }
 
 .lt-topic-card:hover {
-    transform: translateY(-6px) scale(1.02);
-    box-shadow: 0 11px 0 #6ee7b7, 0 20px 32px rgba(16, 185, 129, 0.18);
-    border-color: #34d399;
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 14px 0 #6ee7b7, 0 24px 40px rgba(16, 185, 129, 0.22);
 }
 
 .lt-topic-card:active {
     transform: translateY(3px) scale(0.98);
     box-shadow: 0 2px 0 #a7f3d0;
-    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    transition: transform 0.1s, box-shadow 0.1s;
 }
 
-.lt-topic-icon {
-    width: 52px;
-    height: 52px;
-    border-radius: 14px;
-    object-fit: cover;
-    flex-shrink: 0;
-    border: 2px solid #d1fae5;
-}
-
-.lt-topic-placeholder {
-    width: 52px;
-    height: 52px;
-    border-radius: 14px;
-    background: linear-gradient(135deg, #34d399, #10b981);
+/* ── Banner colours (per nth-child) ─ */
+.lt-card-banner {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.4rem;
+    padding: 1.4rem 1rem 1.1rem;
+    background: linear-gradient(135deg, #34d399, #10b981);
+    position: relative;
+}
+
+.lt-topic-card:nth-child(4n+2) .lt-card-banner {
+    background: linear-gradient(135deg, #f472b6, #ec4899);
+}
+
+.lt-topic-card:nth-child(4n+2) {
+    box-shadow: 0 6px 0 #fbcfe8, 0 10px 28px rgba(236, 72, 153, 0.1);
+}
+
+.lt-topic-card:nth-child(4n+2):hover {
+    box-shadow: 0 14px 0 #f9a8d4, 0 24px 40px rgba(236, 72, 153, 0.2);
+}
+
+.lt-topic-card:nth-child(4n+3) .lt-card-banner {
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+}
+
+.lt-topic-card:nth-child(4n+3) {
+    box-shadow: 0 6px 0 #bfdbfe, 0 10px 28px rgba(59, 130, 246, 0.1);
+}
+
+.lt-topic-card:nth-child(4n+3):hover {
+    box-shadow: 0 14px 0 #93c5fd, 0 24px 40px rgba(59, 130, 246, 0.2);
+}
+
+.lt-topic-card:nth-child(4n+4) .lt-card-banner {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+}
+
+.lt-topic-card:nth-child(4n+4) {
+    box-shadow: 0 6px 0 #fde68a, 0 10px 28px rgba(245, 158, 11, 0.1);
+}
+
+.lt-topic-card:nth-child(4n+4):hover {
+    box-shadow: 0 14px 0 #fcd34d, 0 24px 40px rgba(245, 158, 11, 0.2);
+}
+
+/* ── Lock overlay ──────────── */
+.lt-card-lock {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.38);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    border-radius: 0;
+}
+
+/* ── Icon ───────────────── */
+.lt-topic-icon {
+    width: 76px;
+    height: 76px;
+    border-radius: 18px;
+    object-fit: cover;
+    border: 3px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+}
+
+.lt-topic-placeholder {
+    width: 76px;
+    height: 76px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
     font-weight: 900;
     color: #fff;
     flex-shrink: 0;
-    box-shadow: 0 3px 8px rgba(16, 185, 129, 0.3);
+    border: 3px solid rgba(255, 255, 255, 0.5);
 }
 
-.lt-topic-body {
+/* ── Card content ────────── */
+.lt-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.9rem 1rem 1.1rem;
+    gap: 0.3rem;
+    text-align: center;
     flex: 1;
-    min-width: 0;
 }
 
 .lt-topic-name {
-    font-size: 0.98rem;
-    font-weight: 800;
-    color: #065f46;
+    font-size: 1rem;
+    font-weight: 900;
+    color: #1f2937;
     margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    line-height: 1.3;
 }
 
 .lt-topic-desc {
-    font-size: 0.75rem;
-    color: #6b7280;
+    font-size: 0.73rem;
+    color: #9ca3af;
     font-weight: 500;
-    margin: 0.2rem 0 0;
-    white-space: nowrap;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
     overflow: hidden;
-    text-overflow: ellipsis;
 }
 
-/* Progress row inside each card */
+/* ── Progress ────────────── */
 .lt-topic-progress {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 0.4rem;
-    margin-top: 0.4rem;
+    gap: 0.3rem;
+    width: 100%;
+    margin-top: 0.25rem;
 }
 
 .lt-topic-stars {
     display: flex;
-    gap: 1px;
+    gap: 3px;
 }
 
 .lt-star--on {
     color: #f59e0b;
-    font-size: 0.82rem;
+    font-size: 1.5rem;
+    text-shadow: 0 2px 6px rgba(245, 158, 11, 0.45);
 }
 
 .lt-star--off {
     color: #d1d5db;
-    font-size: 0.82rem;
+    font-size: 1.5rem;
 }
 
 .lt-topic-score-pill {
-    font-size: 0.68rem;
+    font-size: 0.73rem;
     font-weight: 700;
     color: #065f46;
     background: #d1fae5;
     border: 1.5px solid #a7f3d0;
-    padding: 0.05rem 0.45rem;
+    padding: 0.1rem 0.65rem;
     border-radius: 20px;
-    white-space: nowrap;
+}
+
+/* ── CTA buttons ─────────── */
+.lt-card-cta {
+    display: block;
+    width: 100%;
+    margin-top: 0.55rem;
+    padding: 0.55rem 1rem;
+    border-radius: 14px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    text-align: center;
+    letter-spacing: 0.01em;
+}
+
+.lt-cta--start {
+    background: linear-gradient(135deg, #34d399, #10b981);
+    color: #fff;
+    box-shadow: 0 3px 0 #059669;
+}
+
+.lt-cta--continue {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    color: #fff;
+    box-shadow: 0 3px 0 #d97706;
 }
 
 .lt-topic-new {
     display: inline-block;
-    margin-top: 0.4rem;
-    font-size: 0.65rem;
+    margin-top: 0.3rem;
+    font-size: 0.72rem;
     font-weight: 700;
     color: #9ca3af;
     background: #f3f4f6;
     border: 1.5px solid #e5e7eb;
-    padding: 0.05rem 0.45rem;
+    padding: 0.1rem 0.6rem;
     border-radius: 20px;
 }
 
-.lt-topic-arrow {
-    font-size: 1.5rem;
-    color: #a7f3d0;
-    flex-shrink: 0;
-    font-weight: 900;
-    transition: color 0.2s, transform 0.2s;
+/* ── Inactive notice ──────── */
+.lt-topic-inactive-notice {
+    display: inline-block;
+    margin-top: 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #b45309;
+    background: #fef3c7;
+    border: 1.5px solid #fcd34d;
+    padding: 0.2rem 0.65rem;
+    border-radius: 20px;
 }
 
-.lt-topic-card:hover .lt-topic-arrow {
-    color: #10b981;
-    transform: translateX(3px);
+/* ── Disabled card ───────── */
+.lt-topic-card--disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    filter: grayscale(0.45);
+}
+
+.lt-topic-card--disabled:hover,
+.lt-topic-card--disabled:active {
+    transform: none;
+    box-shadow: 0 4px 0 #e5e7eb, 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* ── Arrow (unused in new design) ─ */
+.lt-topic-arrow {
+    display: none;
 }
 
 /* ===========================
@@ -365,14 +472,25 @@
     }
 
     .lt-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.85rem;
     }
 
     .lt-search {
         max-width: 100%;
     }
 
-    .lt-topic-card {
-        padding: 0.9rem 1rem;
+    .lt-topic-icon,
+    .lt-topic-placeholder {
+        width: 58px;
+        height: 58px;
+    }
+
+    .lt-card-banner {
+        padding: 1rem 0.75rem 0.85rem;
+    }
+
+    .lt-card-content {
+        padding: 0.75rem 0.75rem 0.9rem;
     }
 }

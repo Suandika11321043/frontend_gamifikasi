@@ -110,37 +110,52 @@ function ListTopicStudentPage() {
                     <p className="lt-empty">Tidak ada topik ditemukan.</p>
                 ) : (
                     <div className="lt-grid">
-                        {filtered.map((topic) => (
-                            <div
-                                className="lt-topic-card"
-                                key={topic.id}
-                                onClick={() => navigate(`/student/siswa/${studentId}/topics/${topic.id}/quiz`)}
-                                role="button"
-                                tabIndex={0}
-                                onKeyDown={(e) => e.key === 'Enter' && navigate(`/student/siswa/${studentId}/topics/${topic.id}/quiz`)}
-                            >
-                                <TopicIcon icon={topic.icon} name={topic.nameTopic} className="lt-topic-icon" placeholderClassName="lt-topic-placeholder" />
-                                <div className="lt-topic-body">
-                                    <p className="lt-topic-name">{topic.nameTopic}</p>
-                                    {topic.description && (
-                                        <p className="lt-topic-desc">{topic.description}</p>
-                                    )}
-                                    {progressMap[topic.id] ? (
-                                        <div className="lt-topic-progress">
-                                            <span className="lt-topic-stars">
-                                                {[1, 2, 3].map((s) => (
-                                                    <span key={s} className={s <= (progressMap[topic.id].starCount ?? 0) ? 'lt-star--on' : 'lt-star--off'}>★</span>
-                                                ))}
-                                            </span>
-                                            <span className="lt-topic-score-pill">{progressMap[topic.id].totalEarnedScore ?? 0} poin</span>
-                                        </div>
-                                    ) : (
-                                        <span className="lt-topic-new">Belum dimulai</span>
-                                    )}
+                        {filtered.map((topic) => {
+                            const isInactive = topic.isActive === false
+                            return (
+                                <div
+                                    className={`lt-topic-card${isInactive ? ' lt-topic-card--disabled' : ''}`}
+                                    key={topic.id}
+                                    onClick={() => {
+                                        if (isInactive) return
+                                        navigate(`/student/siswa/${studentId}/topics/${topic.id}/quiz`)
+                                    }}
+                                    role="button"
+                                    tabIndex={0}
+                                    aria-disabled={isInactive}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && !isInactive)
+                                            navigate(`/student/siswa/${studentId}/topics/${topic.id}/quiz`)
+                                    }}
+                                >
+                                    <div className="lt-card-banner">
+                                        <TopicIcon icon={topic.icon} name={topic.nameTopic} className="lt-topic-icon" placeholderClassName="lt-topic-placeholder" />
+                                        {isInactive && <div className="lt-card-lock">🔒</div>}
+                                    </div>
+                                    <div className="lt-card-content">
+                                        <p className="lt-topic-name">{topic.nameTopic}</p>
+                                        {topic.description && <p className="lt-topic-desc">{topic.description}</p>}
+                                        {isInactive ? (
+                                            <span className="lt-topic-inactive-notice">Belum diaktifkan</span>
+                                        ) : progressMap[topic.id] ? (
+                                            <>
+                                                <div className="lt-topic-progress">
+                                                    <span className="lt-topic-stars">
+                                                        {[1, 2, 3].map((s) => (
+                                                            <span key={s} className={s <= (progressMap[topic.id].starCount ?? 0) ? 'lt-star--on' : 'lt-star--off'}>★</span>
+                                                        ))}
+                                                    </span>
+                                                    <span className="lt-topic-score-pill">🏆 {progressMap[topic.id].totalEarnedScore ?? 0} poin</span>
+                                                </div>
+                                                <span className="lt-card-cta lt-cta--continue">Lanjutkan ▶</span>
+                                            </>
+                                        ) : (
+                                            <span className="lt-card-cta lt-cta--start">Mulai ✨</span>
+                                        )}
+                                    </div>
                                 </div>
-                                <span className="lt-topic-arrow">›</span>
-                            </div>
-                        ))}
+                            )
+                        })}
                     </div>
                 )}
             </div>

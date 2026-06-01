@@ -25,8 +25,9 @@ export function setOnAuthExpired(fn) {
 // ── Shared fetch wrapper ──────────────────────────────────────────
 export async function apiFetch(path, options = {}) {
     const token = localStorage.getItem('token')
+    const isFormData = options.body instanceof FormData
     const headers = {
-        'Content-Type': 'application/json',
+        ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...options.headers,
     }
