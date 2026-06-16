@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react'
-import { Search, X, Eye, Pencil, Trash2, UserPlus } from 'lucide-react'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { Search, X, Eye, Pencil, Trash2, UserPlus, Camera, User, Users } from 'lucide-react'
 import AdminLayout from '../../components/layout/AdminLayout'
 import AvatarImg from '../../components/common/AvatarImg'
 import Modal from '../../components/common/Modal'
@@ -8,7 +8,7 @@ import '../../pages/admin/DashboardPage.css'
 import './DaftarSiswaPage.css'
 import { apiFetch } from '../../utils/apiFetch'
 
-const emptyForm = { name: '', group: '', totalPoints: '' }
+const emptyForm = { name: '', group: '' }
 
 const RANK_LABELS = {
     BEGINNER: 'Pemula',
@@ -26,6 +26,7 @@ function DaftarSiswaPage() {
     const [form, setForm] = useState(emptyForm)
     const [avatarFile, setAvatarFile] = useState(null)
     const [avatarPreview, setAvatarPreview] = useState(null)
+    const avatarInputRef = useRef(null)
     const [editId, setEditId] = useState(null)
     const [showModal, setShowModal] = useState(false)
     const [detailSiswa, setDetailSiswa] = useState(null)
@@ -38,7 +39,7 @@ function DaftarSiswaPage() {
         setFetchError('')
         try {
             const data = await apiFetch('/students')
-            setSiswaList(Array.isArray(data) ? data : (data.data ?? []))
+            setSiswaList(Array.isArray(data) ? data : (data?.data ?? []))
         } catch (err) {
             setFetchError(err.message)
         } finally {
@@ -66,10 +67,9 @@ function DaftarSiswaPage() {
         setForm({
             name: siswa.name ?? '',
             group: siswa.group ?? '',
-            totalPoints: siswa.totalPoints ?? '',
         })
         setAvatarFile(null)
-        setAvatarPreview(siswa.avatar ? `${BASE_URL}/uploads/${siswa.avatar}` : null)
+        setAvatarPreview(siswa.avatar ?? null)
         setEditId(siswa.id)
         setError('')
         setShowModal(true)
@@ -98,10 +98,9 @@ function DaftarSiswaPage() {
             const fd = new FormData()
             fd.append('name', form.name)
             fd.append('group', form.group)
-            fd.append('totalPoints', form.totalPoints)
             if (avatarFile) fd.append('avatar', avatarFile)
 
-            if (editId !== null) {
+            if (editId) {
                 await apiFetch(`/students/${editId}`, { method: 'PUT', body: fd })
             } else {
                 await apiFetch('/students', { method: 'POST', body: fd })
@@ -125,6 +124,13 @@ function DaftarSiswaPage() {
             setDeleteId(null)
         }
     }
+
+    const isEditing = editId !== null
+    const modalTitle = isEditing ? 'Edit Data Siswa' : 'Tambah Siswa Baru'
+    let saveLabel = 'Tambah Siswa'
+    if (saving) { saveLabel = 'Menyimpan...' }
+    else if (isEditing) { saveLabel = 'Simpan Perubahan' }
+    const hintLabel = avatarPreview ? 'mengubah' : 'menambahkan'
 
     return (
         <AdminLayout activePath="/admin/siswa">
@@ -213,54 +219,67 @@ function DaftarSiswaPage() {
             {/* Modal Tambah / Edit */}
             {showModal && (
                 <Modal
-                    title={editId !== null ? 'Edit Siswa' : 'Tambah Siswa'}
+                    title={modalTitle}
                     onClose={() => setShowModal(false)}
                 >
                     {error && <p className="modal-error">{error}</p>}
 
-                    <div className="form-group">
-                        <label>Nama</label>
+                    {/* Avatar upload */}
+                    <div className="siswa-avatar-upload">
+                        <button
+                            type="button"
+                            className="avatar-upload-trigger"
+                            onClick={() => avatarInputRef.current?.click()}
+                            title="Klik untuk ubah foto"
+                        >
+                            {avatarPreview
+                                ? <AvatarImg avatar={avatarPreview} name={form.name || '?'} size="lg" />
+                                : <div className="avatar-upload-empty">
+                                    <Camera size={22} />
+                                    <span>Upload Foto</span>
+                                </div>
+                            }
+                            <div className="avatar-upload-overlay">
+                                <Camera size={16} />
+                            </div>
+                        </button>
+                        <p className="avatar-upload-hint">Klik untuk {hintLabel} foto profil</p>
                         <input
-                            name="name"
-                            value={form.name}
-                            onChange={handleChange}
-                            placeholder="contoh: Tesa"
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Kelompok</label>
-                        <input
-                            name="group"
-                            value={form.group}
-                            onChange={handleChange}
-                            placeholder="contoh: TK A"
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Total Poin</label>
-                        <input
-                            name="totalPoints"
-                            type="number"
-                            value={form.totalPoints}
-                            onChange={handleChange}
-                            placeholder="contoh: 100"
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Avatar</label>
-                        {avatarPreview && (
-                            <AvatarImg
-                                avatar={avatarPreview}
-                                name={form.name || '?'}
-                                size="md"
-                            />
-                        )}
-                        <input
+                            ref={avatarInputRef}
                             type="file"
                             accept="image/*"
                             onChange={handleAvatarChange}
-                            className="input-file"
+                            style={{ display: 'none' }}
                         />
+                    </div>
+
+                    {/* Fields */}
+                    <div className="siswa-form-fields">
+                        <div className="form-group">
+                            <label>
+                                <User size={13} className="field-icon" />
+                                Nama Siswa
+                            </label>
+                            <input
+                                name="name"
+                                value={form.name}
+                                onChange={handleChange}
+                                placeholder="Masukkan nama lengkap siswa"
+                                autoFocus
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>
+                                <Users size={13} className="field-icon" />
+                                Kelompok
+                            </label>
+                            <input
+                                name="group"
+                                value={form.group}
+                                onChange={handleChange}
+                                placeholder="contoh: TK A"
+                            />
+                        </div>
                     </div>
 
                     <div className="modal-actions">
@@ -268,7 +287,7 @@ function DaftarSiswaPage() {
                             Batal
                         </button>
                         <button className="btn-primary" onClick={handleSave} disabled={saving}>
-                            {saving ? 'Menyimpan...' : 'Simpan'}
+                            {saveLabel}
                         </button>
                     </div>
                 </Modal>

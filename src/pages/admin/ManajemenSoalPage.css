@@ -2,6 +2,682 @@
    (common buttons/modals/form-group live in components/common.css)
    (card grid / topic-icon classes come from ManajemenTemaPage.css)    */
 
+/* ════════════════════════════════════════════════════════════════
+   SoalByTemaPage — calendar + question groups two-column layout
+   ════════════════════════════════════════════════════════════════ */
+
+.tema-cal-layout {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 16px;
+    align-items: start;
+}
+
+@media (max-width: 860px) {
+    .tema-cal-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* calendar panel max width on wide screens */
+.tema-cal-panel {
+    min-width: 0;
+}
+
+/* date with questions — orange glow dot */
+.dp-cal-cell--has-data {
+    border-color: #f97316 !important;
+}
+
+.dp-cal-has-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #f97316;
+    flex-shrink: 0;
+}
+
+/* ── Question Groups Panel ───────────────────────────────────── */
+.tema-groups-panel {
+    display: flex;
+    flex-direction: column;
+}
+
+.groups-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 420px;
+    overflow-y: auto;
+    padding-right: 2px;
+    scrollbar-width: thin;
+}
+
+.group-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--gbg, #f9fafb);
+    border: 1.5px solid transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    transition: border-color 0.14s, transform 0.12s, box-shadow 0.14s;
+}
+
+.group-item:hover {
+    border-color: var(--gcolor, #0f3460);
+    transform: translateX(3px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.group-item:focus-visible {
+    outline: 3px solid var(--gcolor, #4f86c6);
+    outline-offset: 2px;
+}
+
+.group-item-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--gcolor, #9ca3af);
+    flex-shrink: 0;
+}
+
+.group-item-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.group-item-date {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gcolor, #1a1a2e);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.group-item-count {
+    font-size: 11px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.group-item-arrow {
+    color: var(--gcolor, #9ca3af);
+    flex-shrink: 0;
+    opacity: 0.5;
+    transition: opacity 0.14s;
+}
+
+.group-item:hover .group-item-arrow {
+    opacity: 1;
+}
+
+/* skeleton loaders */
+.groups-loading {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.groups-skeleton {
+    height: 48px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+    background-size: 200% 100%;
+    animation: soal-shimmer 1.4s infinite linear;
+}
+
+/* empty state */
+.groups-empty {
+    text-align: center;
+    padding: 28px 16px;
+    color: #9ca3af;
+}
+
+.groups-empty-icon {
+    font-size: 36px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.groups-empty p {
+    font-size: 14px;
+    margin: 0;
+}
+
+.groups-add-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   Flow Selection — step indicator + year / month / day cards
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Step indicator ─────────────────────────────────────────── */
+.flow-steps {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+    padding: 10px 16px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 13px;
+}
+
+.flow-step {
+    color: #94a3b8;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.flow-step--active {
+    color: #0f3460;
+    background: #e0e7ff;
+    font-weight: 700;
+}
+
+.flow-step--done {
+    color: #16a34a;
+    font-weight: 600;
+}
+
+.flow-step-sep {
+    color: #cbd5e1;
+    font-size: 16px;
+    font-weight: 300;
+}
+
+/* ── Year selection grid ────────────────────────────────────── */
+.flow-selection-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 8px;
+}
+
+.flow-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #fff;
+    border: 2px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 20px 24px;
+    cursor: pointer;
+    transition: border-color 0.18s, box-shadow 0.18s, transform 0.12s;
+    min-width: 200px;
+    flex: 1;
+    max-width: 280px;
+    position: relative;
+    user-select: none;
+}
+
+.flow-card:hover {
+    border-color: #0f3460;
+    box-shadow: 0 4px 16px rgba(15, 52, 96, 0.12);
+    transform: translateY(-2px);
+}
+
+.flow-card:focus-visible {
+    outline: 3px solid #4f86c6;
+    outline-offset: 2px;
+}
+
+.flow-card--active {
+    border-color: #0f3460;
+    background: #f0f4ff;
+}
+
+.flow-card-icon {
+    font-size: 28px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.flow-card-label {
+    font-size: 22px;
+    font-weight: 800;
+    color: #1a1a2e;
+    flex: 1;
+}
+
+.flow-card-badge {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    background: #0f3460;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+}
+
+.flow-card-arrow {
+    color: #9ca3af;
+    flex-shrink: 0;
+    transition: color 0.15s;
+}
+
+.flow-card:hover .flow-card-arrow {
+    color: #0f3460;
+}
+
+/* ── Month selection grid ───────────────────────────────────── */
+.flow-month-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 14px;
+    margin-top: 8px;
+}
+
+.flow-month-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: #fff;
+    border: 2px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 20px 16px;
+    cursor: pointer;
+    transition: border-color 0.18s, box-shadow 0.18s, transform 0.12s;
+    position: relative;
+    user-select: none;
+    text-align: center;
+}
+
+.flow-month-card:hover {
+    border-color: #0f3460;
+    box-shadow: 0 4px 16px rgba(15, 52, 96, 0.12);
+    transform: translateY(-2px);
+}
+
+.flow-month-card:focus-visible {
+    outline: 3px solid #4f86c6;
+    outline-offset: 2px;
+}
+
+.flow-month-card.flow-card--active {
+    border-color: #0f3460;
+    background: #f0f4ff;
+}
+
+.flow-month-num {
+    font-size: 28px;
+    font-weight: 800;
+    color: #0f3460;
+    line-height: 1;
+}
+
+.flow-month-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+}
+
+/* ── Day selection grid ─────────────────────────────────────── */
+.flow-day-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 8px;
+    max-width: 480px;
+}
+
+.flow-day-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #fff;
+    border: 2px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 18px 20px;
+    cursor: pointer;
+    transition: border-color 0.18s, box-shadow 0.18s, transform 0.12s;
+    user-select: none;
+}
+
+.flow-day-card:hover {
+    border-color: #0f3460;
+    box-shadow: 0 4px 16px rgba(15, 52, 96, 0.12);
+    transform: translateX(4px);
+}
+
+.flow-day-card:focus-visible {
+    outline: 3px solid #4f86c6;
+    outline-offset: 2px;
+}
+
+.flow-day-emoji {
+    font-size: 22px;
+    flex-shrink: 0;
+}
+
+.flow-day-label {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1a1a2e;
+    flex: 1;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   Date Picker — layout, panels, month selector, calendar grid
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Two-column layout ───────────────────────────────────────── */
+.dp-layout {
+    display: grid;
+    grid-template-columns: 210px 1fr;
+    gap: 16px;
+    align-items: start;
+    margin-top: 4px;
+}
+
+@media (max-width: 780px) {
+    .dp-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ── Panel shell ─────────────────────────────────────────────── */
+.dp-panel {
+    background: #fff;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 18px 18px 14px;
+}
+
+.dp-panel-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1.5px solid #f3f4f6;
+}
+
+.dp-panel-icon {
+    font-size: 17px;
+    line-height: 1;
+}
+
+.dp-panel-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #374151;
+    flex: 1;
+}
+
+.dp-cal-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #0f3460;
+    text-align: center;
+}
+
+/* ── Month grid (3 cols) ─────────────────────────────────────── */
+.dp-month-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+}
+
+.dp-month-btn {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    padding: 8px 4px;
+    background: #f9fafb;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.14s;
+    user-select: none;
+}
+
+.dp-month-btn:hover {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+}
+
+.dp-month-btn:focus-visible {
+    outline: 3px solid #4f86c6;
+    outline-offset: 2px;
+}
+
+.dp-month-btn--sel {
+    background: #0f3460 !important;
+    border-color: #0f3460 !important;
+}
+
+.dp-month-btn--sel .dp-month-num,
+.dp-month-btn--sel .dp-month-name {
+    color: #fff !important;
+}
+
+.dp-month-btn--cur:not(.dp-month-btn--sel) {
+    border-color: #0f3460;
+    background: #f0f4ff;
+}
+
+.dp-month-num {
+    font-size: 15px;
+    font-weight: 800;
+    color: #0f3460;
+    line-height: 1;
+}
+
+.dp-month-name {
+    font-size: 9px;
+    font-weight: 600;
+    color: #6b7280;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+/* green dot = current month */
+.dp-cur-dot {
+    position: absolute;
+    top: 4px;
+    right: 5px;
+    width: 5px;
+    height: 5px;
+    background: #22c55e;
+    border-radius: 50%;
+}
+
+/* ── Calendar nav (prev/next arrows) ────────────────────────── */
+.dp-cal-nav {
+    justify-content: space-between;
+}
+
+.dp-nav-btn {
+    background: none;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 7px;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #374151;
+    padding: 0;
+    line-height: 1;
+    transition: all 0.14s;
+    flex-shrink: 0;
+}
+
+.dp-nav-btn:hover:not(:disabled) {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+.dp-nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* ── Legend ──────────────────────────────────────────────────── */
+.dp-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 12px;
+}
+
+.dp-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--bg, #f3f4f6);
+    color: var(--c, #6b7280);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1.5px solid var(--c, #d1d5db);
+}
+
+.dp-legend-item::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--c, #9ca3af);
+}
+
+.dp-legend-wknd {
+    --c: #d1d5db;
+    --bg: #f9fafb;
+    color: #9ca3af;
+}
+
+/* ── Calendar grid ───────────────────────────────────────────── */
+.dp-calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 10px;
+}
+
+/* day-name header row */
+.dp-cal-header {
+    text-align: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: #6b7280;
+    padding: 6px 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.dp-cal-header--wknd {
+    color: #d1d5db;
+}
+
+/* empty filler cells */
+.dp-cal-empty {
+    min-height: 36px;
+}
+
+/* date cell */
+.dp-cal-cell {
+    aspect-ratio: 1 / 1;
+    min-height: 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    border-radius: 9px;
+    border: 2px solid transparent;
+    background: var(--day-bg, #f3f4f6);
+    cursor: pointer;
+    transition: transform 0.12s, border-color 0.12s, box-shadow 0.12s;
+    padding: 0;
+    position: relative;
+}
+
+.dp-cal-cell:hover:not(:disabled) {
+    border-color: var(--day-color, #0f3460);
+    transform: scale(1.12);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.14);
+    z-index: 2;
+}
+
+.dp-cal-cell:focus-visible {
+    outline: 3px solid var(--day-color, #4f86c6);
+    outline-offset: 1px;
+}
+
+.dp-cal-num {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--day-color, #374151);
+    line-height: 1;
+}
+
+/* small colored dot below the number */
+.dp-cal-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--day-color, #9ca3af);
+    opacity: 0.7;
+}
+
+/* weekend — gray, not clickable */
+.dp-cal-cell--wknd {
+    background: transparent;
+    cursor: not-allowed;
+}
+
+.dp-cal-cell--wknd .dp-cal-num {
+    color: #e2e8f0;
+    font-weight: 400;
+}
+
+/* today — ring around cell */
+.dp-cal-cell--today:not(.dp-cal-cell--wknd) {
+    box-shadow: 0 0 0 2.5px var(--day-color, #0f3460), 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* hint text */
+.dp-hint {
+    font-size: 11.5px;
+    color: #9ca3af;
+    text-align: center;
+    line-height: 1.5;
+    margin-top: 2px;
+}
+
 /* ── Option media cell (table) ───────────────────────────────── */
 
 .opsi-media-cell {
@@ -364,6 +1040,108 @@
 
 /* ── Form select ─────────────────────────────────────────────── */
 
+/* ── Add/Edit question modal — type selector ─────────────────── */
+.qtype-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.qtype-option {
+    padding: 6px 14px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    background: #f9fafb;
+    color: #374151;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.1s;
+}
+
+.qtype-option:hover {
+    border-color: #9ca3af;
+    background: #f3f4f6;
+}
+
+.qtype-option.selected {
+    font-weight: 700;
+}
+
+/* ── Required / optional field labels ───────────────────────── */
+.field-required {
+    color: #dc2626;
+    font-weight: 700;
+    margin-left: 2px;
+}
+
+.field-optional {
+    font-size: 11px;
+    font-weight: 400;
+    color: #9ca3af;
+    margin-left: 4px;
+}
+
+/* ── Media fields side by side ───────────────────────────────── */
+.soal-media-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    background: #f8fafc;
+    border: 1.5px dashed #d1d5db;
+    border-radius: 12px;
+    padding: 14px;
+}
+
+@media (max-width: 480px) {
+    .soal-media-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+.soal-media-field {
+    min-width: 0;
+}
+
+/* Custom file upload button */
+.file-upload-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    background: #fff;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    width: fit-content;
+}
+
+.file-upload-btn:hover {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+/* ── Waktu + Poin side by side ───────────────────────────────── */
+.soal-meta-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    background: #f8fafc;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 14px;
+}
+
+@media (max-width: 480px) {
+    .soal-meta-row {
+        grid-template-columns: 1fr;
+    }
+}
+
 .form-select {
     padding: 9px 12px;
     border: 1.5px solid #d1d5db;
@@ -377,6 +1155,31 @@
 }
 
 .form-select:focus {
+    border-color: #0f3460;
+    box-shadow: 0 0 0 3px rgba(15, 52, 96, 0.1);
+    background: #fff;
+}
+
+/* ── Textarea ────────────────────────────────────────────────── */
+.form-textarea {
+    padding: 9px 12px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #374151;
+    background: #fafafa;
+    outline: none;
+    resize: vertical;
+    font-family: inherit;
+    line-height: 1.5;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-textarea::placeholder {
+    color: #9ca3af;
+}
+
+.form-textarea:focus {
     border-color: #0f3460;
     box-shadow: 0 0 0 3px rgba(15, 52, 96, 0.1);
     background: #fff;
@@ -657,6 +1460,735 @@
     border: 1.5px solid #d1fae5;
 }
 
+/* ── QUIZ options — card-style answer list ───────────────────── */
+
+.quiz-opts-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.quiz-opts-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.opsi-count-badge {
+    display: inline-block;
+    background: #e0e7ff;
+    color: #3730a3;
+    border-radius: 999px;
+    padding: 1px 10px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.quiz-opts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.quiz-opt-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: #fff;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    min-height: 48px;
+}
+
+.quiz-opt-item:hover:not(.quiz-opt-item--editing) {
+    border-color: #d1d5db;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+}
+
+.quiz-opt-item--correct {
+    border-color: #86efac;
+    background: #f0fdf4;
+}
+
+.quiz-opt-item--correct:hover:not(.quiz-opt-item--editing) {
+    border-color: #4ade80;
+}
+
+.quiz-opt-item--editing {
+    border-color: #93c5fd !important;
+    background: #eff6ff !important;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Letter badge: A, B, C, D… */
+.quiz-opt-letter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: #f3f4f6;
+    color: #374151;
+    font-size: 13px;
+    font-weight: 800;
+    flex-shrink: 0;
+    border: 1.5px solid #e5e7eb;
+}
+
+.quiz-opt-item--correct .quiz-opt-letter {
+    background: #dcfce7;
+    color: #166534;
+    border-color: #86efac;
+}
+
+.quiz-opt-letter--add {
+    background: #f0f9ff;
+    color: #0369a1;
+    border-color: #bae6fd;
+    border-style: dashed;
+}
+
+/* Option text */
+.quiz-opt-text {
+    flex: 1;
+    font-size: 14px;
+    color: #1a1a2e;
+    font-weight: 500;
+    line-height: 1.4;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.quiz-opt-item--correct .quiz-opt-text {
+    color: #166534;
+    font-weight: 600;
+}
+
+/* Correct badge */
+.quiz-correct-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #dcfce7;
+    color: #15803d;
+    border: 1px solid #86efac;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 9px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* Media indicator */
+.quiz-has-media {
+    font-size: 14px;
+    flex-shrink: 0;
+    opacity: 0.7;
+}
+
+/* Edit / delete icons on each card */
+.quiz-opt-actions {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* Inline edit body (inside a card) */
+.quiz-opt-edit-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.quiz-opt-edit-input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1.5px solid #93c5fd;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #1a1a2e;
+    background: #fff;
+    outline: none;
+    transition: border-color 0.2s;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.quiz-opt-edit-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.quiz-opt-edit-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+/* Correct-answer checkbox inside card / add row */
+.quiz-correct-check {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #374151;
+    cursor: pointer;
+    user-select: none;
+    flex-shrink: 0;
+}
+
+.quiz-correct-check input[type='checkbox'] {
+    width: 15px;
+    height: 15px;
+    accent-color: #16a34a;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+/* Add-option row at the bottom of the list */
+.quiz-add-opt-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #f8fafc;
+    border: 1.5px dashed #d1d5db;
+    border-radius: 10px;
+    flex-wrap: wrap;
+}
+
+.quiz-add-opt-input {
+    flex: 1;
+    min-width: 140px;
+    padding: 8px 10px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #374151;
+    background: #fff;
+    outline: none;
+    transition: border-color 0.2s;
+    font-family: inherit;
+}
+
+.quiz-add-opt-input:focus {
+    border-color: #0f3460;
+    box-shadow: 0 0 0 3px rgba(15, 52, 96, 0.1);
+}
+
+.quiz-add-opt-input::placeholder {
+    color: #9ca3af;
+}
+
+.quiz-add-opt-btn {
+    white-space: nowrap;
+    font-size: 13px !important;
+    padding: 7px 14px !important;
+}
+
+/* ── Saved image thumbnail on quiz option card ───────────────── */
+.quiz-opt-saved-img {
+    width: 52px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 7px;
+    border: 1.5px solid #d1d5db;
+    flex-shrink: 0;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.quiz-opt-saved-img:hover {
+    transform: scale(1.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+
+.quiz-opt-item--correct .quiz-opt-saved-img {
+    border-color: #86efac;
+}
+
+.quiz-opt-saved-audio {
+    height: 30px;
+    max-width: 160px;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+/* ── Media preview block in edit body and add row ────────────── */
+.quiz-media-preview-block {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    background: #f8fafc;
+    border: 1.5px dashed #d1d5db;
+    border-radius: 10px;
+    flex-wrap: wrap;
+}
+
+.quiz-media-preview-img {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1.5px solid #d1d5db;
+    display: block;
+    flex-shrink: 0;
+}
+
+/* ── Media preview below the add row ────────────────────────── */
+.quiz-add-media-preview {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px 8px 48px;
+    background: #f8fafc;
+    border: 1.5px dashed #d1d5db;
+    border-radius: 10px;
+    flex-wrap: wrap;
+}
+
+.quiz-add-media-preview .quiz-media-preview-img {
+    width: 72px;
+    height: 52px;
+}
+
+/* Small variant of file upload button */
+.file-upload-btn--sm {
+    padding: 5px 10px !important;
+    font-size: 12px !important;
+}
+
+/* ── MATCH / DRAG_AND_DROP — two-step guided UI ─────────────── */
+
+.match-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.match-step {
+    background: #fff;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.match-step-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.match-step-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    border-radius: 50%;
+    background: #0f3460;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 800;
+    margin-top: 1px;
+}
+
+.match-step-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.match-step-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0 0 3px;
+}
+
+.match-step-desc {
+    font-size: 12px;
+    color: #6b7280;
+    margin: 0;
+    line-height: 1.45;
+}
+
+/* ── Two-column item board ───────────────────────────────────── */
+
+.match-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+@media (max-width: 520px) {
+    .match-columns {
+        grid-template-columns: 1fr;
+    }
+}
+
+.match-col {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+
+.match-col-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+
+.match-col-header--left {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 1.5px solid #bfdbfe;
+}
+
+.match-col-header--right {
+    background: #f0fdf4;
+    color: #166534;
+    border: 1.5px solid #86efac;
+}
+
+.match-col-count {
+    background: rgba(255, 255, 255, 0.65);
+    padding: 1px 7px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    backdrop-filter: none;
+}
+
+.match-col-empty {
+    font-size: 12px;
+    color: #9ca3af;
+    text-align: center;
+    padding: 10px 8px;
+    background: #f9fafb;
+    border: 1.5px dashed #e5e7eb;
+    border-radius: 8px;
+    margin: 0;
+}
+
+/* Item cards inside columns */
+.match-item-card {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 9px;
+    border-radius: 8px;
+    border: 1.5px solid transparent;
+    min-height: 38px;
+    transition: box-shadow 0.15s, border-color 0.15s;
+}
+
+.match-item-card--left {
+    background: #f0f9ff;
+    border-color: #bae6fd;
+}
+
+.match-item-card--left:hover {
+    border-color: #7dd3fc;
+    box-shadow: 0 2px 6px rgba(59, 130, 246, 0.1);
+}
+
+.match-item-card--right {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+}
+
+.match-item-card--right:hover {
+    border-color: #4ade80;
+    box-shadow: 0 2px 6px rgba(34, 197, 94, 0.1);
+}
+
+.match-item-card--editing {
+    border-color: #fbbf24 !important;
+    background: #fffbeb !important;
+}
+
+.match-item-thumb {
+    width: 32px;
+    height: 28px;
+    object-fit: cover;
+    border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+}
+
+.match-item-text {
+    flex: 1;
+    font-size: 13px;
+    color: #1a1a2e;
+    font-weight: 500;
+    line-height: 1.3;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.match-item-actions {
+    display: flex;
+    gap: 2px;
+    flex-shrink: 0;
+}
+
+/* ── Add / edit form inside step 1 ──────────────────────────── */
+
+.match-item-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: #f8fafc;
+    border: 1.5px dashed #d1d5db;
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.match-side-toggle {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.match-side-btn {
+    flex: 1;
+    padding: 7px 10px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+    min-width: 0;
+}
+
+.match-side-btn:hover {
+    border-color: #9ca3af;
+    color: #374151;
+    background: #f3f4f6;
+}
+
+.match-side-btn--left.active {
+    background: #eff6ff;
+    border-color: #3b82f6;
+    color: #1d4ed8;
+}
+
+.match-side-btn--right.active {
+    background: #f0fdf4;
+    border-color: #22c55e;
+    color: #166534;
+}
+
+.match-add-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.match-add-input {
+    flex: 1;
+    min-width: 120px;
+    padding: 8px 10px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #374151;
+    background: #fff;
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.2s;
+}
+
+.match-add-input:focus {
+    border-color: #0f3460;
+    box-shadow: 0 0 0 3px rgba(15, 52, 96, 0.1);
+}
+
+.match-add-input::placeholder {
+    color: #9ca3af;
+}
+
+.match-add-input:disabled {
+    background: #f3f4f6;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.match-edit-hint {
+    font-size: 12px;
+    color: #92400e;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 6px;
+    padding: 5px 10px;
+    margin: 0;
+}
+
+.match-hint-text {
+    font-size: 12px;
+    color: #6b7280;
+    font-style: italic;
+    margin: 0;
+}
+
+.file-upload-btn--disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* ── Pair form (step 2) ──────────────────────────────────────── */
+
+.match-pair-form {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.match-pair-select {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 120px;
+}
+
+.match-pair-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.match-pair-label--left {
+    color: #1d4ed8;
+}
+
+.match-pair-label--right {
+    color: #166534;
+}
+
+.match-arrow-connector {
+    font-size: 20px;
+    color: #9ca3af;
+    font-weight: 700;
+    flex-shrink: 0;
+    padding-bottom: 6px;
+    align-self: flex-end;
+}
+
+.match-pair-btn {
+    white-space: nowrap;
+    flex-shrink: 0;
+    align-self: flex-end;
+}
+
+/* ── Saved pair cards ────────────────────────────────────────── */
+
+.match-pairs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.match-pair-card {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #fff;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 9px;
+    min-height: 40px;
+    transition: border-color 0.15s;
+}
+
+.match-pair-card:hover {
+    border-color: #d1d5db;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.match-pair-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    border-radius: 50%;
+    background: #f3f4f6;
+    color: #6b7280;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.match-pair-left {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1d4ed8;
+    background: #eff6ff;
+    padding: 3px 9px;
+    border-radius: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}
+
+.match-pair-arrow {
+    font-size: 16px;
+    color: #9ca3af;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.match-pair-right {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 600;
+    color: #166534;
+    background: #f0fdf4;
+    padding: 3px 9px;
+    border-radius: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}
+
+/* ── MATCH / DRAG_AND_DROP — two-step guided UI end ─────────── */
+
 /* ── Responsive breakpoints ──────────────────────────────────── */
 
 @media (max-width: 900px) {
@@ -758,4 +2290,886 @@
     font-size: 12px;
     color: #9ca3af;
     margin-top: 3px;
+}
+
+/* ── Week Tabs ─ bottom-border style ── */
+.week-tabs-bar {
+    border-bottom: 2px solid #e5e7eb;
+    margin-bottom: 0;
+}
+
+.week-tabs {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex-wrap: wrap;
+}
+
+.week-tab {
+    padding: 8px 16px;
+    border: none;
+    background: none;
+    color: #6b7280;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+}
+
+.week-tab:hover {
+    color: #374151;
+    border-bottom-color: #d1d5db;
+}
+
+.week-tab.active {
+    color: #0f3460;
+    border-bottom-color: #0f3460;
+    font-weight: 600;
+}
+
+.week-tab-add {
+    color: #0f3460;
+}
+
+.week-tab-add:hover {
+    background: #eff6ff;
+    border-radius: 6px 6px 0 0;
+}
+
+/* ── Day Tabs ─ pill style ── */
+.day-tabs-bar {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-top: 8px;
+    margin-bottom: 16px;
+}
+
+.day-tabs {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.day-tab {
+    padding: 6px 14px;
+    border: 1.5px solid transparent;
+    background: white;
+    color: #6b7280;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    transition: all 0.15s;
+}
+
+.day-tab:hover {
+    border-color: #d1d5db;
+    color: #374151;
+}
+
+.day-tab.active {
+    background: #0f3460;
+    color: white;
+    border-color: #0f3460;
+}
+
+.day-tab.active .tab-delete {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.day-tab.active .tab-delete:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.day-tab-add {
+    color: #0f3460;
+    border-color: #bfdbfe;
+}
+
+.day-tab-add:hover {
+    background: #eff6ff;
+    border-color: #0f3460;
+}
+
+/* ── Delete × inside tabs ── */
+.tab-delete {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    color: #9ca3af;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+
+.tab-delete:hover {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+/* ── Questions panel sub-header ── */
+.soal-panel-subheader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    margin-top: 12px;
+}
+
+.soal-panel-day-label {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0f3460;
+    margin-right: 8px;
+}
+
+.tabs-loading {
+    font-size: 0.8125rem;
+    color: #9ca3af;
+    padding: 6px 0;
+}
+
+/* ════════════════════════════════════════════════
+   Drag & Drop — Admin Kelola Opsi UI
+════════════════════════════════════════════════ */
+
+/* Info banner */
+.dnd-admin-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    background: #eff6ff;
+    border: 1.5px solid #bfdbfe;
+    border-radius: 10px;
+    padding: 0.65rem 0.9rem;
+    margin-bottom: 14px;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: #1e40af;
+}
+
+.dnd-note-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.dnd-note-body {
+    flex: 1;
+}
+
+/* Inline badges inside the note and relations table */
+.dnd-badge-zone {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    background: #dbeafe;
+    color: #1d4ed8;
+    border: 1.5px solid #bfdbfe;
+    border-radius: 6px;
+    padding: 1px 8px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.dnd-badge-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    background: #fef3c7;
+    color: #92400e;
+    border: 1.5px solid #fcd34d;
+    border-radius: 6px;
+    padding: 1px 8px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Two-column options layout */
+.dnd-opts-section {
+    margin-bottom: 4px;
+}
+
+.dnd-opts-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+@media (max-width: 600px) {
+    .dnd-opts-cols {
+        grid-template-columns: 1fr;
+    }
+}
+
+.dnd-opts-col {
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.dnd-opts-col-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 12px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+}
+
+.dnd-col-zone {
+    background: #dbeafe;
+    color: #1d4ed8;
+    border-bottom: 1.5px solid #bfdbfe;
+}
+
+.dnd-col-item {
+    background: #fef3c7;
+    color: #92400e;
+    border-bottom: 1.5px solid #fcd34d;
+}
+
+.dnd-opts-count {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    padding: 1px 8px;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+/* Option rows */
+.dnd-opt-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 0.83rem;
+    transition: background 0.15s;
+}
+
+.dnd-opt-row:last-child {
+    border-bottom: none;
+}
+
+.dnd-opt-row:hover {
+    background: #f8fafc;
+}
+
+.dnd-opt-row.row-editing {
+    background: #fef9c3;
+}
+
+.dnd-opt-row--zone .dnd-opt-num {
+    color: #1d4ed8;
+}
+
+.dnd-opt-row--item .dnd-opt-num {
+    color: #92400e;
+}
+
+.dnd-opt-num {
+    font-size: 0.72rem;
+    font-weight: 700;
+    min-width: 18px;
+    flex-shrink: 0;
+}
+
+.dnd-opt-body {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    overflow: hidden;
+}
+
+.dnd-opt-text {
+    font-size: 0.83rem;
+    color: #111827;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dnd-empty {
+    padding: 12px 12px 14px;
+    text-align: left;
+    font-size: 0.8rem;
+}
+
+.dnd-empty small {
+    color: #9ca3af;
+    font-size: 0.72rem;
+    display: block;
+    margin-top: 2px;
+}
+
+/* Hint in form */
+.dnd-tipe-hint {
+    display: block;
+    margin-top: 4px;
+    color: #6b7280;
+}
+
+/* Relation section hint */
+.dnd-rel-hint {
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin: -4px 0 8px;
+    font-style: italic;
+}
+
+/* tipe-chip colors */
+.tipe-chip.tipe-pertanyaan {
+    background: #dbeafe;
+    color: #1d4ed8;
+    border-color: #bfdbfe;
+}
+
+.tipe-chip.tipe-jawaban {
+    background: #fef3c7;
+    color: #92400e;
+    border-color: #fcd34d;
+}
+
+/* ── SORTING — numbered order cards ─────────────────────────── */
+
+.sort-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.sort-section-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.sort-section-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.sort-empty-state {
+    text-align: center;
+    padding: 20px 16px;
+    background: #f9fafb;
+    border: 1.5px dashed #e5e7eb;
+    border-radius: 12px;
+}
+
+.sort-empty-icon {
+    font-size: 28px;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.sort-empty-state p {
+    font-size: 13px;
+    color: #9ca3af;
+    margin: 0;
+}
+
+/* Ordered card list */
+.sort-ordered-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.sort-item-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: #fff;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    min-height: 50px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.sort-item-card:hover:not(.sort-item-card--editing) {
+    border-color: #d1d5db;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.sort-item-card--editing {
+    border-color: #fbbf24 !important;
+    background: #fffbeb !important;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Big position number badge */
+.sort-item-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: #f3f4f6;
+    border: 1.5px solid #e5e7eb;
+    color: #374151;
+    font-size: 16px;
+    font-weight: 800;
+    flex-shrink: 0;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.sort-item-card:not(.sort-item-card--editing):nth-child(1) .sort-item-num {
+    background: #fef9c3;
+    border-color: #fde047;
+    color: #854d0e;
+}
+
+.sort-item-card:not(.sort-item-card--editing):nth-child(2) .sort-item-num {
+    background: #f0f9ff;
+    border-color: #bae6fd;
+    color: #0369a1;
+}
+
+.sort-item-card:not(.sort-item-card--editing):nth-child(3) .sort-item-num {
+    background: #fef2f2;
+    border-color: #fca5a5;
+    color: #b91c1c;
+}
+
+.sort-item-body {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.sort-item-thumb {
+    width: 40px;
+    height: 32px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    flex-shrink: 0;
+}
+
+.sort-item-text {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1a1a2e;
+    line-height: 1.4;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Inline edit inside card */
+.sort-inline-edit {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.sort-edit-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.sort-order-field {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.sort-order-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    white-space: nowrap;
+}
+
+.sort-order-input {
+    width: 64px;
+    padding: 7px 8px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #374151;
+    text-align: center;
+    outline: none;
+    background: #fff;
+    transition: border-color 0.2s;
+}
+
+.sort-order-input:focus {
+    border-color: #0f3460;
+    box-shadow: 0 0 0 3px rgba(15, 52, 96, 0.1);
+}
+
+.sort-edit-preview {
+    width: 52px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1.5px solid #d1d5db;
+}
+
+.sort-edit-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+/* Add new item row */
+.sort-add-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: #f8fafc;
+    border: 1.5px dashed #d1d5db;
+    border-radius: 10px;
+    flex-wrap: wrap;
+}
+
+.sort-add-num-wrap {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0;
+}
+
+.sort-add-num-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    white-space: nowrap;
+}
+
+/* ── SORTING end ─────────────────────────────────────────────── */
+
+/* ── Reschedule / ubah tanggal ───────────────────────────────── */
+
+.reschedule-header-btn {
+    margin-left: 4px;
+    flex-shrink: 0;
+}
+
+.reschedule-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+}
+
+.reschedule-from-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #9ca3af;
+    letter-spacing: 0.4px;
+    white-space: nowrap;
+}
+
+.reschedule-from-date {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1a2e;
+}
+
+.reschedule-to-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 6px;
+}
+
+.reschedule-date-input {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #374151;
+    background: #fafafa;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    font-family: inherit;
+}
+
+.reschedule-date-input:focus {
+    border-color: #0f3460;
+    box-shadow: 0 0 0 3px rgba(15, 52, 96, 0.1);
+    background: #fff;
+}
+
+.reschedule-preview {
+    font-size: 13px;
+    font-weight: 600;
+    color: #166534;
+    background: #f0fdf4;
+    border: 1px solid #86efac;
+    border-radius: 6px;
+    padding: 4px 10px;
+    margin: 6px 0 0;
+    display: inline-block;
+}
+
+.reschedule-warn {
+    font-size: 13px;
+    color: #b45309;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 6px;
+    padding: 4px 10px;
+    margin: 6px 0 0;
+    display: inline-block;
+}
+
+.reschedule-note {
+    font-size: 13px;
+    color: #6b7280;
+    background: #f9fafb;
+    border-left: 3px solid #d1d5db;
+    padding: 6px 10px;
+    border-radius: 0 6px 6px 0;
+    margin: 4px 0 0;
+}
+
+/* Edit button on group item row */
+.group-item-edit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    border: 1.5px solid transparent;
+    background: transparent;
+    color: #9ca3af;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    padding: 0;
+}
+
+.group-item-edit-btn:hover {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #1d4ed8;
+}
+
+.group-item-del-btn:hover {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #dc2626;
+}
+
+/* ── Reschedule end ──────────────────────────────────────────── */
+
+/* -- Availability toggle button in group list -- */
+.group-item-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s, transform 0.15s;
+}
+
+.group-item-toggle-btn--on {
+    background: #dcfce7;
+    color: #15803d;
+    border-color: #86efac;
+}
+
+.group-item-toggle-btn--on:hover:not(:disabled) {
+    background: #bbf7d0;
+    transform: scale(1.04);
+}
+
+.group-item-toggle-btn--off {
+    background: #f3f4f6;
+    color: #6b7280;
+    border-color: #d1d5db;
+}
+
+.group-item-toggle-btn--off:hover:not(:disabled) {
+    background: #e0e7ff;
+    color: #4338ca;
+    border-color: #a5b4fc;
+    transform: scale(1.04);
+}
+
+.group-item-toggle-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.group-item-toggle-spinner {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Active badge inside group item */
+.group-item-avail-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    background: #dcfce7;
+    color: #15803d;
+    border: 1px solid #86efac;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    margin-left: 4px;
+}
+
+/* Locked group item row */
+.group-item--locked {
+    background: linear-gradient(to right, var(--gbg, #f9fafb), #f0fdf4);
+    border-left: 3px solid #22c55e;
+}
+
+/* -- Lock banner on SoalQuestionsPage -- */
+.soal-locked-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    background: #fefce8;
+    border: 1.5px solid #fde047;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #713f12;
+    margin-bottom: 16px;
+    line-height: 1.5;
+}
+
+.soal-locked-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #dcfce7;
+    color: #15803d;
+    border: 1.5px solid #86efac;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    margin-left: 6px;
+}
+
+/* -- Availability toggle button in header -- */
+.btn-avail-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    font-family: inherit;
+    transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+}
+
+.btn-avail-toggle--on {
+    background: #dcfce7;
+    color: #15803d;
+    border-color: #86efac;
+    box-shadow: 0 2px 0 #bbf7d0;
+}
+
+.btn-avail-toggle--on:hover:not(:disabled) {
+    background: #bbf7d0;
+    box-shadow: 0 4px 0 #86efac;
+    transform: translateY(-1px);
+}
+
+.btn-avail-toggle--off {
+    background: #f3f4f6;
+    color: #374151;
+    border-color: #d1d5db;
+    box-shadow: 0 2px 0 #d1d5db;
+}
+
+.btn-avail-toggle--off:hover:not(:disabled) {
+    background: #e0e7ff;
+    color: #3730a3;
+    border-color: #a5b4fc;
+    box-shadow: 0 4px 0 #a5b4fc;
+    transform: translateY(-1px);
+}
+
+.btn-avail-toggle:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* -- Lock notice in opsi modal -- */
+.opsi-locked-notice {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #fef9c3;
+    border: 1.5px solid #fde047;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: #713f12;
+    font-weight: 600;
+    margin-bottom: 12px;
 }

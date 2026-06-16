@@ -118,14 +118,14 @@ function ListTopicStudentPage() {
                                     key={topic.id}
                                     onClick={() => {
                                         if (isInactive) return
-                                        navigate(`/student/siswa/${studentId}/topics/${topic.id}/quiz`)
+                                        navigate(`/student/siswa/${studentId}/topics/${topic.id}/weeks`)
                                     }}
                                     role="button"
                                     tabIndex={0}
                                     aria-disabled={isInactive}
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter' && !isInactive)
-                                            navigate(`/student/siswa/${studentId}/topics/${topic.id}/quiz`)
+                                            navigate(`/student/siswa/${studentId}/topics/${topic.id}/weeks`)
                                     }}
                                 >
                                     <div className="lt-card-banner">

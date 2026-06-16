@@ -11,9 +11,173 @@ import PuzzleQuestion from '../../components/quiz/PuzzleQuestion'
 import TypeBadge from '../../components/quiz/TypeBadge'
 import './QuizStudentPage.css'
 
+// ── Answer Review (shown in feedback screen) ──────────────────────
+function AnswerReview({ question, feedback, reviewQuestion }) {
+    if (!question || !feedback) return null
+    const type = question.questionType
+    // Use reviewQuestion.options (has kunciJawaban/urutanBenar) when available
+    const opts = reviewQuestion?.options ?? question.options ?? []
+
+    if (type === 'QUIZ') {
+        const chosen = feedback.selectedOptionIds?.[0]
+        return (
+            <div className="answer-review">
+                <p className="answer-review__q">{question.contentInstruction}</p>
+                {question.contentImage && <img src={question.contentImage} alt="soal" className="answer-review__img" />}
+                <div className="ar-options">
+                    {opts.map((opt) => {
+                        const isChosen = opt.optionId === chosen
+                        const isCorrect = opt.kunciJawaban === true
+                        let cls = 'ar-option'
+                        if (isCorrect) cls += ' ar-option--correct'
+                        if (isChosen && !isCorrect) cls += ' ar-option--wrong'
+                        return (
+                            <div key={opt.optionId} className={cls}>
+                                {opt.mediaOpsi && <img src={opt.mediaOpsi} alt="" className="ar-option__img" />}
+                                <span className="ar-option__text">{opt.teksOpsi}</span>
+                                {isCorrect && <span className="ar-badge ar-badge--correct">✓ Jawaban Benar</span>}
+                                {isChosen && !isCorrect && <span className="ar-badge ar-badge--wrong">← Jawabanmu</span>}
+                                {isChosen && isCorrect && <span className="ar-badge ar-badge--chosen-correct">✓ Jawabanmu</span>}
+                            </div>
+                        )
+                    })}
+                </div>
+            </div>
+        )
+    }
+
+    if (type === 'SORTING') {
+        const sorted = [...opts].sort((a, b) => (a.urutanBenar ?? 999) - (b.urutanBenar ?? 999))
+        const studentOrder = feedback.orderedOptionIds ?? []
+        const optById = Object.fromEntries(opts.map((o) => [o.optionId, o]))
+        return (
+            <div className="answer-review">
+                <p className="answer-review__q">{question.contentInstruction}</p>
+                <p className="answer-review__label">Urutan yang benar:</p>
+                <ol className="ar-sort-list">
+                    {sorted.map((opt, i) => (
+                        <li key={opt.optionId} className="ar-sort-item ar-sort-item--correct">
+                            <span className="ar-sort-num">{i + 1}</span>
+                            {opt.mediaOpsi && <img src={opt.mediaOpsi} alt="" className="ar-option__img" />}
+                            <span>{opt.teksOpsi}</span>
+                        </li>
+                    ))}
+                </ol>
+                {!feedback.correct && studentOrder.length > 0 && (
+                    <>
+                        <p className="answer-review__label answer-review__label--wrong">Urutanmu:</p>
+                        <ol className="ar-sort-list">
+                            {studentOrder.map((id, i) => {
+                                const opt = optById[id]
+                                const expectedAt = sorted.findIndex((o) => o.optionId === id)
+                                const isOk = expectedAt === i
+                                return (
+                                    <li key={id} className={`ar-sort-item${isOk ? ' ar-sort-item--ok' : ' ar-sort-item--bad'}`}>
+                                        <span className="ar-sort-num">{i + 1}</span>
+                                        <span>{opt?.teksOpsi ?? `#${id}`}</span>
+                                    </li>
+                                )
+                            })}
+                        </ol>
+                    </>
+                )}
+            </div>
+        )
+    }
+
+    if (type === 'MATCH' || type === 'DRAG_AND_DROP') {
+        const optById = Object.fromEntries(opts.map((o) => [o.optionId, o]))
+        const studentPairs = feedback.matchingPairs ?? {}
+        // correctPairs: from server submit response OR from reviewQuestion
+        const rawCorrect = feedback.correctMatchingPairs ?? null
+        const reviewCorrect = reviewQuestion?.correctPairs ?? null
+        const correctPairsObj = rawCorrect ?? (
+            reviewCorrect
+                ? Object.fromEntries(reviewCorrect.map((p) => [p.opsiPertanyaanId, p.opsiJawabanId]))
+                : null
+        )
+        const renderPairs = (pairsObj, variant) => Object.entries(pairsObj).map(([pId, jVal]) => {
+            const p = optById[Number(pId)]
+            const jIds = Array.isArray(jVal) ? jVal : [jVal]
+            const jText = jIds.map((id) => optById[id]?.teksOpsi ?? `#${id}`).join(', ')
+            return (
+                <div key={pId} className={`ar-pair-row${variant === 'wrong' ? ' ar-pair-row--wrong' : variant === 'correct' ? ' ar-pair-row--correct' : ''}`}>
+                    <span className="ar-pair-cell ar-pair-cell--left">{p?.teksOpsi ?? `#${pId}`}</span>
+                    <span className="ar-pair-arrow">↔</span>
+                    <span className="ar-pair-cell ar-pair-cell--right">{jText}</span>
+                </div>
+            )
+        })
+        return (
+            <div className="answer-review">
+                <p className="answer-review__q">{question.contentInstruction}</p>
+                {Object.keys(studentPairs).length > 0 && (
+                    <>
+                        <p className={`answer-review__label${feedback.correct ? '' : ' answer-review__label--wrong'}`}>
+                            {feedback.correct ? '✓ Pasanganmu sudah benar:' : 'Pasangan yang kamu buat:'}
+                        </p>
+                        <div className="ar-pairs-list">{renderPairs(studentPairs, feedback.correct ? 'correct' : 'wrong')}</div>
+                    </>
+                )}
+                {(!feedback.correct || !Object.keys(studentPairs).length) && correctPairsObj && Object.keys(correctPairsObj).length > 0 && (
+                    <>
+                        <p className="answer-review__label">Pasangan yang benar:</p>
+                        <div className="ar-pairs-list">{renderPairs(correctPairsObj, 'correct')}</div>
+                    </>
+                )}
+            </div>
+        )
+    }
+
+    // PUZZLE: show correct arrangement from reviewQuestion (data is flat on the question object)
+    if (type === 'PUZZLE') {
+        // Fall back chain: reviewQuestion.puzzleAnswer → reviewQuestion (flat) → question.puzzleAnswer → question (flat)
+        const pzSource = reviewQuestion ?? question
+        const pzData = pzSource?.puzzleAnswer ?? pzSource
+        const imageUrl = pzData?.imageUrl
+        const gridCols = pzData?.gridCols
+        const rawPieces = pzData?.pieces
+        const hasPuzzleData = gridCols && Array.isArray(rawPieces) && rawPieces.length > 0
+
+        if (hasPuzzleData) {
+            // Sort by pieceIndex — that IS the correct position order
+            const sorted = [...rawPieces].sort((a, b) => (a.pieceIndex ?? 0) - (b.pieceIndex ?? 0))
+            return (
+                <div className="answer-review">
+                    <p className="answer-review__q">{question.contentInstruction}</p>
+                    {imageUrl && (
+                        <>
+                            <p className="answer-review__label">Gambar lengkap:</p>
+                            <img src={imageUrl} alt="Puzzle lengkap" className="answer-review__img" />
+                        </>
+                    )}
+                    <p className="answer-review__label">Susunan yang benar:</p>
+                    <div className="ar-puzzle-grid" style={{ '--ar-cols': gridCols }}>
+                        {sorted.map((piece, i) => (
+                            <div key={piece.id ?? piece.pieceId ?? i} className="ar-puzzle-cell">
+                                {piece.pieceImageUrl
+                                    ? <img src={piece.pieceImageUrl} alt={`Keping ${i + 1}`} className="ar-puzzle-piece" />
+                                    : <span className="ar-puzzle-empty">{i + 1}</span>}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )
+        }
+        return (
+            <div className="answer-review">
+                <p className="answer-review__q">{question.contentInstruction}</p>
+                {question.contentImage && <img src={question.contentImage} alt="soal" className="answer-review__img" />}
+            </div>
+        )
+    }
+
+    return null
+}
+
 // ── Main Page ─────────────────────────────────────────────────────
 function QuizStudentPage() {
-    const { studentId, topicId } = useParams()
+    const { studentId, topicId, learningDate, weekId, dayId } = useParams()
     const navigate = useNavigate()
 
     const [questions, setQuestions] = useState([])
@@ -42,20 +206,56 @@ function QuizStudentPage() {
     // { [questionId]: scorePoint } — fetched from admin endpoint
     const [scorePoints, setScorePoints] = useState({})
     const submitFnRef = useRef(null)
+    // { [questionId]: answer data } — pre-loaded from server so already-answered questions are view-only
+    const [answeredMap, setAnsweredMap] = useState({})
 
     // ── Fetch questions + time limits ─────────────────────────────
     const fetchData = useCallback(async () => {
         setLoading(true)
         setFetchError('')
         try {
-            const [topicData, questionData, adminQuestions] = await Promise.all([
+            const questionsUrl = learningDate
+                ? `/quiz/topics/${topicId}/date/${learningDate}/questions`
+                : dayId
+                    ? `/quiz/days/${dayId}/questions`
+                    : `/quiz/topics/${topicId}/questions`
+            const adminUrl = learningDate
+                ? `/questions/topic/${topicId}/date/${learningDate}`
+                : dayId
+                    ? `/questions?dayId=${dayId}`
+                    : `/questions?topicId=${topicId}`
+            const [topicData, questionData, adminQuestions, statusGroups] = await Promise.all([
                 apiFetch(`/topics/${topicId}`),
-                apiFetch(`/quiz/topics/${topicId}/questions`),
-                apiFetch(`/questions?topicId=${topicId}`).catch(() => []),
+                apiFetch(questionsUrl),
+                apiFetch(adminUrl).catch(() => []),
+                learningDate
+                    ? apiFetch(`/questions/topic/${topicId}/student/${studentId}`).catch(() => [])
+                    : Promise.resolve([]),
             ])
             setTopicName(topicData.nameTopic ?? `Topik ${topicId}`)
             setTopicIcon(topicData.icon ?? '')
-            setQuestions(Array.isArray(questionData) ? questionData : [])
+
+            const questionList = Array.isArray(questionData) ? questionData : []
+            const groupList = Array.isArray(statusGroups) ? statusGroups : (statusGroups?.data ?? [])
+
+            // Use status endpoint to detect which questions are done
+            const dateGroup = groupList.find((g) => g.learningDate === learningDate)
+            const answeredIds = new Set(
+                (dateGroup?.questions ?? []).filter((q) => q.status === 'SELESAI').map((q) => q.id)
+            )
+
+            // If all questions are done, redirect to dedicated review page
+            const allDone = learningDate != null &&
+                questionList.length > 0 &&
+                questionList.every((q) => answeredIds.has(q.questionId))
+
+            if (allDone) {
+                navigate(`/student/siswa/${studentId}/topics/${topicId}/dates/${learningDate}/review`, { replace: true })
+                return
+            }
+
+            setQuestions(questionList)
+
             // Build map: questionId → timeLimitSeconds
             const limits = {}
             const scoreMap = {}
@@ -68,19 +268,61 @@ function QuizStudentPage() {
             })
             setTimeLimits(limits)
             setScorePoints(scoreMap)
+
+            // Mark already-answered questions as view-only
+            const aMap = {}
+            questionList.forEach((q) => {
+                if (answeredIds.has(q.questionId)) {
+                    aMap[q.questionId] = { questionId: q.questionId, isReviewOnly: true }
+                }
+            })
+            setAnsweredMap(aMap)
         } catch (err) {
             setFetchError(err.message)
         } finally {
             setLoading(false)
         }
-    }, [topicId])
+    }, [topicId, studentId, learningDate, dayId])
 
     useEffect(() => { fetchData() }, [fetchData])
 
     // currentQuestion must be declared before any effect that references it
     const currentQuestion = questions[currentIdx]
 
-    // ── Init timer when question changes ──────────────────────────
+    // ── Restore progress from previous answers when data loads ────
+    useEffect(() => {
+        if (loading || !questions.length || !Object.keys(answeredMap).length) return
+        const history = []
+        let correct = 0
+        let score = 0
+        questions.forEach((q) => {
+            const ans = answeredMap[q.questionId]
+            // Skip review-only entries — they have no real score data to restore
+            if (ans && !ans.isReviewOnly) {
+                history.push({ questionId: q.questionId, correct: ans.correct ?? false, earnedScore: ans.earnedScore ?? 0 })
+                if (ans.correct) correct++
+                score += ans.earnedScore ?? 0
+            }
+        })
+        if (history.length > 0) {
+            setAnswerHistory(history)
+            setCorrectCount(correct)
+            setTotalScore(score)
+        }
+    }, [loading, questions, answeredMap])
+
+    // ── Auto-show view-only feedback for already-answered questions
+    useEffect(() => {
+        if (!currentQuestion || loading) return
+        const prev = answeredMap[currentQuestion.questionId]
+        if (!prev) return
+        // In a partially-done quiz, skip already-answered questions instead of showing feedback
+        const nextUnanswered = questions.findIndex((q, i) => i > currentIdx && !answeredMap[q.questionId])
+        if (nextUnanswered !== -1) {
+            setCurrentIdx(nextUnanswered)
+        }
+        // If no unanswered question found ahead, the allDone redirect in fetchData will handle it
+    }, [currentIdx, answeredMap, loading, questions])
     useEffect(() => {
         if (!currentQuestion || phase !== 'quiz') return
         // Prefer timeLimits map (from admin endpoint); fall back to field on question
@@ -94,7 +336,7 @@ function QuizStudentPage() {
         }
         setTimerTotal(limit)
         // Restore from sessionStorage (persists across page refreshes in same tab)
-        const storageKey = `quiz_timer_${studentId}_${topicId}_${currentQuestion.questionId}`
+        const storageKey = `quiz_timer_${studentId}_${learningDate ?? dayId ?? topicId}_${currentQuestion.questionId}`
         const saved = sessionStorage.getItem(storageKey)
         const savedTime = saved ? parseInt(saved, 10) : NaN
         setTimeLeft(!isNaN(savedTime) && savedTime > 0 && savedTime <= limit ? savedTime : limit)
@@ -111,7 +353,7 @@ function QuizStudentPage() {
         }
         // Save to sessionStorage on every tick so refresh restores exact remaining time
         if (currentQuestion) {
-            const storageKey = `quiz_timer_${studentId}_${topicId}_${currentQuestion.questionId}`
+            const storageKey = `quiz_timer_${studentId}_${learningDate ?? dayId ?? topicId}_${currentQuestion.questionId}`
             sessionStorage.setItem(storageKey, String(timeLeft))
         }
         const id = setTimeout(() => setTimeLeft((t) => Math.max(0, t - 1)), 1000)
@@ -161,7 +403,7 @@ function QuizStudentPage() {
     const handleSubmitAnswer = async (force = false) => {
         // Clear sessionStorage timer for this question
         if (currentQuestion) {
-            sessionStorage.removeItem(`quiz_timer_${studentId}_${topicId}_${currentQuestion.questionId}`)
+            sessionStorage.removeItem(`quiz_timer_${studentId}_${learningDate ?? dayId ?? topicId}_${currentQuestion.questionId}`)
         }
         setTimeLeft(null) // stop timer
         setPhase('submitting')
@@ -204,8 +446,17 @@ function QuizStudentPage() {
             setFeedback(data)
             setPhase('feedback')
         } catch (err) {
-            setSubmitError(err.message)
-            setPhase('quiz')
+            const errMsg = err.message ?? ''
+            // If backend rejects because already answered, fetch existing answer and show view-only
+            if ((errMsg.toLowerCase().includes('already') || errMsg.toLowerCase().includes('sudah')) && currentQuestion) {
+                setPhase('quiz')
+                apiFetch(`/quiz/students/${studentId}/questions/${currentQuestion.questionId}/answer`)
+                    .then((prev) => setAnsweredMap((m) => ({ ...m, [currentQuestion.questionId]: { ...prev, questionId: currentQuestion.questionId } })))
+                    .catch(() => { setSubmitError(errMsg); setPhase('quiz') })
+            } else {
+                setSubmitError(errMsg)
+                setPhase('quiz')
+            }
         }
     }
 
@@ -219,14 +470,19 @@ function QuizStudentPage() {
             setCurrentIdx((i) => i + 1)
             setPhase('quiz')
         } else {
+            // If last question was view-only (already answered before this session), skip finish API
+            if (answeredMap[currentQuestion?.questionId]) {
+                setPhase('result')
+                return
+            }
             setPhase('finishing')
             setSubmitError('')
             // Clear all sessionStorage timer keys for this quiz session
             Object.keys(sessionStorage)
-                .filter((k) => k.startsWith(`quiz_timer_${studentId}_${topicId}_`))
+                .filter((k) => k.startsWith(`quiz_timer_${studentId}_${learningDate ?? dayId ?? topicId}_`))
                 .forEach((k) => sessionStorage.removeItem(k))
             // Delete persisted timer for this session
-            apiFetch(`/quiz/timer/${studentId}/${topicId}`, { method: 'DELETE' }).catch(() => { })
+            apiFetch(`/quiz/timer/${studentId}/${learningDate ?? dayId ?? topicId}`, { method: 'DELETE' }).catch(() => { })
             try {
                 const finishData = await apiFetch('/quiz/finish', {
                     method: 'POST',
@@ -373,15 +629,9 @@ function QuizStudentPage() {
                     <div className="result-actions">
                         <button
                             className="quiz-btn quiz-btn--outline"
-                            onClick={() => navigate(`/student/siswa/${studentId}/topics`)}
+                            onClick={() => navigate(`/student/siswa/${studentId}/topics/${topicId}/weeks`)}
                         >
-                            Pilih Topik Lain
-                        </button>
-                        <button
-                            className="quiz-btn quiz-btn--primary"
-                            onClick={resetQuiz}
-                        >
-                            Ulangi Kuis
+                            Kembali ke Peta
                         </button>
                     </div>
                 </div>
@@ -428,42 +678,12 @@ function QuizStudentPage() {
                         <div className="feedback-icon">{isCorrect ? '✓' : '✗'}</div>
                         <h3 className="feedback-title">{isCorrect ? 'Jawaban Benar!' : 'Jawaban Salah'}</h3>
 
-                        {/* Puzzle piece-result grid */}
-                        {feedback.pieceResults && (
-                            <div className="fpz-results">
-                                <p className="fpz-summary">
-                                    <span className="fpz-count">{feedback.correctPiecesCount}</span>
-                                    <span className="fpz-sep">/</span>
-                                    <span className="fpz-total">{feedback.totalPieces}</span>
-                                    {' '}keping benar
-                                </p>
-                                <div
-                                    className="fpz-grid"
-                                    style={{ '--fpz-cols': Math.round(Math.sqrt(feedback.totalPieces)) }}
-                                >
-                                    {Array.from({ length: feedback.totalPieces }, (_, slotIdx) => {
-                                        const pr = feedback.pieceResults.find((r) => r.placedPosition === slotIdx)
-                                        const ok = pr?.isCorrect ?? false
-                                        const placed = pr != null
-                                        return (
-                                            <div
-                                                key={slotIdx}
-                                                className={`fpz-cell${ok ? ' fpz-cell--ok' : placed ? ' fpz-cell--bad' : ' fpz-cell--empty'}`}
-                                            >
-                                                {ok ? '✓' : placed ? '✗' : '—'}
-                                            </div>
-                                        )
-                                    })}
-                                </div>
-                            </div>
-                        )}
-
                         {isCorrect ? (
                             <p className="feedback-score">+{earned} poin</p>
                         ) : (
                             <>
                                 <p className="feedback-msg">Tetap semangat, terus berlatih!</p>
-                                {!feedback.pieceResults && (currentQuestion?.scorePoint || scorePoints[currentQuestion?.questionId]) && (
+                                {(currentQuestion?.scorePoint || scorePoints[currentQuestion?.questionId]) && (
                                     <p className="feedback-missed-pts">
                                         Sayang, kamu melewatkan {currentQuestion?.scorePoint ?? scorePoints[currentQuestion?.questionId]} poin
                                     </p>

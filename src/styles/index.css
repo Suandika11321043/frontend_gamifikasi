@@ -34,6 +34,11 @@
 
 body {
   margin: 0;
+  min-height: 100vh;
+}
+
+html {
+  height: 100%;
 }
 
 /* ── Custom cursor: student pages only ─────────────────────────────────────── */
@@ -66,6 +71,14 @@ body {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+}
+
+/* Admin layout overrides — must be full-width, no centering constraints */
+.dashboard-wrapper {
+  width: 100% !important;
+  margin: 0 !important;
+  border-inline: none !important;
+  text-align: left;
 }
 
 h1,
