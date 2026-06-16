@@ -63,19 +63,28 @@ function Sidebar({ activePath, mobileOpen = false, onMobileClose }) {
         <aside className={`sidebar${collapsed ? ' sidebar--collapsed' : ''}${mobileOpen ? ' sidebar--mobile-open' : ''}`}>
             <div className="sidebar-header">
                 {!collapsed && <div className="sidebar-brand">Gamifikasi</div>}
-                <button
-                    className="sidebar-toggle"
-                    onClick={() => {
-                        if (onMobileClose && mobileOpen) {
-                            onMobileClose()
-                        } else {
-                            setCollapsed((v) => !v)
-                        }
-                    }}
-                    title={collapsed ? 'Perluas sidebar' : 'Perkecil sidebar'}
-                >
-                    {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
-                </button>
+                <div className="sidebar-header-actions">
+                    <button
+                        className="sidebar-logout-btn"
+                        onClick={handleLogout}
+                        title="Keluar"
+                    >
+                        <LogOut size={16} />
+                    </button>
+                    <button
+                        className="sidebar-toggle"
+                        onClick={() => {
+                            if (onMobileClose && mobileOpen) {
+                                onMobileClose()
+                            } else {
+                                setCollapsed((v) => !v)
+                            }
+                        }}
+                        title={collapsed ? 'Perluas sidebar' : 'Perkecil sidebar'}
+                    >
+                        {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
+                    </button>
+                </div>
             </div>
 
             <nav className="sidebar-nav">
@@ -118,15 +127,6 @@ function Sidebar({ activePath, mobileOpen = false, onMobileClose }) {
                     )
                 })}
             </nav>
-
-            <button
-                className="logout-btn"
-                onClick={handleLogout}
-                title={collapsed ? 'Keluar' : undefined}
-            >
-                <LogOut size={16} />
-                {!collapsed && <span>Keluar</span>}
-            </button>
         </aside>
     )
 }

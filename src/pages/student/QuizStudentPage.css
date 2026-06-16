@@ -26,6 +26,21 @@
     }
 }
 
+.feedback-card--review {
+    border-color: #bfdbfe;
+    background: linear-gradient(135deg, #eff6ff, #f0f9ff);
+}
+
+.feedback-card--review .feedback-icon {
+    background: #dbeafe;
+    color: #1d4ed8;
+    border-color: #93c5fd;
+}
+
+.feedback-card--review .feedback-title {
+    color: #1e40af;
+}
+
 .feedback-card--correct {
     background: #f0fdf4;
     border-color: #86efac;
@@ -337,6 +352,7 @@
     position: relative;
     overflow-x: hidden;
     overflow-y: auto;
+    min-height: 100vh;
 }
 
 /* ===========================
@@ -2357,62 +2373,104 @@
 .pz-grid {
     display: grid;
     grid-template-columns: repeat(var(--pz-cols, 3), 1fr);
-    gap: 5px;
+    gap: 0;
     width: 100%;
-    max-width: 340px;
+    max-width: 360px;
     margin: 0 auto;
+    overflow: visible;
+    /* Neutral board colour — shows through transparent puzzle tab areas */
+    background: #d6cfc4;
+    border-radius: 4px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+    padding: 8px;
 }
 
 .pz-slot {
     aspect-ratio: 1 / 1;
-    border: 2.5px dashed #d1d5db;
-    border-radius: 10px;
-    background: #f9fafb;
+    /* No border, no background — board colour shows through transparent tabs */
+    border: none;
+    background: transparent;
+    border-radius: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    overflow: hidden;
+    overflow: visible;
     position: relative;
-    transition: border-color 0.18s, background 0.18s, transform 0.15s, box-shadow 0.15s;
+    z-index: 0;
+    transition: box-shadow 0.15s;
     user-select: none;
 }
 
 .pz-slot--filled {
-    border-style: solid;
-    border-color: #a5b4fc;
-    background: #fff;
+    /* Filled slots: completely transparent, puzzle PNG owns the visual */
+    background: transparent;
 }
 
 .pz-slot--hover,
 .pz-slot--droppable:hover {
-    border-color: #6366f1;
-    background: #eef2ff;
-    transform: scale(1.05);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    /* Subtle tinted overlay — use ::after so the piece image sits above it */
+    z-index: 10;
+}
+
+.pz-slot--hover::after,
+.pz-slot--droppable:hover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(99, 102, 241, 0.18);
+    pointer-events: none;
+    z-index: 1;
+    border-radius: 2px;
 }
 
 .pz-slot--active {
-    border-color: #f59e0b;
-    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.3);
-    background: #fffbeb;
+    z-index: 10;
+}
+
+.pz-slot--active::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(245, 158, 11, 0.18);
+    pointer-events: none;
+    z-index: 1;
+    border-radius: 2px;
+}
+
+/* Active/hovered slot piece renders above neighbouring piece tabs */
+.pz-slot--active .pz-piece-img,
+.pz-slot--hover .pz-piece-img {
+    z-index: 20;
 }
 
 .pz-slot-num {
-    font-size: 0.68rem;
+    font-size: 0.65rem;
     font-weight: 700;
-    color: #d1d5db;
+    /* Subtle placeholder number visible on board background */
+    color: rgba(0, 0, 0, 0.22);
     pointer-events: none;
+    position: relative;
+    z-index: 0;
 }
 
-/* ── Piece inside slot ────────────────────────────────────── */
+/* ── Piece inside slot ────────────────────────────────────────
+   The backend generates each PNG at 1.5× logical size
+   (25% transparent padding on every side for puzzle tabs).
+   We position it with -25% offset so the logical cell center
+   aligns with the slot, and tabs overflow into neighbors.
+   ────────────────────────────────────────────────────────── */
 .pz-slot .pz-piece-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    position: absolute;
+    width: 150%;
+    height: 150%;
+    top: -25%;
+    left: -25%;
+    object-fit: fill;
     display: block;
     pointer-events: none;
-    border-radius: 7px;
+    border-radius: 0;
+    z-index: 2;
 }
 
 /* ── Tray ─────────────────────────────────────────────────── */
@@ -2446,41 +2504,49 @@
     min-height: 40px;
 }
 
-/* ── Piece chip ───────────────────────────────────────────── */
+/* ── Piece chip in tray ───────────────────────────────────────
+   No clipping — show the full puzzle shape including tabs.
+   Selection ring is drawn via filter / outline, not border.
+   ────────────────────────────────────────────────────────── */
 .pz-piece {
-    width: 72px;
-    height: 72px;
-    border-radius: 10px;
-    overflow: hidden;
+    width: 80px;
+    height: 80px;
+    border-radius: 0;
+    /* overflow visible so tabs are not clipped */
+    overflow: visible;
     cursor: grab;
-    border: 3px solid #e5e7eb;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s, border-color 0.15s, opacity 0.15s;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.15s;
     user-select: none;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .pz-piece:hover {
-    transform: scale(1.1);
-    border-color: #818cf8;
-    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.22);
+    transform: scale(1.15) translateY(-4px);
+    filter: drop-shadow(0 4px 10px rgba(99, 102, 241, 0.4));
 }
 
 .pz-piece:active {
     cursor: grabbing;
-    transform: scale(0.97);
+    transform: scale(0.95);
 }
 
 .pz-piece--selected {
-    border-color: #6366f1;
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.35), 0 4px 12px rgba(99, 102, 241, 0.2);
-    transform: scale(1.08);
+    transform: scale(1.12) translateY(-4px);
+    filter:
+        drop-shadow(0 0 6px rgba(99, 102, 241, 0.8)) drop-shadow(0 0 2px #6366f1);
 }
 
 .pz-piece .pz-piece-img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    /* contain: show the full puzzle shape (transparent areas outside) */
+    object-fit: contain;
     display: block;
     pointer-events: none;
 }
@@ -2520,6 +2586,175 @@
 .fpz-sep {
     opacity: 0.6;
     margin: 0 1px;
+}
+
+/* ── Match / Drag-and-drop table layout ──────────────────────────── */
+.ar-match-table {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.ar-match-header {
+    display: grid;
+    grid-template-columns: 1fr 24px 1fr;
+    gap: 8px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0 4px;
+    text-align: center;
+}
+
+.ar-match-row {
+    display: grid;
+    grid-template-columns: 1fr 24px 1fr;
+    align-items: center;
+    gap: 8px;
+    background: #f9fafb;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 10px 12px;
+}
+
+.ar-match-row--empty {
+    opacity: 0.6;
+    border-style: dashed;
+}
+
+.ar-match-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+    font-size: 0.88rem;
+    font-weight: 500;
+}
+
+.ar-match-cell--question {
+    background: #dbeafe;
+    border-radius: 8px;
+    padding: 8px 6px;
+    color: #1e40af;
+}
+
+.ar-match-cell--answer {
+    background: #dcfce7;
+    border-radius: 8px;
+    padding: 8px 6px;
+    color: #166534;
+}
+
+.ar-match-answer-item+.ar-match-answer-item {
+    border-top: 1px solid #bbf7d0;
+    padding-top: 6px;
+    margin-top: 4px;
+}
+
+.ar-match-arrow {
+    color: #9ca3af;
+    font-size: 1.2rem;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.ar-pair-opt img {
+    width: 100%;
+    max-width: 72px;
+    height: auto;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+/* ── History summary screen ──────────────────────────────────────── */
+.result-card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    padding: 36px 28px;
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.result-icon {
+    font-size: 3rem;
+    margin-bottom: 12px;
+}
+
+.result-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin: 0 0 4px;
+}
+
+.result-topic {
+    font-size: 0.95rem;
+    color: #6b7280;
+    margin: 0 0 24px;
+}
+
+.result-score-box {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+    background: #f0fdf4;
+    border: 2px solid #86efac;
+    border-radius: 16px;
+    padding: 12px 28px;
+    margin-bottom: 14px;
+}
+
+.result-score-num {
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: #16a34a;
+    line-height: 1;
+}
+
+.result-score-max {
+    font-size: 1rem;
+    color: #4ade80;
+    font-weight: 600;
+}
+
+.result-correct {
+    font-size: 0.95rem;
+    color: #374151;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* ── History result indicator on question card ───────────────────── */
+.question-card--correct {
+    border-left: 4px solid #22c55e;
+}
+
+.question-card--wrong {
+    border-left: 4px solid #ef4444;
+}
+
+.history-result-badge {
+    margin-left: auto;
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+.history-result-badge--correct {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.history-result-badge--wrong {
+    background: #fee2e2;
+    color: #b91c1c;
 }
 
 .fpz-total {
@@ -2576,4 +2811,469 @@
     border-color: rgba(0, 0, 0, 0.1);
     color: rgba(0, 0, 0, 0.25);
     font-size: 0.7rem;
+}
+
+/* -- Answer Review ----------------------------------------------- */
+.answer-review {
+    background: #fff;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.answer-review__q {
+    font-size: 0.97rem;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.answer-review__img {
+    width: 100%;
+    max-height: 200px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.answer-review__label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #6b7280;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.answer-review__label--wrong {
+    color: #dc2626;
+}
+
+/* QUIZ options */
+.ar-options {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.ar-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1.5px solid #e5e7eb;
+    background: #f9fafb;
+    font-size: 0.93rem;
+    color: #374151;
+}
+
+.ar-option--correct {
+    border-color: #6ee7b7;
+    background: #ecfdf5;
+    color: #065f46;
+}
+
+.ar-option--wrong {
+    border-color: #fca5a5;
+    background: #fef2f2;
+    color: #991b1b;
+}
+
+.ar-option__img {
+    width: 44px;
+    height: 44px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.ar-option__text {
+    flex: 1;
+}
+
+.ar-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.ar-badge--correct {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.ar-badge--wrong {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.ar-badge--chosen-correct {
+    background: #bbf7d0;
+    color: #14532d;
+}
+
+/* SORTING */
+.ar-sort-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.ar-sort-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 9px;
+    border: 1.5px solid #e5e7eb;
+    background: #f9fafb;
+    font-size: 0.92rem;
+    color: #374151;
+}
+
+.ar-sort-item--correct {
+    border-color: #6ee7b7;
+    background: #ecfdf5;
+    color: #065f46;
+}
+
+.ar-sort-item--ok {
+    border-color: #6ee7b7;
+    background: #ecfdf5;
+    color: #065f46;
+}
+
+.ar-sort-item--bad {
+    border-color: #fca5a5;
+    background: #fef2f2;
+    color: #991b1b;
+}
+
+.ar-sort-num {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    color: #374151;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.ar-sort-item--correct .ar-sort-num,
+.ar-sort-item--ok .ar-sort-num {
+    background: #6ee7b7;
+    color: #065f46;
+}
+
+.ar-sort-item--bad .ar-sort-num {
+    background: #fca5a5;
+    color: #991b1b;
+}
+
+/* MATCH / DRAG_AND_DROP */
+.ar-pairs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.ar-pair-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ar-pair-cell {
+    flex: 1;
+    padding: 7px 12px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+.ar-pair-cell--left {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.ar-pair-cell--right {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.ar-pair-arrow {
+    color: #9ca3af;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+/* -- Answer Review pair row variants ---------------------------- */
+.ar-pair-row--correct .ar-pair-cell--left {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.ar-pair-row--correct .ar-pair-cell--right {
+    background: #bbf7d0;
+    color: #14532d;
+}
+
+.ar-pair-row--wrong .ar-pair-cell--left {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.ar-pair-row--wrong .ar-pair-cell--right {
+    background: #fecaca;
+    color: #7f1d1d;
+}
+
+/* Pair option content (image + text) */
+.ar-pair-opt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.ar-pair-opt img {
+    width: 100%;
+    max-width: 80px;
+    height: auto;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.ar-pair-empty {
+    color: #9ca3af;
+    font-size: 1.1rem;
+}
+
+/* PUZZLE review grid */
+.ar-puzzle-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--ar-cols, 2), 1fr);
+    gap: 4px;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #e5e7eb;
+}
+
+.ar-puzzle-cell {
+    background: #f3f4f6;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.ar-puzzle-piece {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.ar-puzzle-empty {
+    font-size: 1.2rem;
+    color: #9ca3af;
+}
+
+.ar-puzzle-cell--ok {
+    outline: 2px solid #10b981;
+    outline-offset: -2px;
+}
+
+.ar-puzzle-cell--bad {
+    outline: 2px solid #ef4444;
+    outline-offset: -2px;
+    opacity: 0.75;
+}
+
+.ar-puzzle-badge {
+    position: absolute;
+    bottom: 2px;
+    right: 3px;
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1;
+    pointer-events: none;
+    text-shadow: 0 0 3px #fff, 0 0 3px #fff;
+}
+
+/* ===========================
+   History Answer � Child-Friendly Nav
+=========================== */
+.ha-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 1.5rem 0 2.5rem;
+}
+
+/* -- Buttons -- */
+.ha-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.8rem 1.4rem;
+    border-radius: 999px;
+    font-size: 1rem;
+    font-weight: 800;
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.2s ease,
+                background 0.2s ease;
+    white-space: nowrap;
+    min-width: 130px;
+    justify-content: center;
+}
+
+.ha-nav-btn--prev {
+    background: #fff;
+    color: #7c3aed;
+    border: 2.5px solid #ddd6fe;
+    box-shadow: 0 4px 0 #ddd6fe;
+}
+
+.ha-nav-btn--prev:hover:not(:disabled) {
+    background: #f5f3ff;
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 8px 0 #c4b5fd;
+}
+
+.ha-nav-btn--prev:active:not(:disabled) {
+    transform: translateY(3px) scale(0.97);
+    box-shadow: 0 1px 0 #ddd6fe;
+    transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+
+.ha-nav-btn--ghost {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.ha-nav-btn--next {
+    background: linear-gradient(135deg, #a78bfa, #7c3aed);
+    color: #fff;
+    box-shadow: 0 5px 0 #5b21b6;
+}
+
+.ha-nav-btn--next:hover {
+    transform: translateY(-4px) scale(1.06);
+    box-shadow: 0 9px 0 #5b21b6;
+}
+
+.ha-nav-btn--next:active {
+    transform: translateY(3px) scale(0.97);
+    box-shadow: 0 2px 0 #5b21b6;
+    transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+
+.ha-nav-arrow {
+    font-size: 1.3rem;
+    line-height: 1;
+}
+
+.ha-nav-label {
+    font-size: 0.95rem;
+}
+
+/* -- Dot indicator -- */
+.ha-nav-dots {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 160px;
+}
+
+.ha-nav-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    border: 2px solid #d1d5db;
+    transition: background 0.2s, transform 0.2s;
+    flex-shrink: 0;
+}
+
+.ha-nav-dot--done {
+    background: #c4b5fd;
+    border-color: #a78bfa;
+}
+
+.ha-nav-dot--active {
+    background: #7c3aed;
+    border-color: #5b21b6;
+    transform: scale(1.4);
+    box-shadow: 0 0 0 3px #ddd6fe;
+}
+
+/* -- Count indicator (>10 questions) -- */
+.ha-nav-counter {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    background: #f5f3ff;
+    border: 2px solid #ddd6fe;
+    border-radius: 999px;
+    padding: 6px 16px;
+}
+
+.ha-nav-counter-cur {
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: #7c3aed;
+    line-height: 1;
+}
+
+.ha-nav-counter-sep {
+    font-size: 1rem;
+    color: #a78bfa;
+    font-weight: 700;
+}
+
+.ha-nav-counter-tot {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #a78bfa;
+}
+
+@media (max-width: 480px) {
+    .ha-nav-btn {
+        min-width: 100px;
+        padding: 0.7rem 1rem;
+    }
+
+    .ha-nav-label {
+        font-size: 0.85rem;
+    }
+
+    .ha-nav-arrow {
+        font-size: 1.1rem;
+    }
 }

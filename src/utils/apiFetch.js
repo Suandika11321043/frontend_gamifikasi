@@ -47,7 +47,12 @@ export async function apiFetch(path, options = {}) {
 
         if (res.status === 204) return null
         const data = await res.json().catch(() => ({}))
-        if (!res.ok) throw new Error(data.message || 'Terjadi kesalahan.')
+        if (!res.ok) {
+            const msg = data.message || data.error || data.detail
+                || (typeof data === 'string' && data)
+                || `Error ${res.status}`
+            throw new Error(msg)
+        }
         return data
     } finally {
         _activeCount--

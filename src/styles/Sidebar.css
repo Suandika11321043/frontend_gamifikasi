@@ -2,14 +2,18 @@
 .sidebar {
     width: 240px;
     min-height: 100vh;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    /* lets sticky work with page scroll */
     background: #1a1a2e;
     display: flex;
     flex-direction: column;
     padding: 16px 12px;
     gap: 8px;
     flex-shrink: 0;
-    transition: width 0.25s ease, transform 0.25s ease;
-    overflow: hidden;
+    overflow-x: hidden;
+    transition: width 0.25s ease;
 }
 
 .sidebar--collapsed {
@@ -192,27 +196,30 @@
     flex-shrink: 0;
 }
 
-/* ── Logout ───────────────────────────────────────────── */
-.logout-btn {
-    margin-top: auto;
+/* ── Logout (header icon button) ─────────────────────── */
+.sidebar-logout-btn {
+    background: transparent;
+    border: none;
+    color: #fc8181;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 10px 14px;
-    background: transparent;
-    border: 1.5px solid #e53e3e;
-    color: #fc8181;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
     transition: background 0.2s, color 0.2s;
-    white-space: nowrap;
-    overflow: hidden;
+    flex-shrink: 0;
 }
 
-.logout-btn:hover {
-    background: #e53e3e;
-    color: #ffffff;
+.sidebar-logout-btn:hover {
+    background: rgba(229, 62, 62, 0.18);
+    color: #e53e3e;
+}
+
+/* ── Header actions group (logout + toggle) ───────────── */
+.sidebar-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin-left: auto;
 }
