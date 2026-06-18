@@ -79,8 +79,9 @@ export default function WeekStudentPage() {
 
             const completed = new Set()
             const progress = {}
-            groupList.forEach(({ learningDate, questions }) => {
-                const qList = (Array.isArray(questions) ? questions : []).filter((q) => q.isAvailable === true)
+            groupList.forEach(({ learningDate, isAvailable, questions }) => {
+                if (isAvailable !== true) return
+                const qList = Array.isArray(questions) ? questions : []
                 const total = qList.length
                 const answeredCount = qList.filter((q) => q.status === 'SELESAI').length
                 progress[learningDate] = {
@@ -95,11 +96,11 @@ export default function WeekStudentPage() {
 
             setDateGroups(
                 groupList
-                    .filter((g) => g.learningDate)
+                    .filter((g) => g.isAvailable === true && g.learningDate)
                     .sort((a, b) => a.learningDate.localeCompare(b.learningDate))
                     .map(({ learningDate, questions }) => ({
                         date: learningDate,
-                        count: (questions ?? []).filter((q) => q.isAvailable === true).length,
+                        count: (questions ?? []).length,
                     }))
                     .filter((g) => g.count > 0)
             )

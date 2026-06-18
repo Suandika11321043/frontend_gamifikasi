@@ -10,8 +10,13 @@ import {
     ChevronRight,
     PanelLeftClose,
     PanelLeftOpen,
+    LayoutDashboard,
 } from 'lucide-react'
 import '../../styles/Sidebar.css'
+
+const navLinks = [
+    { label: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={18} /> },
+]
 
 const navGroups = [
     {
@@ -88,6 +93,18 @@ function Sidebar({ activePath, mobileOpen = false, onMobileClose }) {
             </div>
 
             <nav className="sidebar-nav">
+                {navLinks.map((link) => (
+                    <a
+                        key={link.path}
+                        href={link.path}
+                        className={`nav-item nav-item--direct${activePath === link.path ? ' active' : ''}`}
+                        title={collapsed ? link.label : undefined}
+                    >
+                        <span className="nav-item-icon">{link.icon}</span>
+                        {!collapsed && <span>{link.label}</span>}
+                    </a>
+                ))}
+
                 {navGroups.map((group) => {
                     const isGroupActive = group.children.some((c) => c.path === activePath)
                     return (

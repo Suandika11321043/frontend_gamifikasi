@@ -3173,3 +3173,8 @@
     font-weight: 600;
     margin-bottom: 12px;
 }
+
+.opsi-modal--locked .quiz-opt-actions,
+.opsi-modal--locked .match-item-actions {
+    display: none;
+}

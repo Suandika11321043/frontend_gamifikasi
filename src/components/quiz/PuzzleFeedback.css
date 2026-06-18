@@ -1,0 +1,176 @@
+.pz-feedback {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.65rem;
+    padding: 1.75rem 1.25rem 1.5rem;
+    border-radius: 22px;
+    overflow: hidden;
+    animation: pzFeedbackIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.pz-feedback--win {
+    background: linear-gradient(160deg, #ecfdf5 0%, #d1fae5 100%);
+    border: 3px solid #6ee7b7;
+    box-shadow: 0 6px 0 #10b981;
+}
+
+.pz-feedback--try {
+    background: linear-gradient(160deg, #fff7ed 0%, #ffedd5 100%);
+    border: 3px solid #fdba74;
+    box-shadow: 0 6px 0 #ea580c;
+}
+
+.pz-feedback__sparkles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.pz-feedback__sparkles span {
+    position: absolute;
+    font-size: 1.1rem;
+    animation: pzSparkle 2s ease-in-out infinite;
+}
+
+.pz-feedback__sparkles span:nth-child(1) { top: 12%; left: 10%; }
+.pz-feedback__sparkles span:nth-child(2) { top: 8%; right: 12%; animation-delay: 0.4s; }
+.pz-feedback__sparkles span:nth-child(3) { bottom: 15%; left: 15%; animation-delay: 0.8s; }
+
+.pz-feedback__mascot {
+    font-size: 3.5rem;
+    line-height: 1;
+    animation: pzMascotPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
+}
+
+.pz-feedback__title {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 900;
+    color: #1e3a5f;
+}
+
+.pz-feedback--win .pz-feedback__title { color: #065f46; }
+.pz-feedback--try .pz-feedback__title { color: #9a3412; }
+
+.pz-feedback__score-box {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.15rem;
+    padding: 0.5rem 1.25rem;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 999px;
+    border: 2.5px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.pz-feedback__score-plus {
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: #f59e0b;
+}
+
+.pz-feedback__score-num {
+    font-size: 2.4rem;
+    font-weight: 900;
+    color: #d97706;
+    line-height: 1;
+}
+
+.pz-feedback__score-label {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #92400e;
+    margin-left: 0.15rem;
+}
+
+.pz-feedback__msg {
+    margin: 0.25rem 0 0;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #64748b;
+}
+
+/* Popup overlay */
+.pz-popup-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem;
+    background: rgba(15, 23, 42, 0.45);
+    backdrop-filter: blur(4px);
+    animation: pzOverlayIn 0.25s ease;
+}
+
+.pz-popup {
+    width: 100%;
+    max-width: 340px;
+    animation: pzPopupIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.pz-popup .pz-feedback {
+    margin: 0;
+}
+
+.pz-popup__next {
+    margin-top: 1rem;
+    width: 100%;
+    padding: 0.85rem 1.25rem;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #4ade80 0%, #22c55e 100%);
+    color: #fff;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 900;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    box-shadow: 0 5px 0 #15803d;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+}
+
+.pz-popup__next:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 0 #15803d;
+}
+
+.pz-popup__next:active:not(:disabled) {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #15803d;
+}
+
+.pz-popup__next:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@keyframes pzOverlayIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes pzPopupIn {
+    from { opacity: 0; transform: scale(0.85) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes pzFeedbackIn {
+    from { opacity: 0; transform: scale(0.92) translateY(12px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes pzMascotPop {
+    from { transform: scale(0.5) rotate(-10deg); opacity: 0; }
+    to { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+@keyframes pzSparkle {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2) rotate(15deg); }
+}
