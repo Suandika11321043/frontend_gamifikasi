@@ -1,9 +1,22 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 
-export default function MatchQuestion({ question, answer, onAnswer }) {
+function normalizeMatchAnswer(answer) {
+    const raw = answer || {}
+    const out = {}
+    Object.entries(raw).forEach(([k, v]) => {
+        const pId = Number(k)
+        if (Number.isNaN(pId)) return
+        const jVal = Array.isArray(v) ? v[0] : v
+        const jId = Number(jVal)
+        if (!Number.isNaN(jId)) out[pId] = jId
+    })
+    return out
+}
+
+export default function MatchQuestion({ question, answer, onAnswer, readOnly = false }) {
     const pertanyaan = question.options.filter((o) => o.tipeItem === 'PERTANYAAN')
     const jawaban = question.options.filter((o) => o.tipeItem === 'JAWABAN')
-    const matchAnswer = answer || {}
+    const matchAnswer = useMemo(() => normalizeMatchAnswer(answer), [answer])
 
     const containerRef = useRef(null)
     const leftRefs = useRef({})
@@ -12,13 +25,14 @@ export default function MatchQuestion({ question, answer, onAnswer }) {
     const [dragging, setDragging] = useState(null)
     const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
     const [, forceRender] = useState(0)
+    const bumpLayout = () => forceRender((n) => n + 1)
 
     useEffect(() => {
         forceRender((n) => n + 1)
         const onResize = () => forceRender((n) => n + 1)
         window.addEventListener('resize', onResize)
         return () => window.removeEventListener('resize', onResize)
-    }, [])
+    }, [matchAnswer, pertanyaan.length, jawaban.length])
 
     const getNode = (el, side) => {
         if (!el || !containerRef.current) return null
@@ -97,6 +111,17 @@ export default function MatchQuestion({ question, answer, onAnswer }) {
         return from && to ? { pId, jId, from, to, color: colorOf(pId) } : null
     }).filter(Boolean)
 
+    // Pastikan garis tergambar setelah layout selesai (riwayat / media gambar)
+    useEffect(() => {
+        if (!readOnly) return undefined
+        const t1 = requestAnimationFrame(() => forceRender((n) => n + 1))
+        const t2 = setTimeout(() => forceRender((n) => n + 1), 120)
+        return () => {
+            cancelAnimationFrame(t1)
+            clearTimeout(t2)
+        }
+    }, [readOnly, matchAnswer, pertanyaan.length, jawaban.length])
+
     const dragFrom = dragging != null ? getNode(leftRefs.current[dragging], 'right') : null
 
     if (pertanyaan.length === 0 || jawaban.length === 0) {
@@ -105,18 +130,20 @@ export default function MatchQuestion({ question, answer, onAnswer }) {
 
     return (
         <div
-            className={`match-line-wrap${dragging != null ? ' match-line-wrap--active' : ''}`}
+            className={`match-line-wrap${!readOnly && dragging != null ? ' match-line-wrap--active' : ''}${readOnly ? ' match-line-wrap--readonly' : ''}`}
             ref={containerRef}
-            onMouseMove={onMouseMove}
-            onMouseUp={cancelDrag}
-            onMouseLeave={cancelDrag}
-            onTouchMove={onTouchMove}
-            onTouchEnd={onTouchEndContainer}
+            onMouseMove={readOnly ? undefined : onMouseMove}
+            onMouseUp={readOnly ? undefined : cancelDrag}
+            onMouseLeave={readOnly ? undefined : cancelDrag}
+            onTouchMove={readOnly ? undefined : onTouchMove}
+            onTouchEnd={readOnly ? undefined : onTouchEndContainer}
         >
             <p className="match-line-hint">
-                {dragging != null
-                    ? '👉 Lepaskan di jawaban yang cocok'
-                    : '✋ Tahan & seret dari pertanyaan ke jawaban'}
+                {readOnly
+                    ? '↳ Pasangan jawabanmu'
+                    : dragging != null
+                        ? '👉 Lepaskan di jawaban yang cocok'
+                        : '✋ Tahan & seret dari pertanyaan ke jawaban'}
             </p>
 
             <svg className="match-line-svg" aria-hidden="true">
@@ -152,15 +179,23 @@ export default function MatchQuestion({ question, answer, onAnswer }) {
                             <div
                                 key={p.optionId}
                                 ref={(el) => { leftRefs.current[p.optionId] = el }}
-                                className={`match-line-item match-line-item--left${isMatched ? ' match-line-item--matched' : ''}${isDragging ? ' match-line-item--active' : ''}`}
-                                style={(isMatched || isDragging) ? { '--mc': color } : undefined}
-                                onMouseDown={(e) => onMouseDown(e, p.optionId)}
-                                onTouchStart={(e) => onTouchStart(e, p.optionId)}
+                                className={`match-line-item match-line-item--left${isMatched ? ' match-line-item--matched' : ''}${!readOnly && isDragging ? ' match-line-item--active' : ''}`}
+                                style={(isMatched || (!readOnly && isDragging)) ? { '--mc': color } : undefined}
+                                onMouseDown={readOnly ? undefined : (e) => onMouseDown(e, p.optionId)}
+                                onTouchStart={readOnly ? undefined : (e) => onTouchStart(e, p.optionId)}
                             >
                                 <span className="match-line-num">{idx + 1}</span>
-                                {p.mediaOpsi && <img src={p.mediaOpsi} alt={p.teksOpsi} className="match-line-media" />}
+                                {p.mediaOpsi && (
+                                    <img
+                                        src={p.mediaOpsi}
+                                        alt={p.teksOpsi || 'Media pertanyaan'}
+                                        className="match-line-media"
+                                        loading="lazy"
+                                        onLoad={readOnly ? bumpLayout : undefined}
+                                    />
+                                )}
                                 <span className="match-line-text">{p.teksOpsi}</span>
-                                {isMatched && (
+                                {!readOnly && isMatched && (
                                     <button
                                         className="match-line-del"
                                         onMouseDown={(e) => e.stopPropagation()}
@@ -171,7 +206,7 @@ export default function MatchQuestion({ question, answer, onAnswer }) {
                                 )}
                                 <span
                                     className="match-line-node match-line-node--r"
-                                    style={(isMatched || isDragging) ? { background: color, borderColor: color } : undefined}
+                                    style={(isMatched || (!readOnly && isDragging)) ? { background: color, borderColor: color } : undefined}
                                 />
                             </div>
                         )
@@ -183,7 +218,7 @@ export default function MatchQuestion({ question, answer, onAnswer }) {
                     {jawaban.map((j) => {
                         const matchedPId = pertanyaan.find((p) => matchAnswer[p.optionId] === j.optionId)?.optionId
                         const isMatched = matchedPId !== undefined
-                        const isTarget = dragging != null && !isMatched
+                        const isTarget = !readOnly && dragging != null && !isMatched
                         const color = isMatched ? colorOf(matchedPId) : undefined
                         return (
                             <div
@@ -192,13 +227,21 @@ export default function MatchQuestion({ question, answer, onAnswer }) {
                                 className={`match-line-item match-line-item--right${isMatched ? ' match-line-item--matched' : ''}${isTarget ? ' match-line-item--target' : ''}`}
                                 style={isMatched ? { '--mc': color } : undefined}
                                 data-jid={j.optionId}
-                                onMouseUp={() => onMouseUpAnswer(j.optionId)}
+                                onMouseUp={readOnly ? undefined : () => onMouseUpAnswer(j.optionId)}
                             >
                                 <span
                                     className="match-line-node match-line-node--l"
                                     style={isMatched ? { background: color, borderColor: color } : undefined}
                                 />
-                                {j.mediaOpsi && <img src={j.mediaOpsi} alt={j.teksOpsi} className="match-line-media" />}
+                                {j.mediaOpsi && (
+                                    <img
+                                        src={j.mediaOpsi}
+                                        alt={j.teksOpsi || 'Media jawaban'}
+                                        className="match-line-media"
+                                        loading="lazy"
+                                        onLoad={readOnly ? bumpLayout : undefined}
+                                    />
+                                )}
                                 <span className="match-line-text">{j.teksOpsi}</span>
                             </div>
                         )

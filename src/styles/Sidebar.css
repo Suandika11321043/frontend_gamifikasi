@@ -88,7 +88,9 @@
 }
 
 .nav-item {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 10px;
     padding: 10px 14px;
     border-radius: 8px;
     color: #94a3b8;
@@ -96,6 +98,22 @@
     font-size: 14px;
     font-weight: 500;
     transition: background 0.2s, color 0.2s;
+}
+
+.nav-item--direct {
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.sidebar--collapsed .nav-item--direct {
+    justify-content: center;
+    padding: 10px;
+}
+
+.nav-item-icon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
 }
 
 .nav-item:hover,

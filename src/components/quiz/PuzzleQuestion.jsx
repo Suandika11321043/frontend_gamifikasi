@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { apiFetch } from '../../utils/apiFetch'
+import './PuzzleQuestion.css'
 
 export default function PuzzleQuestion({ question, answer, onAnswer }) {
     const [puzzleData, setPuzzleData] = useState(null)
@@ -99,63 +100,76 @@ export default function PuzzleQuestion({ question, answer, onAnswer }) {
     if (!puzzleData) return <p className="pz-empty">Puzzle belum tersedia untuk soal ini.</p>
 
     const allPlaced = trayPieces.length === 0 && totalSlots > 0
+    const progressPct = Math.round(progress?.progressPercent ?? progress?.percentage ?? 0)
+    const referenceImage = puzzleData.imageUrl || puzzleData.contentImage || question?.contentImage
 
     return (
         <div className="pz-wrap">
             <p className="pz-hint">
                 {activePieceId
                     ? '👉 Ketuk kotak untuk menempatkan keping'
-                    : '🧩 Ketuk keping lalu ketuk kotak, atau seret langsung!'}
+                    : '🧩 Ketuk keping lalu ketuk kotak untuk menyusun puzzle!'}
             </p>
 
-            <div className="pz-layout">
-                {puzzleData.imageUrl && (
-                    <div className="pz-reference">
-                        <p className="pz-reference__label">🖼 Gambar Asli</p>
-                        <img
-                            src={puzzleData.imageUrl}
-                            alt="Gambar puzzle asli"
-                            className="pz-reference__img"
-                        />
-                    </div>
+            <div className={`pz-workspace${referenceImage ? '' : ' pz-workspace--no-ref'}`}>
+                {referenceImage && (
+                    <aside className="pz-sidebar pz-sidebar--left">
+                        <div className="pz-reference">
+                            <p className="pz-reference__label">🖼 Gambar Asli</p>
+                            <img
+                                src={referenceImage}
+                                alt="Gambar puzzle asli"
+                                className="pz-reference__img"
+                            />
+                        </div>
+                    </aside>
                 )}
 
-                <div className="pz-right">
+                <div className="pz-main">
                     <div
-                        className="pz-grid"
-                        style={{ '--pz-cols': puzzleData.gridCols }}
-                        onDragOver={(e) => e.preventDefault()}
-                        onDrop={(e) => { e.preventDefault(); returnToTray() }}
+                        className="pz-board"
+                        style={{
+                            '--pz-cols': puzzleData.gridCols,
+                            '--pz-rows': puzzleData.gridRows,
+                        }}
                     >
-                        {Array.from({ length: totalSlots }, (_, slotIdx) => {
-                            const pieceId = placements[slotIdx]
-                            const piece = pieceId != null ? pieceMap[pieceId] : null
-                            const isActive = activePieceId != null && activeFromSlot === slotIdx
-                            const isHovered = hoveredSlot === slotIdx
-                            return (
-                                <div
-                                    key={slotIdx}
-                                    className={`pz-slot${piece ? ' pz-slot--filled' : ''}${isHovered && activePieceId != null ? ' pz-slot--hover' : ''}${isActive ? ' pz-slot--active' : ''}${activePieceId != null && !piece ? ' pz-slot--droppable' : ''}`}
-                                    onDragOver={(e) => { e.preventDefault(); setHoveredSlot(slotIdx) }}
-                                    onDragLeave={() => setHoveredSlot(null)}
-                                    onDrop={(e) => { e.preventDefault(); placeOnSlot(slotIdx) }}
-                                    onClick={() => handleSlotClick(slotIdx)}
-                                >
-                                    {piece ? (
-                                        <img
-                                            src={piece.pieceImageUrl}
-                                            alt={`keping ${slotIdx + 1}`}
-                                            className="pz-piece-img"
-                                            draggable
-                                            onDragStart={() => { setActivePieceId(pieceId); setActiveFromSlot(slotIdx) }}
-                                            onDragEnd={() => { setActivePieceId(null); setActiveFromSlot(null); setHoveredSlot(null) }}
-                                        />
-                                    ) : (
-                                        <span className="pz-slot-num">{slotIdx + 1}</span>
-                                    )}
-                                </div>
-                            )
-                        })}
+                        <div
+                            className="pz-grid"
+                            onDragOver={(e) => e.preventDefault()}
+                            onDrop={(e) => { e.preventDefault(); returnToTray() }}
+                        >
+                            {Array.from({ length: totalSlots }, (_, slotIdx) => {
+                                const pieceId = placements[slotIdx]
+                                const piece = pieceId != null ? pieceMap[pieceId] : null
+                                const isActive = activePieceId != null && activeFromSlot === slotIdx
+                                const isHovered = hoveredSlot === slotIdx
+                                return (
+                                    <div
+                                        key={slotIdx}
+                                        className={`pz-slot${piece ? ' pz-slot--filled' : ''}${isHovered && activePieceId != null ? ' pz-slot--hover' : ''}${isActive ? ' pz-slot--active' : ''}${activePieceId != null && !piece ? ' pz-slot--droppable' : ''}`}
+                                        onDragOver={(e) => { e.preventDefault(); setHoveredSlot(slotIdx) }}
+                                        onDragLeave={() => setHoveredSlot(null)}
+                                        onDrop={(e) => { e.preventDefault(); placeOnSlot(slotIdx) }}
+                                        onClick={() => handleSlotClick(slotIdx)}
+                                    >
+                                        {piece ? (
+                                            <span className="pz-piece-layer">
+                                                <img
+                                                    src={piece.pieceImageUrl}
+                                                    alt={`keping ${slotIdx + 1}`}
+                                                    className="pz-piece-img"
+                                                    draggable
+                                                    onDragStart={() => { setActivePieceId(pieceId); setActiveFromSlot(slotIdx) }}
+                                                    onDragEnd={() => { setActivePieceId(null); setActiveFromSlot(null); setHoveredSlot(null) }}
+                                                />
+                                            </span>
+                                        ) : (
+                                            <span className="pz-slot-num">{slotIdx + 1}</span>
+                                        )}
+                                    </div>
+                                )
+                            })}
+                        </div>
                     </div>
 
                     <div
@@ -184,15 +198,18 @@ export default function PuzzleQuestion({ question, answer, onAnswer }) {
                     </div>
                 </div>
 
-                <div className="pz-progress-side">
-                    <span className="pz-progress-side__pct">{Math.round(progress?.progressPercent ?? progress?.percentage ?? 0)}%</span>
-                    <div className="pz-progress-side__track">
-                        <div
-                            className="pz-progress-side__fill"
-                            style={{ height: `${progress?.progressPercent ?? progress?.percentage ?? 0}%` }}
-                        />
+                <aside className="pz-sidebar pz-sidebar--right">
+                    <div className="pz-progress-side">
+                        <span className="pz-progress-side__label">🎯 Progres</span>
+                        <div className="pz-progress-side__track">
+                            <div
+                                className="pz-progress-side__fill"
+                                style={{ height: `${progressPct}%`, width: `${progressPct}%` }}
+                            />
+                        </div>
+                        <span className="pz-progress-side__pct">{progressPct}%</span>
                     </div>
-                </div>
+                </aside>
             </div>
         </div>
     )

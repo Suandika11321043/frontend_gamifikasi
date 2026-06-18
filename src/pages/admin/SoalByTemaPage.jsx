@@ -9,6 +9,7 @@ import '../../pages/admin/DashboardPage.css'
 import './ManajemenTemaPage.css'
 import './ManajemenSoalPage.css'
 import { apiFetch } from '../../utils/apiFetch'
+import { buildDuplicateQuestionFormData, copyQuestionAttachments } from '../../utils/duplicateQuestion'
 
 const MONTHS = [
     { num: 1, label: 'Januari', short: 'Jan' },
@@ -124,22 +125,18 @@ export default function SoalByTemaPage() {
         setLoadingGroups(true)
         setGroupError('')
         try {
-            const data = await apiFetch(`/questions/topic/${topicId}`)
+            const [data, availData] = await Promise.all([
+                apiFetch(`/questions/topic/${topicId}`),
+                apiFetch(`/questions/topic/${topicId}/learning-dates`).catch(() => []),
+            ])
             const list = Array.isArray(data) ? data : (data?.data ?? [])
             const dateList = [...new Set(list.map((q) => q.learningDate).filter(Boolean))]
             setGroups(groupByDate(list))
             setActiveDates(new Set(dateList))
-            // Derive availability directly from isAvailable field on each question
-            const dateQuestions = {}
-            for (const q of list) {
-                if (q.learningDate) {
-                    if (!dateQuestions[q.learningDate]) dateQuestions[q.learningDate] = []
-                    dateQuestions[q.learningDate].push(q)
-                }
-            }
             const avMap = {}
-            for (const [date, qs] of Object.entries(dateQuestions)) {
-                avMap[date] = qs.every((q) => q.isAvailable === true)
+            const availList = Array.isArray(availData) ? availData : (availData?.data ?? [])
+            for (const item of availList) {
+                if (item.learningDate) avMap[item.learningDate] = item.isAvailable === true
             }
             setAvailabilityMap(avMap)
         } catch (err) {
@@ -158,7 +155,7 @@ export default function SoalByTemaPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ learningDate: date, available: !currentAvailable }),
             })
-            setAvailabilityMap((prev) => ({ ...prev, [date]: !currentAvailable }))
+            await fetchGroups()
         } catch (err) {
             setGroupError(err.message)
         } finally {
@@ -234,78 +231,9 @@ export default function SoalByTemaPage() {
             const list = await apiFetch(`/questions/topic/${topicId}/date/${dupFromDate}`)
             const questions = Array.isArray(list) ? list : (list?.data ?? [])
             for (const q of questions) {
-                const fd = new FormData()
-                fd.append('topicId', topicId)
-                fd.append('learningDate', dupNewDate)
-                fd.append('questionType', q.questionType ?? 'QUIZ')
-                fd.append('contentInstruction', q.contentInstruction ?? '')
-                if (q.timeLimitMinutes) fd.append('timeLimitMinutes', q.timeLimitMinutes)
-                if (q.scorePoint) fd.append('scorePoint', q.scorePoint)
-                if (q.contentImage) {
-                    try {
-                        const blob = await fetch(q.contentImage).then((r) => r.blob())
-                        fd.append('contentImage', blob, 'image')
-                    } catch { /* skip image if unreachable */ }
-                }
+                const fd = await buildDuplicateQuestionFormData(q, topicId, dupNewDate)
                 const newQ = await apiFetch('/questions', { method: 'POST', body: fd })
-                if (!newQ?.id) continue
-
-                if (q.questionType === 'PUZZLE') {
-                    try {
-                        const puzzle = await apiFetch(`/jigsaw/questions/${q.id}/puzzle`)
-                        if (puzzle?.id) {
-                            const pfd = new FormData()
-                            pfd.append('questionId', newQ.id)
-                            if (puzzle.gridRows != null) pfd.append('gridRows', puzzle.gridRows)
-                            if (puzzle.gridCols != null) pfd.append('gridCols', puzzle.gridCols)
-                            if (puzzle.imageUrl) {
-                                try {
-                                    const blob = await fetch(puzzle.imageUrl).then((r) => r.blob())
-                                    pfd.append('image', blob, 'puzzle-image')
-                                } catch { /* skip puzzle image */ }
-                            }
-                            const newPuzzle = await apiFetch('/jigsaw/puzzles', { method: 'POST', body: pfd })
-                            if (newPuzzle?.id) {
-                                try {
-                                    const pieces = await apiFetch(`/jigsaw/puzzles/${puzzle.id}/pieces`)
-                                    const pieceList = Array.isArray(pieces) ? pieces : []
-                                    for (const piece of pieceList) {
-                                        const pcfd = new FormData()
-                                        if (piece.pieceIndex != null) pcfd.append('pieceIndex', piece.pieceIndex)
-                                        if (piece.correctPosition != null) pcfd.append('correctPosition', piece.correctPosition)
-                                        if (piece.pieceImageUrl) {
-                                            try {
-                                                const blob = await fetch(piece.pieceImageUrl).then((r) => r.blob())
-                                                pcfd.append('image', blob, `piece-${piece.pieceIndex}`)
-                                            } catch { /* skip piece image */ }
-                                        }
-                                        await apiFetch(`/jigsaw/puzzles/${newPuzzle.id}/pieces`, { method: 'POST', body: pcfd })
-                                    }
-                                } catch { /* skip pieces if fetch fails */ }
-                            }
-                        }
-                    } catch { /* skip puzzle if fetch fails */ }
-                } else {
-                    try {
-                        const opts = await apiFetch(`/question-options/question/${q.id}`)
-                        const optList = Array.isArray(opts) ? opts : []
-                        for (const opt of optList) {
-                            const ofd = new FormData()
-                            ofd.append('questionId', newQ.id)
-                            ofd.append('teksOpsi', opt.teksOpsi ?? '')
-                            if (q.questionType === 'QUIZ') ofd.append('kunciJawaban', opt.kunciJawaban ? 'true' : 'false')
-                            if (q.questionType === 'SORTING' && opt.urutanBenar != null) ofd.append('urutanBenar', opt.urutanBenar)
-                            if (['MATCH', 'DRAG_AND_DROP'].includes(q.questionType) && opt.tipeItem) ofd.append('tipeItem', opt.tipeItem)
-                            if (opt.mediaOpsi) {
-                                try {
-                                    const blob = await fetch(opt.mediaOpsi).then((r) => r.blob())
-                                    ofd.append('mediaOpsi', blob, 'media')
-                                } catch { /* skip option media */ }
-                            }
-                            await apiFetch('/question-options', { method: 'POST', body: ofd })
-                        }
-                    } catch { /* skip options if fetch fails */ }
-                }
+                if (newQ?.id) await copyQuestionAttachments(apiFetch, q, newQ.id)
             }
             setDupFromDate(null)
             fetchGroups()
@@ -586,7 +514,7 @@ export default function SoalByTemaPage() {
                         })()}
                     </div>
                     <p className="reschedule-note">
-                        Soal dari tanggal ini akan disalin ke tanggal baru beserta seluruh opsi, gambar, dan potongan puzzle.
+                        Soal dari tanggal ini akan disalin ke tanggal baru beserta opsi, pasangan, gambar, dan keping puzzle.
                     </p>
                     <div className="modal-actions">
                         <button className="btn-secondary" onClick={() => setDupFromDate(null)} disabled={duplicating}>Batal</button>

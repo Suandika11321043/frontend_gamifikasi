@@ -2,178 +2,14 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { playCorrectSound, playWrongSound } from '../../utils/cursorSound.js'
 import { apiFetch } from '../../utils/apiFetch'
-import { isAnswered } from '../../utils/quizHelpers'
 import QuizQuestion from '../../components/quiz/QuizQuestion'
 import MatchQuestion from '../../components/quiz/MatchQuestion'
 import SortingQuestion from '../../components/quiz/SortingQuestion'
 import DragAndDropQuestion from '../../components/quiz/DragAndDropQuestion'
 import PuzzleQuestion from '../../components/quiz/PuzzleQuestion'
 import TypeBadge from '../../components/quiz/TypeBadge'
+import QuizFeedbackPopup from '../../components/quiz/QuizFeedbackPopup'
 import './QuizStudentPage.css'
-
-// ── Answer Review (shown in feedback screen) ──────────────────────
-function AnswerReview({ question, feedback, reviewQuestion }) {
-    if (!question || !feedback) return null
-    const type = question.questionType
-    // Use reviewQuestion.options (has kunciJawaban/urutanBenar) when available
-    const opts = reviewQuestion?.options ?? question.options ?? []
-
-    if (type === 'QUIZ') {
-        const chosen = feedback.selectedOptionIds?.[0]
-        return (
-            <div className="answer-review">
-                <p className="answer-review__q">{question.contentInstruction}</p>
-                {question.contentImage && <img src={question.contentImage} alt="soal" className="answer-review__img" />}
-                <div className="ar-options">
-                    {opts.map((opt) => {
-                        const isChosen = opt.optionId === chosen
-                        const isCorrect = opt.kunciJawaban === true
-                        let cls = 'ar-option'
-                        if (isCorrect) cls += ' ar-option--correct'
-                        if (isChosen && !isCorrect) cls += ' ar-option--wrong'
-                        return (
-                            <div key={opt.optionId} className={cls}>
-                                {opt.mediaOpsi && <img src={opt.mediaOpsi} alt="" className="ar-option__img" />}
-                                <span className="ar-option__text">{opt.teksOpsi}</span>
-                                {isCorrect && <span className="ar-badge ar-badge--correct">✓ Jawaban Benar</span>}
-                                {isChosen && !isCorrect && <span className="ar-badge ar-badge--wrong">← Jawabanmu</span>}
-                                {isChosen && isCorrect && <span className="ar-badge ar-badge--chosen-correct">✓ Jawabanmu</span>}
-                            </div>
-                        )
-                    })}
-                </div>
-            </div>
-        )
-    }
-
-    if (type === 'SORTING') {
-        const sorted = [...opts].sort((a, b) => (a.urutanBenar ?? 999) - (b.urutanBenar ?? 999))
-        const studentOrder = feedback.orderedOptionIds ?? []
-        const optById = Object.fromEntries(opts.map((o) => [o.optionId, o]))
-        return (
-            <div className="answer-review">
-                <p className="answer-review__q">{question.contentInstruction}</p>
-                <p className="answer-review__label">Urutan yang benar:</p>
-                <ol className="ar-sort-list">
-                    {sorted.map((opt, i) => (
-                        <li key={opt.optionId} className="ar-sort-item ar-sort-item--correct">
-                            <span className="ar-sort-num">{i + 1}</span>
-                            {opt.mediaOpsi && <img src={opt.mediaOpsi} alt="" className="ar-option__img" />}
-                            <span>{opt.teksOpsi}</span>
-                        </li>
-                    ))}
-                </ol>
-                {!feedback.correct && studentOrder.length > 0 && (
-                    <>
-                        <p className="answer-review__label answer-review__label--wrong">Urutanmu:</p>
-                        <ol className="ar-sort-list">
-                            {studentOrder.map((id, i) => {
-                                const opt = optById[id]
-                                const expectedAt = sorted.findIndex((o) => o.optionId === id)
-                                const isOk = expectedAt === i
-                                return (
-                                    <li key={id} className={`ar-sort-item${isOk ? ' ar-sort-item--ok' : ' ar-sort-item--bad'}`}>
-                                        <span className="ar-sort-num">{i + 1}</span>
-                                        <span>{opt?.teksOpsi ?? `#${id}`}</span>
-                                    </li>
-                                )
-                            })}
-                        </ol>
-                    </>
-                )}
-            </div>
-        )
-    }
-
-    if (type === 'MATCH' || type === 'DRAG_AND_DROP') {
-        const optById = Object.fromEntries(opts.map((o) => [o.optionId, o]))
-        const studentPairs = feedback.matchingPairs ?? {}
-        // correctPairs: from server submit response OR from reviewQuestion
-        const rawCorrect = feedback.correctMatchingPairs ?? null
-        const reviewCorrect = reviewQuestion?.correctPairs ?? null
-        const correctPairsObj = rawCorrect ?? (
-            reviewCorrect
-                ? Object.fromEntries(reviewCorrect.map((p) => [p.opsiPertanyaanId, p.opsiJawabanId]))
-                : null
-        )
-        const renderPairs = (pairsObj, variant) => Object.entries(pairsObj).map(([pId, jVal]) => {
-            const p = optById[Number(pId)]
-            const jIds = Array.isArray(jVal) ? jVal : [jVal]
-            const jText = jIds.map((id) => optById[id]?.teksOpsi ?? `#${id}`).join(', ')
-            return (
-                <div key={pId} className={`ar-pair-row${variant === 'wrong' ? ' ar-pair-row--wrong' : variant === 'correct' ? ' ar-pair-row--correct' : ''}`}>
-                    <span className="ar-pair-cell ar-pair-cell--left">{p?.teksOpsi ?? `#${pId}`}</span>
-                    <span className="ar-pair-arrow">↔</span>
-                    <span className="ar-pair-cell ar-pair-cell--right">{jText}</span>
-                </div>
-            )
-        })
-        return (
-            <div className="answer-review">
-                <p className="answer-review__q">{question.contentInstruction}</p>
-                {Object.keys(studentPairs).length > 0 && (
-                    <>
-                        <p className={`answer-review__label${feedback.correct ? '' : ' answer-review__label--wrong'}`}>
-                            {feedback.correct ? '✓ Pasanganmu sudah benar:' : 'Pasangan yang kamu buat:'}
-                        </p>
-                        <div className="ar-pairs-list">{renderPairs(studentPairs, feedback.correct ? 'correct' : 'wrong')}</div>
-                    </>
-                )}
-                {(!feedback.correct || !Object.keys(studentPairs).length) && correctPairsObj && Object.keys(correctPairsObj).length > 0 && (
-                    <>
-                        <p className="answer-review__label">Pasangan yang benar:</p>
-                        <div className="ar-pairs-list">{renderPairs(correctPairsObj, 'correct')}</div>
-                    </>
-                )}
-            </div>
-        )
-    }
-
-    // PUZZLE: show correct arrangement from reviewQuestion (data is flat on the question object)
-    if (type === 'PUZZLE') {
-        // Fall back chain: reviewQuestion.puzzleAnswer → reviewQuestion (flat) → question.puzzleAnswer → question (flat)
-        const pzSource = reviewQuestion ?? question
-        const pzData = pzSource?.puzzleAnswer ?? pzSource
-        const imageUrl = pzData?.imageUrl
-        const gridCols = pzData?.gridCols
-        const rawPieces = pzData?.pieces
-        const hasPuzzleData = gridCols && Array.isArray(rawPieces) && rawPieces.length > 0
-
-        if (hasPuzzleData) {
-            // Sort by pieceIndex — that IS the correct position order
-            const sorted = [...rawPieces].sort((a, b) => (a.pieceIndex ?? 0) - (b.pieceIndex ?? 0))
-            return (
-                <div className="answer-review">
-                    <p className="answer-review__q">{question.contentInstruction}</p>
-                    {imageUrl && (
-                        <>
-                            <p className="answer-review__label">Gambar lengkap:</p>
-                            <img src={imageUrl} alt="Puzzle lengkap" className="answer-review__img" />
-                        </>
-                    )}
-                    <p className="answer-review__label">Susunan yang benar:</p>
-                    <div className="ar-puzzle-grid" style={{ '--ar-cols': gridCols }}>
-                        {sorted.map((piece, i) => (
-                            <div key={piece.id ?? piece.pieceId ?? i} className="ar-puzzle-cell">
-                                {piece.pieceImageUrl
-                                    ? <img src={piece.pieceImageUrl} alt={`Keping ${i + 1}`} className="ar-puzzle-piece" />
-                                    : <span className="ar-puzzle-empty">{i + 1}</span>}
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            )
-        }
-        return (
-            <div className="answer-review">
-                <p className="answer-review__q">{question.contentInstruction}</p>
-                {question.contentImage && <img src={question.contentImage} alt="soal" className="answer-review__img" />}
-            </div>
-        )
-    }
-
-    return null
-}
 
 // ── Main Page ─────────────────────────────────────────────────────
 function QuizStudentPage() {
@@ -208,6 +44,7 @@ function QuizStudentPage() {
     const submitFnRef = useRef(null)
     // { [questionId]: answer data } — pre-loaded from server so already-answered questions are view-only
     const [answeredMap, setAnsweredMap] = useState({})
+    const [draftAnswers, setDraftAnswers] = useState({})
 
     // ── Fetch questions + time limits ─────────────────────────────
     const fetchData = useCallback(async () => {
@@ -311,18 +148,16 @@ function QuizStudentPage() {
         }
     }, [loading, questions, answeredMap])
 
-    // ── Auto-show view-only feedback for already-answered questions
+    // ── Lewati soal yang sudah dijawab sebelumnya (dari server)
     useEffect(() => {
-        if (!currentQuestion || loading) return
+        if (!currentQuestion || loading || phase !== 'quiz') return
         const prev = answeredMap[currentQuestion.questionId]
-        if (!prev) return
-        // In a partially-done quiz, skip already-answered questions instead of showing feedback
+        if (!prev?.isReviewOnly) return
         const nextUnanswered = questions.findIndex((q, i) => i > currentIdx && !answeredMap[q.questionId])
         if (nextUnanswered !== -1) {
             setCurrentIdx(nextUnanswered)
         }
-        // If no unanswered question found ahead, the allDone redirect in fetchData will handle it
-    }, [currentIdx, answeredMap, loading, questions])
+    }, [currentIdx, answeredMap, loading, questions, phase])
     useEffect(() => {
         if (!currentQuestion || phase !== 'quiz') return
         // Prefer timeLimits map (from admin endpoint); fall back to field on question
@@ -360,9 +195,14 @@ function QuizStudentPage() {
         return () => clearTimeout(id)
     }, [timeLeft, phase])
 
-    // Auto-init SORTING answer when question changes
+    // Muat jawaban draft saat pindah soal
     useEffect(() => {
         if (!currentQuestion) return
+        const draft = draftAnswers[currentQuestion.questionId]
+        if (draft !== undefined) {
+            setCurrentAnswer(draft)
+            return
+        }
         if (currentQuestion.questionType === 'SORTING') {
             setCurrentAnswer(currentQuestion.options.map((o) => o.optionId))
         } else {
@@ -370,14 +210,17 @@ function QuizStudentPage() {
         }
     }, [currentIdx, currentQuestion?.questionId])
 
-    const handleAnswer = (_questionId, value) => {
+    const handleAnswer = (questionId, value) => {
         setCurrentAnswer(value)
+        setDraftAnswers((m) => ({ ...m, [questionId]: value }))
     }
 
     // Build per-question answer payload
     const buildAnswerPayload = (q, a) => {
         const base = { questionId: q.questionId }
-        if (q.questionType === 'QUIZ') return { ...base, selectedOptionIds: [a] }
+        if (q.questionType === 'QUIZ') {
+            return { ...base, selectedOptionIds: (a != null && a !== undefined) ? [a] : [] }
+        }
         if (q.questionType === 'MATCH') {
             const matchingPairs = {}
             Object.entries(a || {}).forEach(([pId, jId]) => { matchingPairs[Number(pId)] = jId })
@@ -395,13 +238,8 @@ function QuizStudentPage() {
         return base
     }
 
-    const currentAnswered = currentQuestion
-        ? isAnswered(currentQuestion, { [currentQuestion.questionId]: currentAnswer })
-        : false
-
-    // Submit single answer
-    const handleSubmitAnswer = async (force = false) => {
-        // Clear sessionStorage timer for this question
+    // Submit jawaban — selalu dikirim; kosong jika belum dijawab
+    const handleSubmitAnswer = async () => {
         if (currentQuestion) {
             sessionStorage.removeItem(`quiz_timer_${studentId}_${learningDate ?? dayId ?? topicId}_${currentQuestion.questionId}`)
         }
@@ -444,6 +282,14 @@ function QuizStudentPage() {
             if (data.correct) playCorrectSound()
             else playWrongSound()
             setFeedback(data)
+            setAnsweredMap((m) => ({
+                ...m,
+                [currentQuestion.questionId]: {
+                    questionId: currentQuestion.questionId,
+                    correct: data.correct,
+                    earnedScore: earned,
+                },
+            }))
             setPhase('feedback')
         } catch (err) {
             const errMsg = err.message ?? ''
@@ -462,6 +308,37 @@ function QuizStudentPage() {
 
     // Keep ref current so the countdown effect can call the latest version
     submitFnRef.current = handleSubmitAnswer
+
+    const finishQuiz = async () => {
+        setPhase('finishing')
+        setSubmitError('')
+        Object.keys(sessionStorage)
+            .filter((k) => k.startsWith(`quiz_timer_${studentId}_${learningDate ?? dayId ?? topicId}_`))
+            .forEach((k) => sessionStorage.removeItem(k))
+        apiFetch(`/quiz/timer/${studentId}/${learningDate ?? dayId ?? topicId}`, { method: 'DELETE' }).catch(() => { })
+        try {
+            const finishData = await apiFetch('/quiz/finish', {
+                method: 'POST',
+                body: JSON.stringify({
+                    studentId: Number(studentId),
+                    topicId: Number(topicId),
+                    correctCount,
+                    totalQuestions: questions.length,
+                }),
+            })
+            setResult(finishData)
+            setPhase('result')
+        } catch (err) {
+            setSubmitError(err.message)
+            setPhase('quiz')
+        }
+    }
+
+    const handleFooterNext = () => {
+        if (phase === 'submitting') return
+        handleSubmitAnswer()
+    }
+
     const handleNext = async () => {
         const isLast = currentIdx === questions.length - 1
         if (!isLast) {
@@ -470,35 +347,11 @@ function QuizStudentPage() {
             setCurrentIdx((i) => i + 1)
             setPhase('quiz')
         } else {
-            // If last question was view-only (already answered before this session), skip finish API
-            if (answeredMap[currentQuestion?.questionId]) {
+            if (answeredMap[currentQuestion?.questionId]?.isReviewOnly) {
                 setPhase('result')
                 return
             }
-            setPhase('finishing')
-            setSubmitError('')
-            // Clear all sessionStorage timer keys for this quiz session
-            Object.keys(sessionStorage)
-                .filter((k) => k.startsWith(`quiz_timer_${studentId}_${learningDate ?? dayId ?? topicId}_`))
-                .forEach((k) => sessionStorage.removeItem(k))
-            // Delete persisted timer for this session
-            apiFetch(`/quiz/timer/${studentId}/${learningDate ?? dayId ?? topicId}`, { method: 'DELETE' }).catch(() => { })
-            try {
-                const finishData = await apiFetch('/quiz/finish', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        studentId: Number(studentId),
-                        topicId: Number(topicId),
-                        correctCount: correctCount + (feedback?.correct ? 0 : 0),
-                        totalQuestions: questions.length,
-                    }),
-                })
-                setResult(finishData)
-                setPhase('result')
-            } catch (err) {
-                setSubmitError(err.message)
-                setPhase('feedback')
-            }
+            await finishQuiz()
         }
     }
 
@@ -639,78 +492,11 @@ function QuizStudentPage() {
         )
     }
 
-    // ── Feedback screen (shown after each answer is submitted) ────
-    if (phase === 'feedback' && feedback) {
-        const isLast = currentIdx === questions.length - 1
-        const isCorrect = feedback.correct
-        const earned = feedback.earnedScore ?? 0
+    // ── Quiz screen (+ popup feedback di atasnya) ─────────────────
+    const isLastQuestion = currentIdx === questions.length - 1
 
-        return (
-            <div className="quiz-wrapper">
-                <div className="quiz-decoration quiz-decoration--1" />
-                <div className="quiz-decoration quiz-decoration--2" />
-                <div className="quiz-container">
-                    {/* Header */}
-                    <header className="quiz-header">
-                        <button className="quiz-back-btn" onClick={() => navigate(-1)}>← Kembali</button>
-                        <div className="quiz-header__meta">
-                            <span className="quiz-topic-badge">
-                                {topicIcon
-                                    ? <img src={topicIcon} alt={topicName} className="quiz-topic-badge__icon" />
-                                    : <span aria-hidden="true">📚</span>
-                                }
-                                {topicName}
-                            </span>
-                            <span className="quiz-progress">Soal {currentIdx + 1} / {questions.length}</span>
-                        </div>
-                    </header>
-
-                    {/* Progress bar */}
-                    <div className="quiz-progress-bar">
-                        <div
-                            className="quiz-progress-bar__fill"
-                            style={{ width: `${((currentIdx + 1) / questions.length) * 100}%` }}
-                        />
-                    </div>
-
-                    {/* Feedback card */}
-                    <div className={`feedback-card ${isCorrect ? 'feedback-card--correct' : 'feedback-card--wrong'}`}>
-                        <div className="feedback-icon">{isCorrect ? '✓' : '✗'}</div>
-                        <h3 className="feedback-title">{isCorrect ? 'Jawaban Benar!' : 'Jawaban Salah'}</h3>
-
-                        {isCorrect ? (
-                            <p className="feedback-score">+{earned} poin</p>
-                        ) : (
-                            <>
-                                <p className="feedback-msg">Tetap semangat, terus berlatih!</p>
-                                {(currentQuestion?.scorePoint || scorePoints[currentQuestion?.questionId]) && (
-                                    <p className="feedback-missed-pts">
-                                        Sayang, kamu melewatkan {currentQuestion?.scorePoint ?? scorePoints[currentQuestion?.questionId]} poin
-                                    </p>
-                                )}
-                            </>
-                        )}
-                    </div>
-
-                    {submitError && <p className="quiz-submit-error">{submitError}</p>}
-
-                    <div className="quiz-footer">
-                        <button
-                            className="quiz-btn quiz-btn--primary quiz-btn--lg"
-                            onClick={handleNext}
-                            disabled={phase === 'finishing'}
-                        >
-                            {isLast ? 'Lihat Hasil' : 'Soal Berikutnya →'}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        )
-    }
-
-    // ── Quiz screen (one question at a time) ──────────────────────
     return (
-        <div className="quiz-wrapper">
+        <div className={`quiz-wrapper${phase === 'feedback' ? ' quiz-wrapper--has-popup' : ''}`}>
             <div className="quiz-decoration quiz-decoration--1" />
             <div className="quiz-decoration quiz-decoration--2" />
 
@@ -748,8 +534,6 @@ function QuizStudentPage() {
                     )}
                 </header>
 
-                <h2 className="quiz-title">Kerjakan Soal</h2>
-
                 {/* Progress bar */}
                 <div className="quiz-progress-bar">
                     <div
@@ -763,7 +547,7 @@ function QuizStudentPage() {
                 {questions.length === 0 ? (
                     <p className="quiz-empty">Tidak ada soal pada topik ini.</p>
                 ) : currentQuestion ? (
-                    <div className="question-card" key={currentQuestion.questionId}>
+                    <div className={`question-card${currentQuestion.questionType === 'PUZZLE' ? ' question-card--puzzle' : ''}`} key={currentQuestion.questionId}>
                         <div className="question-card__header">
                             <p className="question-card__num">Soal {currentIdx + 1}</p>
                             <TypeBadge type={currentQuestion.questionType} />
@@ -774,7 +558,7 @@ function QuizStudentPage() {
                             )}
                         </div>
                         <p className="question-card__text">{currentQuestion.contentInstruction}</p>
-                        {currentQuestion.contentImage && (
+                        {currentQuestion.contentImage && currentQuestion.questionType !== 'PUZZLE' && (
                             <img src={currentQuestion.contentImage} alt="Gambar soal" className="question-card__img" />
                         )}
                         {currentQuestion.contentAudio && (
@@ -821,19 +605,57 @@ function QuizStudentPage() {
                     </div>
                 ) : null}
 
-                {/* Submit button */}
-                {questions.length > 0 && (
-                    <div className="quiz-footer">
+                {questions.length > 0 && phase !== 'feedback' && (
+                    <nav className="ha-nav quiz-nav quiz-nav--forward-only" aria-label="Navigasi soal">
+                        {questions.length <= 10 ? (
+                            <div className="ha-nav-dots" aria-hidden="true">
+                                {questions.map((_, i) => (
+                                    <span
+                                        key={i}
+                                        className={`ha-nav-dot${i === currentIdx ? ' ha-nav-dot--active' : ''}${i < currentIdx ? ' ha-nav-dot--done' : ''}`}
+                                    />
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="ha-nav-counter" aria-hidden="true">
+                                <span className="ha-nav-counter-cur">{currentIdx + 1}</span>
+                                <span className="ha-nav-counter-sep">/</span>
+                                <span className="ha-nav-counter-tot">{questions.length}</span>
+                            </div>
+                        )}
+
                         <button
-                            className="quiz-btn quiz-btn--primary quiz-btn--lg"
-                            onClick={handleSubmitAnswer}
+                            type="button"
+                            className={`ha-nav-btn ha-nav-btn--next${isLastQuestion ? ' ha-nav-btn--finish' : ''}`}
+                            onClick={handleFooterNext}
                             disabled={phase === 'submitting'}
+                            aria-label={isLastQuestion ? 'Selesai' : 'Soal berikutnya'}
                         >
-                            {phase === 'submitting' ? 'Mengirim...' : 'Lanjut →'}
+                            <span className="ha-nav-btn__text">
+                                {phase === 'submitting'
+                                    ? 'Mengirim...'
+                                    : isLastQuestion
+                                        ? 'Selesai!'
+                                        : 'Selanjutnya'}
+                            </span>
+                            <span className="ha-nav-btn__icon" aria-hidden="true">
+                                {phase === 'submitting' ? '…' : isLastQuestion ? '★' : '▶'}
+                            </span>
                         </button>
-                    </div>
+                    </nav>
                 )}
             </div>
+
+            {phase === 'feedback' && feedback && (
+                <QuizFeedbackPopup
+                    popup
+                    earned={feedback.earnedScore ?? 0}
+                    isCorrect={feedback.correct}
+                    onNext={handleNext}
+                    isLast={isLastQuestion}
+                    disabled={phase === 'finishing'}
+                />
+            )}
         </div>
     )
 }

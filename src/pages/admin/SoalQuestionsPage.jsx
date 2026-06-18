@@ -8,6 +8,7 @@ import '../../pages/admin/DashboardPage.css'
 import './ManajemenTemaPage.css'
 import './ManajemenSoalPage.css'
 import { apiFetch } from '../../utils/apiFetch'
+import { buildDuplicateQuestionFormData, copyQuestionAttachments } from '../../utils/duplicateQuestion'
 
 const MONTHS = ['', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
     'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
@@ -163,11 +164,13 @@ function SoalQuestionsPage() {
         setLoading(true)
         setFetchError('')
         try {
-            const data = await apiFetch(`/questions/topic/${topicId}/date/${learningDate}`)
+            const [data, avail] = await Promise.all([
+                apiFetch(`/questions/topic/${topicId}/date/${learningDate}`),
+                apiFetch(`/questions/topic/${topicId}/date/${learningDate}/availability`).catch(() => null),
+            ])
             const list = Array.isArray(data) ? data : (data?.data ?? [])
             setQuestionList(list)
-            // Derive isAvailable directly from each question's isAvailable field
-            setIsAvailable(list.length > 0 && list.every((q) => q.isAvailable === true))
+            setIsAvailable(avail?.isAvailable === true)
         } catch (err) {
             setFetchError(err.message)
         } finally {
@@ -254,22 +257,26 @@ function SoalQuestionsPage() {
 
     const handleSaveQuestion = async () => {
         if (!form.contentInstruction.trim()) { setError('Instruksi soal wajib diisi.'); return }
+        const score = Number(form.scorePoint)
+        if (!form.scorePoint || Number.isNaN(score) || score <= 0) {
+            setError('Poin soal wajib diisi (minimal 1).')
+            return
+        }
         setSaving(true); setError('')
         try {
             const fd = new FormData()
+            fd.append('topicId', topicId)
+            fd.append('learningDate', learningDate)
             fd.append('questionType', form.questionType)
             fd.append('contentInstruction', form.contentInstruction)
             if (form.timeLimitMinutes && Number(form.timeLimitMinutes) > 0) fd.append('timeLimitMinutes', form.timeLimitMinutes)
-            if (form.scorePoint && Number(form.scorePoint) > 0) fd.append('scorePoint', form.scorePoint)
+            fd.append('scorePoint', form.scorePoint)
             if (imageFile) fd.append('contentImage', imageFile)
             if (audioFile) fd.append('contentAudio', audioFile)
 
             if (editId !== null) {
                 await apiFetch(`/questions/${editId}`, { method: 'PUT', body: fd })
             } else {
-                // POST /api/questions with topicId + learningDate (yyyy-MM-dd)
-                fd.append('topicId', topicId)
-                fd.append('learningDate', learningDate)
                 await apiFetch('/questions', { method: 'POST', body: fd })
             }
             setShowModal(false); fetchQuestions()
@@ -285,7 +292,7 @@ function SoalQuestionsPage() {
     }
 
     const openOpsiModal = (q) => {
-        setActiveQuestion(q); setOptForm(emptyOptForm); setEditingOptId(null)
+        setActiveQuestion(q); setOptForm(emptyOptForm); setEditingOptId(null); setEditingPieceId(null)
         setMediaOpsiFile(null); setOptionError(''); setRelForm(emptyRelForm); setRelError('')
         setPuzzleData(null); setPuzzleForm({ gridRows: '3', gridCols: '3' }); setPuzzleImageFile(null); setPuzzleError('')
         setPiecesList([]); setPieceForm(emptyPieceForm); setPieceImageFile(null); setEditingPieceId(null); setPieceError('')
@@ -304,6 +311,7 @@ function SoalQuestionsPage() {
     }
 
     const startEditOption = (opt) => {
+        if (isAvailable) return
         setOptForm({ teksOpsi: opt.teksOpsi ?? '', kunciJawaban: opt.kunciJawaban ?? false, urutanBenar: opt.urutanBenar ?? '', tipeItem: opt.tipeItem ?? '' })
         setEditingOptId(opt.id); setMediaOpsiFile(null)
         // show existing media as starting preview
@@ -314,6 +322,7 @@ function SoalQuestionsPage() {
     const cancelEditOption = () => { setOptForm(emptyOptForm); setEditingOptId(null); setMediaOpsiFile(null); setMediaOpsiPreview(null) }
 
     const handleSaveOption = async () => {
+        if (isAvailable) return
         if (!optForm.teksOpsi.trim()) { setOptionError('Teks opsi wajib diisi.'); return }
 
         // Duplicate-order guard for SORTING
@@ -347,12 +356,22 @@ function SoalQuestionsPage() {
     }
 
     const handleDeleteOption = async (optId) => {
+        if (isAvailable) return
         try { await apiFetch(`/question-options/${optId}`, { method: 'DELETE' }); fetchOptions(activeQuestion.id) }
         catch (err) { setOptionError(err.message) }
     }
 
     const handleSaveRelation = async () => {
+        if (isAvailable) return
         if (!relForm.opsiPertanyaanId || !relForm.opsiJawabanId) { setRelError('Pilih kedua opsi.'); return }
+
+        const leftId = Number(relForm.opsiPertanyaanId)
+        const rightId = Number(relForm.opsiJawabanId)
+        if (relationsList.some((r) => Number(r.opsiPertanyaanId) === leftId && Number(r.opsiJawabanId) === rightId)) {
+            setRelError('Pasangan ini sudah ada.')
+            return
+        }
+
         setSavingRel(true); setRelError('')
         try {
             await apiFetch('/matching-relations', {
@@ -370,11 +389,13 @@ function SoalQuestionsPage() {
     }
 
     const handleDeleteRelation = async (relId) => {
+        if (isAvailable) return
         try { await apiFetch(`/matching-relations/${relId}`, { method: 'DELETE' }); fetchRelations(activeQuestion.id) }
         catch (err) { setRelError(err.message) }
     }
 
     const handleSavePuzzle = async () => {
+        if (isAvailable) return
         if (!puzzleForm.gridRows || !puzzleForm.gridCols) { setPuzzleError('Baris dan kolom wajib diisi.'); return }
         if (!puzzleImageFile && !puzzleData) { setPuzzleError('Gambar puzzle wajib diunggah.'); return }
         setSavingPuzzle(true); setPuzzleError('')
@@ -391,6 +412,7 @@ function SoalQuestionsPage() {
     }
 
     const handleDeletePuzzle = async () => {
+        if (isAvailable) return
         if (!puzzleData?.id) return
         setSavingPuzzle(true); setPuzzleError('')
         try {
@@ -401,6 +423,7 @@ function SoalQuestionsPage() {
     }
 
     const handleSavePiece = async () => {
+        if (isAvailable) return
         if (pieceForm.pieceIndex === '' || pieceForm.correctPosition === '') { setPieceError('Index dan posisi benar wajib diisi.'); return }
         if (!pieceImageFile && !editingPieceId) { setPieceError('Gambar keping wajib diunggah untuk keping baru.'); return }
         setSavingPiece(true); setPieceError('')
@@ -418,11 +441,13 @@ function SoalQuestionsPage() {
     }
 
     const handleDeletePiece = async (pieceId) => {
+        if (isAvailable) return
         try { await apiFetch(`/jigsaw/pieces/${pieceId}`, { method: 'DELETE' }); fetchPieces(puzzleData.id) }
         catch (err) { setPieceError(err.message) }
     }
 
     const startEditPiece = (piece) => {
+        if (isAvailable) return
         setPieceForm({ pieceIndex: String(piece.pieceIndex ?? ''), correctPosition: String(piece.correctPosition ?? '') })
         setEditingPieceId(piece.id); setPieceImageFile(null)
     }
@@ -475,29 +500,9 @@ function SoalQuestionsPage() {
         setDuplicating(true); setDupErr('')
         try {
             for (const q of questionList) {
-                const fd = new FormData()
-                fd.append('topicId', topicId)
-                fd.append('learningDate', dupDateVal)
-                fd.append('questionType', q.questionType ?? 'QUIZ')
-                fd.append('contentInstruction', q.contentInstruction ?? '')
-                if (q.timeLimitMinutes) fd.append('timeLimitMinutes', q.timeLimitMinutes)
-                if (q.scorePoint) fd.append('scorePoint', q.scorePoint)
+                const fd = await buildDuplicateQuestionFormData(q, topicId, dupDateVal)
                 const newQ = await apiFetch('/questions', { method: 'POST', body: fd })
-                if (q.questionType !== 'PUZZLE' && newQ?.id) {
-                    try {
-                        const opts = await apiFetch(`/question-options/question/${q.id}`)
-                        const optList = Array.isArray(opts) ? opts : []
-                        for (const opt of optList) {
-                            const ofd = new FormData()
-                            ofd.append('questionId', newQ.id)
-                            ofd.append('teksOpsi', opt.teksOpsi ?? '')
-                            if (q.questionType === 'QUIZ') ofd.append('kunciJawaban', opt.kunciJawaban ? 'true' : 'false')
-                            if (q.questionType === 'SORTING' && opt.urutanBenar != null) ofd.append('urutanBenar', opt.urutanBenar)
-                            if (NEEDS_RELATION.includes(q.questionType) && opt.tipeItem) ofd.append('tipeItem', opt.tipeItem)
-                            await apiFetch('/question-options', { method: 'POST', body: ofd })
-                        }
-                    } catch { /* skip options if fetch fails */ }
-                }
+                if (newQ?.id) await copyQuestionAttachments(apiFetch, q, newQ.id)
             }
             setShowDuplicate(false)
         } catch (err) { setDupErr(err.message) }
@@ -522,7 +527,7 @@ function SoalQuestionsPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ learningDate, available: !isAvailable }),
             })
-            setIsAvailable((v) => !v)
+            await fetchQuestions()
         } catch (err) { setFetchError(err.message) }
         finally { setTogglingAvail(false) }
     }
@@ -641,7 +646,7 @@ function SoalQuestionsPage() {
                                 </td>
                                 <td>
                                     <div className="action-cell">
-                                        <button className="btn-icon btn-icon-detail" onClick={() => openOpsiModal(q)} title="Kelola opsi"><Eye size={15} /></button>
+                                        <button className="btn-icon btn-icon-detail" onClick={() => openOpsiModal(q)} title={isAvailable ? 'Lihat opsi' : 'Kelola opsi'}><Eye size={15} /></button>
                                         <button className="btn-icon btn-icon-edit" onClick={() => openEdit(q)} title="Edit soal" disabled={isAvailable}><Pencil size={15} /></button>
                                         <button className="btn-icon btn-icon-delete" onClick={() => setDeleteId(q.id)} title="Hapus soal" disabled={isAvailable}><Trash2 size={15} /></button>
                                     </div>
@@ -750,13 +755,14 @@ function SoalQuestionsPage() {
                             <small className="form-hint">Kosongkan jika tidak ada batas waktu</small>
                         </div>
                         <div className="form-group">
-                            <label>🏆 Poin Soal <span className="field-optional">(opsional)</span></label>
+                            <label>🏆 Poin Soal <span className="field-required">*</span></label>
                             <div className="timer-input-row">
                                 <input
                                     name="scorePoint"
                                     type="number"
                                     min="1"
                                     max="1000"
+                                    required
                                     value={form.scorePoint}
                                     onChange={handleQChange}
                                     placeholder="misal: 10"
@@ -764,7 +770,7 @@ function SoalQuestionsPage() {
                                 />
                                 <span className="timer-unit">poin</span>
                             </div>
-                            <small className="form-hint">Kosongkan untuk poin default sistem</small>
+                            <small className="form-hint">Wajib diisi, minimal 1 poin</small>
                         </div>
                     </div>
 
@@ -790,7 +796,7 @@ function SoalQuestionsPage() {
 
             {/* Modal Kelola Opsi */}
             {showOpsiModal && activeQuestion && (
-                <Modal title="Kelola Opsi Soal" className="modal-wide" onClose={closeOpsiModal}>
+                <Modal title={isAvailable ? 'Lihat Opsi Soal' : 'Kelola Opsi Soal'} className={`modal-wide${isAvailable ? ' opsi-modal--locked' : ''}`} onClose={closeOpsiModal}>
                     <div className="opsi-question-info">
                         <TypeBadge type={activeQuestion.questionType} />
                         <span className="opsi-q-text">{activeQuestion.contentInstruction}</span>
@@ -814,38 +820,44 @@ function SoalQuestionsPage() {
                                             <p className="opsi-section-label" style={{ margin: 0 }}>Puzzle Tersimpan</p>
                                             <p className="puzzle-grid-label">Grid: <strong>{puzzleData.gridRows} baris × {puzzleData.gridCols} kolom</strong></p>
                                         </div>
+                                        {!isAvailable && (
                                         <button className="btn-danger" onClick={handleDeletePuzzle} disabled={savingPuzzle} style={{ fontSize: '0.78rem', padding: '4px 10px' }}>
                                             Hapus Puzzle
                                         </button>
+                                        )}
                                     </div>
                                     {puzzleData.imageUrl && <img src={puzzleData.imageUrl} alt="puzzle" className="puzzle-preview-img" />}
                                 </div>
                             )}
-                            <h4 className="opsi-form-title">{puzzleData ? '✏ Update Puzzle' : '+ Buat Puzzle'}</h4>
-                            <div className="opsi-form-grid">
-                                <div className="form-group">
-                                    <label>Jumlah Baris</label>
-                                    <input type="number" min="2" max="6" value={puzzleForm.gridRows}
-                                        onChange={(e) => setPuzzleForm((p) => ({ ...p, gridRows: e.target.value }))} placeholder="contoh: 3" />
-                                    <small className="form-hint">Minimal 2, maksimal 6</small>
-                                </div>
-                                <div className="form-group">
-                                    <label>Jumlah Kolom</label>
-                                    <input type="number" min="2" max="6" value={puzzleForm.gridCols}
-                                        onChange={(e) => setPuzzleForm((p) => ({ ...p, gridCols: e.target.value }))} placeholder="contoh: 3" />
-                                    <small className="form-hint">Minimal 2, maksimal 6</small>
-                                </div>
-                                <div className="form-group">
-                                    <label>Gambar Puzzle {puzzleData ? '(kosongkan untuk tetap pakai gambar lama)' : '(wajib)'}</label>
-                                    <input type="file" accept="image/*" className="input-file" onChange={(e) => setPuzzleImageFile(e.target.files[0] || null)} />
-                                    {puzzleImageFile && <span className="file-selected">✓ {puzzleImageFile.name}</span>}
-                                </div>
-                            </div>
-                            <div className="opsi-form-actions">
-                                <button className="btn-primary" onClick={handleSavePuzzle} disabled={savingPuzzle}>
-                                    {savingPuzzle ? 'Menyimpan...' : puzzleData ? 'Update Puzzle' : 'Buat Puzzle'}
-                                </button>
-                            </div>
+                            {!isAvailable && (
+                                <>
+                                    <h4 className="opsi-form-title">{puzzleData ? '✏ Update Puzzle' : '+ Buat Puzzle'}</h4>
+                                    <div className="opsi-form-grid">
+                                        <div className="form-group">
+                                            <label>Jumlah Baris</label>
+                                            <input type="number" min="2" max="6" value={puzzleForm.gridRows}
+                                                onChange={(e) => setPuzzleForm((p) => ({ ...p, gridRows: e.target.value }))} placeholder="contoh: 3" />
+                                            <small className="form-hint">Minimal 2, maksimal 6</small>
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Jumlah Kolom</label>
+                                            <input type="number" min="2" max="6" value={puzzleForm.gridCols}
+                                                onChange={(e) => setPuzzleForm((p) => ({ ...p, gridCols: e.target.value }))} placeholder="contoh: 3" />
+                                            <small className="form-hint">Minimal 2, maksimal 6</small>
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Gambar Puzzle {puzzleData ? '(kosongkan untuk tetap pakai gambar lama)' : '(wajib)'}</label>
+                                            <input type="file" accept="image/*" className="input-file" onChange={(e) => setPuzzleImageFile(e.target.files[0] || null)} />
+                                            {puzzleImageFile && <span className="file-selected">✓ {puzzleImageFile.name}</span>}
+                                        </div>
+                                    </div>
+                                    <div className="opsi-form-actions">
+                                        <button className="btn-primary" onClick={handleSavePuzzle} disabled={savingPuzzle}>
+                                            {savingPuzzle ? 'Menyimpan...' : puzzleData ? 'Update Puzzle' : 'Buat Puzzle'}
+                                        </button>
+                                    </div>
+                                </>
+                            )}
                             {puzzleData?.id && (
                                 <div className="rel-section">
                                     <h4 className="opsi-section-label">🧩 Keping Puzzle</h4>
@@ -855,7 +867,12 @@ function SoalQuestionsPage() {
                                             : (
                                                 <div className="opsi-table-wrap">
                                                     <table className="opsi-table">
-                                                        <thead><tr><th>#</th><th>Index</th><th>Posisi Benar</th><th>Gambar</th><th>Aksi</th></tr></thead>
+                                                        <thead>
+                                                            <tr>
+                                                                <th>#</th><th>Index</th><th>Posisi Benar</th><th>Gambar</th>
+                                                                {!isAvailable && <th>Aksi</th>}
+                                                            </tr>
+                                                        </thead>
                                                         <tbody>
                                                             {piecesList.map((piece, idx) => (
                                                                 <tr key={piece.id} className={editingPieceId === piece.id ? 'row-editing' : ''}>
@@ -869,50 +886,54 @@ function SoalQuestionsPage() {
                                                                             </a>
                                                                             : <span className="no-media">&mdash;</span>}
                                                                     </td>
-                                                                    <td>
-                                                                        <div className="action-cell">
-                                                                            <button className="btn-edit" onClick={() => startEditPiece(piece)}>Edit</button>
-                                                                            <button className="btn-delete" onClick={() => handleDeletePiece(piece.id)}>Hapus</button>
-                                                                        </div>
-                                                                    </td>
+                                                                    {!isAvailable && (
+                                                                        <td>
+                                                                            <div className="action-cell">
+                                                                                <button className="btn-edit" onClick={() => startEditPiece(piece)}>Edit</button>
+                                                                                <button className="btn-delete" onClick={() => handleDeletePiece(piece.id)}>Hapus</button>
+                                                                            </div>
+                                                                        </td>
+                                                                    )}
                                                                 </tr>
                                                             ))}
                                                         </tbody>
                                                     </table>
                                                 </div>
                                             )}
-                                    <div className="opsi-form-section">
-                                        <h4 className="opsi-form-title">{editingPieceId ? '✏ Edit Keping' : '+ Tambah Keping'}</h4>
-                                        <div className="opsi-form-grid">
-                                            <div className="form-group">
-                                                <label>Piece Index</label>
-                                                <input type="number" min="0" value={pieceForm.pieceIndex}
-                                                    onChange={(e) => setPieceForm((p) => ({ ...p, pieceIndex: e.target.value }))} placeholder="contoh: 0" />
-                                                <small className="form-hint">Dimulai dari 0</small>
+                                    {!isAvailable && (
+                                        <div className="opsi-form-section">
+                                            <h4 className="opsi-form-title">{editingPieceId ? '✏ Edit Keping' : '+ Tambah Keping'}</h4>
+                                            <div className="opsi-form-grid">
+                                                <div className="form-group">
+                                                    <label>Piece Index</label>
+                                                    <input type="number" min="0" value={pieceForm.pieceIndex}
+                                                        onChange={(e) => setPieceForm((p) => ({ ...p, pieceIndex: e.target.value }))} placeholder="contoh: 0" />
+                                                    <small className="form-hint">Dimulai dari 0</small>
+                                                </div>
+                                                <div className="form-group">
+                                                    <label>Correct Position</label>
+                                                    <input type="number" min="0" value={pieceForm.correctPosition}
+                                                        onChange={(e) => setPieceForm((p) => ({ ...p, correctPosition: e.target.value }))} placeholder="contoh: 0" />
+                                                    <small className="form-hint">Posisi benar keping ini di grid</small>
+                                                </div>
+                                                <div className="form-group">
+                                                    <label>Gambar Keping {editingPieceId ? '(kosongkan untuk tetap pakai lama)' : '(wajib)'}</label>
+                                                    <input type="file" accept="image/*" className="input-file" onChange={(e) => setPieceImageFile(e.target.files[0] || null)} />
+                                                    {pieceImageFile && <span className="file-selected">✓ {pieceImageFile.name}</span>}
+                                                </div>
                                             </div>
-                                            <div className="form-group">
-                                                <label>Correct Position</label>
-                                                <input type="number" min="0" value={pieceForm.correctPosition}
-                                                    onChange={(e) => setPieceForm((p) => ({ ...p, correctPosition: e.target.value }))} placeholder="contoh: 0" />
-                                                <small className="form-hint">Posisi benar keping ini di grid</small>
-                                            </div>
-                                            <div className="form-group">
-                                                <label>Gambar Keping {editingPieceId ? '(kosongkan untuk tetap pakai lama)' : '(wajib)'}</label>
-                                                <input type="file" accept="image/*" className="input-file" onChange={(e) => setPieceImageFile(e.target.files[0] || null)} />
-                                                {pieceImageFile && <span className="file-selected">✓ {pieceImageFile.name}</span>}
-                                            </div>
-                                        </div>
-                                        <div className="opsi-form-actions">
-                                            {editingPieceId && (
-                                                <button className="btn-secondary" onClick={() => { setEditingPieceId(null); setPieceForm(emptyPieceForm); setPieceImageFile(null) }}>
-                                                    Batal Edit
+                                            <div className="opsi-form-actions">
+                                                {editingPieceId && (
+                                                    <button className="btn-secondary" onClick={() => { setEditingPieceId(null); setPieceForm(emptyPieceForm); setPieceImageFile(null) }}>
+                                                        Batal Edit
+                                                    </button>
+                                                )}
+                                                <button className="btn-primary" onClick={handleSavePiece} disabled={savingPiece}>
+                                                    {savingPiece ? 'Menyimpan...' : editingPieceId ? 'Update Keping' : 'Tambah Keping'}
                                                 </button>
-                                            )}
-                                            <button className="btn-primary" onClick={handleSavePiece} disabled={savingPiece}>
-                                                {savingPiece ? 'Menyimpan...' : editingPieceId ? 'Update Keping' : 'Tambah Keping'}
-                                            </button>
+                                            </div>
                                         </div>
-                                    </div>
+                                    )}
                                 </div>
                             )}
                         </div>
@@ -936,7 +957,7 @@ function SoalQuestionsPage() {
                                                 <div key={opt.id}
                                                     className={`quiz-opt-item${opt.kunciJawaban ? ' quiz-opt-item--correct' : ''}${editingOptId === opt.id ? ' quiz-opt-item--editing' : ''}`}>
                                                     <span className="quiz-opt-letter">{String.fromCodePoint(65 + idx)}</span>
-                                                    {editingOptId === opt.id ? (
+                                                    {editingOptId === opt.id && !isAvailable ? (
                                                         <div className="quiz-opt-edit-body">
                                                             <input
                                                                 name="teksOpsi"
@@ -988,12 +1009,16 @@ function SoalQuestionsPage() {
                                                             <span className="quiz-opt-text">{opt.teksOpsi}</span>
                                                             {opt.kunciJawaban && <span className="quiz-correct-badge">✓ Benar</span>}
                                                             <div className="quiz-opt-actions">
-                                                                <button className="btn-icon btn-icon-edit" onClick={() => startEditOption(opt)} title="Edit opsi" disabled={isAvailable}>
+                                                                {!isAvailable && (
+                                                                <>
+                                                                <button className="btn-icon btn-icon-edit" onClick={() => startEditOption(opt)} title="Edit opsi">
                                                                     <Pencil size={13} />
                                                                 </button>
-                                                                <button className="btn-icon btn-icon-delete" onClick={() => handleDeleteOption(opt.id)} title="Hapus opsi" disabled={isAvailable}>
+                                                                <button className="btn-icon btn-icon-delete" onClick={() => handleDeleteOption(opt.id)} title="Hapus opsi">
                                                                     <Trash2 size={13} />
                                                                 </button>
+                                                                </>
+                                                                )}
                                                             </div>
                                                         </>
                                                     )}
@@ -1090,8 +1115,12 @@ function SoalQuestionsPage() {
                                                                 )}
                                                                 <span className="match-item-text">{opt.teksOpsi}</span>
                                                                 <div className="match-item-actions">
-                                                                    <button className="btn-icon btn-icon-edit" onClick={() => startEditOption(opt)} title="Edit" disabled={isAvailable}><Pencil size={12} /></button>
-                                                                    <button className="btn-icon btn-icon-delete" onClick={() => handleDeleteOption(opt.id)} title="Hapus" disabled={isAvailable}><Trash2 size={12} /></button>
+                                                                    {!isAvailable && (
+                                                                    <>
+                                                                    <button className="btn-icon btn-icon-edit" onClick={() => startEditOption(opt)} title="Edit"><Pencil size={12} /></button>
+                                                                    <button className="btn-icon btn-icon-delete" onClick={() => handleDeleteOption(opt.id)} title="Hapus"><Trash2 size={12} /></button>
+                                                                    </>
+                                                                    )}
                                                                 </div>
                                                             </div>
                                                         ))}
@@ -1111,8 +1140,12 @@ function SoalQuestionsPage() {
                                                                 )}
                                                                 <span className="match-item-text">{opt.teksOpsi}</span>
                                                                 <div className="match-item-actions">
-                                                                    <button className="btn-icon btn-icon-edit" onClick={() => startEditOption(opt)} title="Edit" disabled={isAvailable}><Pencil size={12} /></button>
-                                                                    <button className="btn-icon btn-icon-delete" onClick={() => handleDeleteOption(opt.id)} title="Hapus" disabled={isAvailable}><Trash2 size={12} /></button>
+                                                                    {!isAvailable && (
+                                                                    <>
+                                                                    <button className="btn-icon btn-icon-edit" onClick={() => startEditOption(opt)} title="Edit"><Pencil size={12} /></button>
+                                                                    <button className="btn-icon btn-icon-delete" onClick={() => handleDeleteOption(opt.id)} title="Hapus"><Trash2 size={12} /></button>
+                                                                    </>
+                                                                    )}
                                                                 </div>
                                                             </div>
                                                         ))}
@@ -1120,6 +1153,7 @@ function SoalQuestionsPage() {
                                         </div>
 
                                         {/* Add / edit item form */}
+                                        {!isAvailable && (
                                         <div className="match-item-form">
                                             {editingOptId ? (
                                                 <p className="match-edit-hint">
@@ -1179,6 +1213,7 @@ function SoalQuestionsPage() {
                                                 <p className="match-hint-text">⬆ Pilih sisi yang ingin ditambahkan itemnya terlebih dahulu.</p>
                                             )}
                                         </div>
+                                        )}
                                     </div>
 
                                     {/* ── Step 2: Create pairs ───────────────────────────── */}
@@ -1194,6 +1229,7 @@ function SoalQuestionsPage() {
                                         {relError && <p className="modal-error">{relError}</p>}
 
                                         {/* Pair selector */}
+                                        {!isAvailable && (
                                         <div className="match-pair-form">
                                             <div className="match-pair-select">
                                                 <span className="match-pair-label match-pair-label--left">{tipeItemOptions[0]?.label ?? 'Kiri'}</span>
@@ -1220,6 +1256,7 @@ function SoalQuestionsPage() {
                                                 {savingRel ? '...' : '🔗 Pasangkan'}
                                             </button>
                                         </div>
+                                        )}
 
                                         {/* Saved pairs */}
                                         {loadingRel ? <p className="tema-loading">Memuat pasangan...</p>
@@ -1233,9 +1270,11 @@ function SoalQuestionsPage() {
                                                                 <span className="match-pair-left">{getOptLabel(rel.opsiPertanyaanId)}</span>
                                                                 <span className="match-pair-arrow">↔</span>
                                                                 <span className="match-pair-right">{getOptLabel(rel.opsiJawabanId)}</span>
-                                                                <button className="btn-icon btn-icon-delete" onClick={() => handleDeleteRelation(rel.id)} title="Hapus pasangan" disabled={isAvailable}>
+                                                                {!isAvailable && (
+                                                                <button className="btn-icon btn-icon-delete" onClick={() => handleDeleteRelation(rel.id)} title="Hapus pasangan">
                                                                     <Trash2 size={12} />
                                                                 </button>
+                                                                )}
                                                             </div>
                                                         ))}
                                                     </div>
@@ -1277,7 +1316,7 @@ function SoalQuestionsPage() {
                                                             {opt.mediaOpsi && getMediaType(opt.mediaOpsi) === 'image' && (
                                                                 <img src={opt.mediaOpsi} alt="" className="sort-item-thumb" />
                                                             )}
-                                                            {editingOptId === opt.id ? (
+                                                            {editingOptId === opt.id && !isAvailable ? (
                                                                 <div className="sort-inline-edit">
                                                                     <input
                                                                         name="teksOpsi"
@@ -1324,10 +1363,10 @@ function SoalQuestionsPage() {
                                                                 <span className="sort-item-text">{opt.teksOpsi}</span>
                                                             )}
                                                         </div>
-                                                        {editingOptId !== opt.id && (
+                                                        {editingOptId !== opt.id && !isAvailable && (
                                                             <div className="match-item-actions">
-                                                                <button className="btn-icon btn-icon-edit" onClick={() => startEditOption(opt)} title="Edit" disabled={isAvailable}><Pencil size={12} /></button>
-                                                                <button className="btn-icon btn-icon-delete" onClick={() => handleDeleteOption(opt.id)} title="Hapus" disabled={isAvailable}><Trash2 size={12} /></button>
+                                                                <button className="btn-icon btn-icon-edit" onClick={() => startEditOption(opt)} title="Edit"><Pencil size={12} /></button>
+                                                                <button className="btn-icon btn-icon-delete" onClick={() => handleDeleteOption(opt.id)} title="Hapus"><Trash2 size={12} /></button>
                                                             </div>
                                                         )}
                                                     </div>
@@ -1336,7 +1375,7 @@ function SoalQuestionsPage() {
                                     )}
 
                                     {/* Add new item */}
-                                    {!editingOptId && (
+                                    {!editingOptId && !isAvailable && (
                                         <div className="sort-add-form">
                                             <div className="sort-add-num-wrap">
                                                 <span className="sort-add-num-label">Urutan</span>
@@ -1376,10 +1415,10 @@ function SoalQuestionsPage() {
                                             </button>
                                         </div>
                                     )}
-                                    {!editingOptId && mediaOpsiPreview && (
+                                    {!editingOptId && !isAvailable && mediaOpsiPreview && (
                                         <img src={mediaOpsiPreview} alt="preview" className="quiz-media-preview-img" style={{ marginLeft: 8 }} />
                                     )}
-                                    {!editingOptId && mediaOpsiFile && !mediaOpsiPreview && (
+                                    {!editingOptId && !isAvailable && mediaOpsiFile && !mediaOpsiPreview && (
                                         <span className="file-selected" style={{ marginLeft: 8 }}>✓ {mediaOpsiFile.name}</span>
                                     )}
                                 </div>
@@ -1429,7 +1468,7 @@ function SoalQuestionsPage() {
                         })()}
                     </div>
                     <p className="reschedule-note">
-                        <strong>{questionList.length} soal</strong> akan disalin ke tanggal baru beserta teks opsinya. Media perlu diunggah ulang.
+                        <strong>{questionList.length} soal</strong> akan disalin ke tanggal baru beserta opsi, pasangan, gambar, dan keping puzzle.
                     </p>
                     <div className="modal-actions">
                         <button className="btn-secondary" onClick={() => setShowDuplicate(false)} disabled={duplicating}>Batal</button>
