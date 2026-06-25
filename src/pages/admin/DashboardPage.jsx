@@ -5,13 +5,20 @@ import AvatarImg from '../../components/common/AvatarImg'
 import { apiFetch } from '../../utils/apiFetch'
 import './DashboardPage.css'
 
-const RANK_LABELS = {
-    BEGINNER: 'Pemula',
-    BRONZE: 'Perunggu',
-    SILVER: 'Perak',
-    GOLD: 'Emas',
-    PLATINUM: 'Platinum',
-    DIAMOND: 'Berlian',
+function formatPositionBadge(position) {
+    if (position === 1) return '🥇'
+    if (position === 2) return '🥈'
+    if (position === 3) return '🥉'
+    return position
+}
+
+function PositionCell({ position }) {
+    const pos = position ?? 0
+    return (
+        <span className={`rank-badge rank-${pos <= 3 ? pos : 'other'}${pos <= 3 ? ' rank-badge--medal' : ''}`}>
+            {formatPositionBadge(pos)}
+        </span>
+    )
 }
 
 function DashboardPage() {
@@ -90,42 +97,39 @@ function DashboardPage() {
                     <table>
                         <thead>
                             <tr>
-                                <th style={{ width: '60px' }}>Rank</th>
+                                <th style={{ width: '50px' }}>No</th>
                                 <th style={{ width: '70px' }}>Avatar</th>
                                 <th>Nama Siswa</th>
                                 <th>Kelompok</th>
                                 <th>Total Poin</th>
                                 <th>Bintang</th>
-                                <th>Rank</th>
                             </tr>
                         </thead>
                         <tbody>
                             {loading ? (
                                 <tr>
-                                    <td colSpan={7} className="empty-row">Memuat data...</td>
+                                    <td colSpan={6} className="empty-row">Memuat data...</td>
                                 </tr>
                             ) : leaderboard.length === 0 ? (
                                 <tr>
-                                    <td colSpan={7} className="empty-row">Belum ada data siswa.</td>
+                                    <td colSpan={6} className="empty-row">Belum ada data siswa.</td>
                                 </tr>
                             ) : (
-                                leaderboard.map((s) => (
+                                leaderboard.map((s, idx) => {
+                                    const position = s.rank ?? idx + 1
+                                    return (
                                     <tr key={s.id}>
+                                        <td><PositionCell position={position} /></td>
                                         <td>
-                                            <span className={`rank-badge rank-${s.rank <= 3 ? s.rank : 'other'}`}>
-                                                {s.rank}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <AvatarImg src={s.avatar} alt={s.name} size={36} />
+                                            <AvatarImg avatar={s.avatar} name={s.name} size="sm" />
                                         </td>
                                         <td className="text-left">{s.name}</td>
                                         <td>{s.group || '—'}</td>
                                         <td><strong>{s.totalEarnedScore ?? 0}</strong></td>
                                         <td>{s.totalStars ?? 0} ⭐</td>
-                                        <td>{RANK_LABELS[s.rankName] ?? s.rankName ?? '—'}</td>
                                     </tr>
-                                ))
+                                    )
+                                })
                             )}
                         </tbody>
                     </table>
@@ -159,32 +163,38 @@ function DashboardPage() {
                             topicGroups.map((group) => {
                                 const scoredStudents = group.students.filter((s) => (s.totalEarnedScore ?? 0) > 0)
                                 return (
-                                <div className="topic-overview-card" key={group.topicId}>
-                                    <h3>{group.topicName}</h3>
-                                    {scoredStudents.length === 0 ? (
-                                        <p className="empty-hint">Belum ada skor.</p>
-                                    ) : (
-                                        <ol className="topic-mini-list">
-                                            {scoredStudents.slice(0, 5).map((s) => (
-                                                <li key={s.studentId}>
-                                                    <span className="mini-rank">{s.rank}</span>
-                                                    <span className="mini-name">{s.studentName}</span>
-                                                    <span className="mini-score">{s.totalEarnedScore ?? 0} poin</span>
-                                                </li>
-                                            ))}
-                                        </ol>
-                                    )}
-                                    {scoredStudents.length > 5 && (
-                                        <button
-                                            type="button"
-                                            className="view-all-btn"
-                                            onClick={() => setSelectedTopicId(String(group.topicId))}
-                                        >
-                                            Lihat semua ({scoredStudents.length})
-                                        </button>
-                                    )}
-                                </div>
-                            )})
+                                    <div className="topic-overview-card" key={group.topicId}>
+                                        <h3>{group.topicName}</h3>
+                                        {scoredStudents.length === 0 ? (
+                                            <p className="empty-hint">Belum ada skor.</p>
+                                        ) : (
+                                            <ol className="topic-mini-list">
+                                                {scoredStudents.slice(0, 5).map((s, idx) => {
+                                                    const position = s.rank ?? idx + 1
+                                                    return (
+                                                    <li key={s.studentId}>
+                                                        <span className={`mini-rank${position <= 3 ? ' mini-rank--medal' : ''}`}>
+                                                            {formatPositionBadge(position)}
+                                                        </span>
+                                                        <span className="mini-name">{s.studentName}</span>
+                                                        <span className="mini-score">{s.totalEarnedScore ?? 0} poin</span>
+                                                    </li>
+                                                    )
+                                                })}
+                                            </ol>
+                                        )}
+                                        {scoredStudents.length > 5 && (
+                                            <button
+                                                type="button"
+                                                className="view-all-btn"
+                                                onClick={() => setSelectedTopicId(String(group.topicId))}
+                                            >
+                                                Lihat semua ({scoredStudents.length})
+                                            </button>
+                                        )}
+                                    </div>
+                                )
+                            })
                         )}
                     </div>
                 ) : (
@@ -192,7 +202,7 @@ function DashboardPage() {
                         <table>
                             <thead>
                                 <tr>
-                                    <th style={{ width: '60px' }}>Rank</th>
+                                    <th style={{ width: '50px' }}>No</th>
                                     <th style={{ width: '70px' }}>Avatar</th>
                                     <th>Nama Siswa</th>
                                     <th>Kelompok</th>
@@ -212,22 +222,21 @@ function DashboardPage() {
                                         </td>
                                     </tr>
                                 ) : (
-                                    topicStudents.map((s) => (
+                                    topicStudents.map((s, idx) => {
+                                        const position = s.rank ?? idx + 1
+                                        return (
                                         <tr key={s.studentId}>
+                                            <td><PositionCell position={position} /></td>
                                             <td>
-                                                <span className={`rank-badge rank-${s.rank <= 3 ? s.rank : 'other'}`}>
-                                                    {s.rank}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <AvatarImg src={s.avatar} alt={s.studentName} size={36} />
+                                                <AvatarImg avatar={s.avatar} name={s.studentName} size="sm" />
                                             </td>
                                             <td className="text-left">{s.studentName}</td>
                                             <td>{s.studentGroup || '—'}</td>
                                             <td><strong>{s.totalEarnedScore ?? 0}</strong></td>
                                             <td>{s.starCount ?? 0} ⭐</td>
                                         </tr>
-                                    ))
+                                        )
+                                    })
                                 )}
                             </tbody>
                         </table>

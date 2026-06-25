@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AvatarImg from '../../components/common/AvatarImg'
+import StarsDisplay from '../../components/common/StarsDisplay'
 import './DaftarSiswaStudentPage.css'
 import { apiFetch, BASE_URL } from '../../utils/apiFetch'
 
@@ -63,7 +64,7 @@ function DaftarSiswaStudentPage() {
                 ) : filtered.length === 0 ? (
                     <p className="ds-empty">Tidak ada siswa ditemukan.</p>
                 ) : (
-                    filtered.map((siswa, idx) => (
+                    filtered.map((siswa) => (
                         <div
                             className="siswa-card"
                             key={siswa.id}
@@ -72,22 +73,20 @@ function DaftarSiswaStudentPage() {
                             tabIndex={0}
                             onKeyDown={(e) => e.key === 'Enter' && navigate(`/student/siswa/${siswa.id}/topics`)}
                         >
-                            <span className={`siswa-card__rank ${idx < 3 ? `siswa-card__rank--top${idx + 1}` : ''}`}>
-                                {idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`}
-                            </span>
                             <AvatarImg avatar={siswa.avatar} name={siswa.name} size="md" />
                             <div className="siswa-card__info">
                                 <p className="siswa-card__name">{siswa.name}</p>
                                 <div className="siswa-card__meta">
                                     <span className="siswa-card__group">{siswa.group}</span>
-                                    {siswa.rankName && (
-                                        <span className="siswa-card__rank-badge">{siswa.rankName}</span>
-                                    )}
                                 </div>
                             </div>
                             <div className="siswa-card__stats">
                                 <span className="siswa-card__points">🏆 {siswa.totalEarnedScore ?? 0}</span>
-                                <span className="siswa-card__stars">{'⭐'.repeat(Math.min(siswa.totalStars ?? 0, 5)) || '—'}</span>
+                                <StarsDisplay
+                                    count={siswa.totalStars}
+                                    className="siswa-card__stars"
+                                    emptyFallback="—"
+                                />
                             </div>
                         </div>
                     ))

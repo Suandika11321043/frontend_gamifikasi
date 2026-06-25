@@ -9,6 +9,19 @@ import DragAndDropQuestion from '../../components/quiz/DragAndDropQuestion'
 import PuzzleQuestion from '../../components/quiz/PuzzleQuestion'
 import TypeBadge from '../../components/quiz/TypeBadge'
 import QuizFeedbackPopup from '../../components/quiz/QuizFeedbackPopup'
+import { formatPuzzleResultBadge } from '../../utils/puzzleResult'
+import {
+    SAVE_INTERVAL_MS,
+    getTimerStorageKey,
+    computeRemainingFromServer,
+    fetchTimerFromServer,
+    saveTimerToServer,
+    clearTimerOnServer,
+    clearAllTimersOnServer,
+    readLocalTimer,
+    writeLocalTimer,
+    clearLocalTimers,
+} from '../../utils/quizTimer'
 import './QuizStudentPage.css'
 
 // ── Main Page ─────────────────────────────────────────────────────
@@ -42,6 +55,8 @@ function QuizStudentPage() {
     // { [questionId]: scorePoint } — fetched from admin endpoint
     const [scorePoints, setScorePoints] = useState({})
     const submitFnRef = useRef(null)
+    const lastServerSaveRef = useRef(0)
+    const timerScopeId = learningDate ?? dayId ?? topicId
     // { [questionId]: answer data } — pre-loaded from server so already-answered questions are view-only
     const [answeredMap, setAnsweredMap] = useState({})
     const [draftAnswers, setDraftAnswers] = useState({})
@@ -69,7 +84,7 @@ function QuizStudentPage() {
                     ? apiFetch(`/questions/topic/${topicId}/student/${studentId}`).catch(() => [])
                     : Promise.resolve([]),
             ])
-            setTopicName(topicData.nameTopic ?? `Topik ${topicId}`)
+            setTopicName(topicData.nameTopic ?? `Tema ${topicId}`)
             setTopicIcon(topicData.icon ?? '')
 
             const questionList = Array.isArray(questionData) ? questionData : []
@@ -160,7 +175,6 @@ function QuizStudentPage() {
     }, [currentIdx, answeredMap, loading, questions, phase])
     useEffect(() => {
         if (!currentQuestion || phase !== 'quiz') return
-        // Prefer timeLimits map (from admin endpoint); fall back to field on question
         const limit = timeLimits[currentQuestion.questionId]
             ?? (currentQuestion.timeLimitMinutes ? currentQuestion.timeLimitMinutes * 60 : 0)
             ?? 0
@@ -170,30 +184,82 @@ function QuizStudentPage() {
             return
         }
         setTimerTotal(limit)
-        // Restore from sessionStorage (persists across page refreshes in same tab)
-        const storageKey = `quiz_timer_${studentId}_${learningDate ?? dayId ?? topicId}_${currentQuestion.questionId}`
-        const saved = sessionStorage.getItem(storageKey)
-        const savedTime = saved ? parseInt(saved, 10) : NaN
-        setTimeLeft(!isNaN(savedTime) && savedTime > 0 && savedTime <= limit ? savedTime : limit)
+        let cancelled = false
+        const storageKey = getTimerStorageKey(studentId, timerScopeId, currentQuestion.questionId)
+
+        ;(async () => {
+            let restored = null
+            const serverTimer = await fetchTimerFromServer(apiFetch, studentId, topicId, currentQuestion.questionId)
+            if (serverTimer) {
+                restored = computeRemainingFromServer(serverTimer, limit)
+            }
+            if (restored == null) {
+                restored = readLocalTimer(storageKey, limit)
+            }
+            if (restored == null) restored = limit
+
+            if (cancelled) return
+            if (restored <= 0) {
+                submitFnRef.current?.(true)
+                return
+            }
+            setTimeLeft(restored)
+            writeLocalTimer(storageKey, restored)
+        })()
+
+        return () => { cancelled = true }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentQuestion?.questionId, timeLimits])
+    }, [currentQuestion?.questionId, timeLimits, phase])
 
     // ── Countdown tick ────────────────────────────────────────────
     useEffect(() => {
-        if (timeLeft === null || phase !== 'quiz') return
+        if (timeLeft === null || phase !== 'quiz' || !currentQuestion) return
         if (timeLeft <= 0) {
-            // Trigger auto-submit via stable ref
             submitFnRef.current?.(true)
             return
         }
-        // Save to sessionStorage on every tick so refresh restores exact remaining time
-        if (currentQuestion) {
-            const storageKey = `quiz_timer_${studentId}_${learningDate ?? dayId ?? topicId}_${currentQuestion.questionId}`
-            sessionStorage.setItem(storageKey, String(timeLeft))
+        const storageKey = getTimerStorageKey(studentId, timerScopeId, currentQuestion.questionId)
+        writeLocalTimer(storageKey, timeLeft)
+
+        const now = Date.now()
+        if (now - lastServerSaveRef.current >= SAVE_INTERVAL_MS) {
+            lastServerSaveRef.current = now
+            saveTimerToServer(apiFetch, {
+                studentId,
+                topicId,
+                questionId: currentQuestion.questionId,
+                remainingSeconds: timeLeft,
+            }).catch(() => {})
         }
+
         const id = setTimeout(() => setTimeLeft((t) => Math.max(0, t - 1)), 1000)
         return () => clearTimeout(id)
-    }, [timeLeft, phase])
+    }, [timeLeft, phase, currentQuestion?.questionId, studentId, topicId, timerScopeId])
+
+    // Simpan timer ke server saat tab ditutup / disembunyikan
+    useEffect(() => {
+        if (!currentQuestion || timeLeft == null || phase !== 'quiz') return
+
+        const persistNow = () => {
+            saveTimerToServer(apiFetch, {
+                studentId,
+                topicId,
+                questionId: currentQuestion.questionId,
+                remainingSeconds: timeLeft,
+            }).catch(() => {})
+        }
+
+        const onVisibility = () => {
+            if (document.visibilityState === 'hidden') persistNow()
+        }
+
+        window.addEventListener('beforeunload', persistNow)
+        document.addEventListener('visibilitychange', onVisibility)
+        return () => {
+            window.removeEventListener('beforeunload', persistNow)
+            document.removeEventListener('visibilitychange', onVisibility)
+        }
+    }, [currentQuestion?.questionId, timeLeft, phase, studentId, topicId])
 
     // Muat jawaban draft saat pindah soal
     useEffect(() => {
@@ -241,7 +307,9 @@ function QuizStudentPage() {
     // Submit jawaban — selalu dikirim; kosong jika belum dijawab
     const handleSubmitAnswer = async () => {
         if (currentQuestion) {
-            sessionStorage.removeItem(`quiz_timer_${studentId}_${learningDate ?? dayId ?? topicId}_${currentQuestion.questionId}`)
+            const storageKey = getTimerStorageKey(studentId, timerScopeId, currentQuestion.questionId)
+            sessionStorage.removeItem(storageKey)
+            clearTimerOnServer(apiFetch, studentId, topicId, currentQuestion.questionId)
         }
         setTimeLeft(null) // stop timer
         setPhase('submitting')
@@ -261,6 +329,8 @@ function QuizStudentPage() {
                 data = {
                     ...raw,
                     correct: raw.isCorrect,
+                    correctPieces: raw.correctPiecesCount,
+                    totalPieces: raw.totalPieces,
                     questionId: currentQuestion.questionId,
                 }
             } else {
@@ -278,7 +348,14 @@ function QuizStudentPage() {
             const newTotal = totalScore + earned
             setCorrectCount(newCorrect)
             setTotalScore(newTotal)
-            setAnswerHistory((h) => [...h, { questionId: data.questionId, correct: data.correct, earnedScore: earned }])
+            setAnswerHistory((h) => [...h, {
+                questionId: data.questionId,
+                correct: data.correct,
+                earnedScore: earned,
+                correctPieces: data.correctPieces,
+                totalPieces: data.totalPieces,
+                questionType: currentQuestion.questionType,
+            }])
             if (data.correct) playCorrectSound()
             else playWrongSound()
             setFeedback(data)
@@ -312,16 +389,15 @@ function QuizStudentPage() {
     const finishQuiz = async () => {
         setPhase('finishing')
         setSubmitError('')
-        Object.keys(sessionStorage)
-            .filter((k) => k.startsWith(`quiz_timer_${studentId}_${learningDate ?? dayId ?? topicId}_`))
-            .forEach((k) => sessionStorage.removeItem(k))
-        apiFetch(`/quiz/timer/${studentId}/${learningDate ?? dayId ?? topicId}`, { method: 'DELETE' }).catch(() => { })
+        clearLocalTimers(studentId, timerScopeId)
+        clearAllTimersOnServer(apiFetch, studentId, topicId)
         try {
             const finishData = await apiFetch('/quiz/finish', {
                 method: 'POST',
                 body: JSON.stringify({
                     studentId: Number(studentId),
                     topicId: Number(topicId),
+                    learningDate: learningDate ?? dayId ?? null,
                     correctCount,
                     totalQuestions: questions.length,
                 }),
@@ -410,8 +486,6 @@ function QuizStudentPage() {
         const pct = total > 0 ? Math.round((correct / total) * 100) : 0
         const stars = result?.starsEarned ?? 0
         const finalTotalStars = result?.totalStars ?? 0
-        const rankName = result?.rankName ?? ''
-        const rankLabels = { BEGINNER: 'Pemula', INTERMEDIATE: 'Menengah', ADVANCED: 'Mahir', EXPERT: 'Ahli' }
 
         return (
             <div className="quiz-wrapper">
@@ -425,11 +499,10 @@ function QuizStudentPage() {
                         <span className="result-circle__label">Skor</span>
                     </div>
 
-                    {/* Stars */}
+                    {/* Bintang sesi = jumlah soal benar */}
                     <div className="result-stars">
-                        {[1, 2, 3].map((s) => (
-                            <span key={s} className={`result-star ${s <= stars ? 'result-star--filled' : ''}`}>★</span>
-                        ))}
+                        <span className="result-stars-count">⭐ {stars}</span>
+                        <span className="result-stars-label">bintang hari ini · {correct} soal benar</span>
                     </div>
 
                     <h2 className="result-title">
@@ -458,24 +531,29 @@ function QuizStudentPage() {
                         )}
                     </div>
 
-                    {/* Rank badge */}
-                    {rankName && (
-                        <div className="result-rank-badge">
-                            🏅 Rank: <strong>{rankLabels[rankName] ?? rankName}</strong>
-                        </div>
-                    )}
-
                     {/* Per-question answer details */}
                     {answerHistory.length > 0 && (
                         <div className="result-details">
                             <p className="result-details__title">Rincian Jawaban</p>
-                            {answerHistory.map((d, idx) => (
-                                <div key={d.questionId} className={`result-detail-row ${d.correct ? 'result-detail-row--correct' : 'result-detail-row--wrong'}`}>
-                                    <span className="result-detail-num">Soal {idx + 1}</span>
-                                    <span className="result-detail-icon">{d.correct ? '✓' : '✗'}</span>
-                                    <span className="result-detail-score">+{d.earnedScore ?? 0}</span>
-                                </div>
-                            ))}
+                            {answerHistory.map((d, idx) => {
+                                const puzzleBadge = d.questionType === 'PUZZLE' ? formatPuzzleResultBadge(d) : null
+                                const rowClass = puzzleBadge
+                                    ? `result-detail-row result-detail-row--${puzzleBadge.variant}`
+                                    : `result-detail-row ${d.correct ? 'result-detail-row--correct' : 'result-detail-row--wrong'}`
+                                return (
+                                    <div key={d.questionId} className={rowClass}>
+                                        <span className="result-detail-num">Soal {idx + 1}</span>
+                                        {puzzleBadge ? (
+                                            <span className="result-detail-puzzle">{puzzleBadge.text}</span>
+                                        ) : (
+                                            <>
+                                                <span className="result-detail-icon">{d.correct ? '✓' : '✗'}</span>
+                                                <span className="result-detail-score">+{d.earnedScore ?? 0}</span>
+                                            </>
+                                        )}
+                                    </div>
+                                )
+                            })}
                         </div>
                     )}
 
@@ -545,7 +623,7 @@ function QuizStudentPage() {
                 {submitError && <p className="quiz-submit-error">{submitError}</p>}
 
                 {questions.length === 0 ? (
-                    <p className="quiz-empty">Tidak ada soal pada topik ini.</p>
+                    <p className="quiz-empty">Tidak ada soal pada tema ini.</p>
                 ) : currentQuestion ? (
                     <div className={`question-card${currentQuestion.questionType === 'PUZZLE' ? ' question-card--puzzle' : ''}`} key={currentQuestion.questionId}>
                         <div className="question-card__header">
@@ -651,6 +729,8 @@ function QuizStudentPage() {
                     popup
                     earned={feedback.earnedScore ?? 0}
                     isCorrect={feedback.correct}
+                    puzzleCorrectPieces={feedback.correctPieces}
+                    puzzleTotalPieces={feedback.totalPieces}
                     onNext={handleNext}
                     isLast={isLastQuestion}
                     disabled={phase === 'finishing'}

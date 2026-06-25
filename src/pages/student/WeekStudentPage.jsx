@@ -2,6 +2,7 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { apiFetch } from '../../utils/apiFetch'
 import TopicIcon from '../../components/common/TopicIcon'
+import StarsDisplay from '../../components/common/StarsDisplay'
 import './WeekStudentPage.css'
 
 const JSDAY_META = {
@@ -98,9 +99,10 @@ export default function WeekStudentPage() {
                 groupList
                     .filter((g) => g.isAvailable === true && g.learningDate)
                     .sort((a, b) => a.learningDate.localeCompare(b.learningDate))
-                    .map(({ learningDate, questions }) => ({
+                    .map(({ learningDate, questions, starCount }) => ({
                         date: learningDate,
                         count: (questions ?? []).length,
+                        stars: starCount ?? (questions ?? []).filter((q) => q.correct === true).length,
                     }))
                     .filter((g) => g.count > 0)
             )
@@ -133,7 +135,6 @@ export default function WeekStudentPage() {
                 <div className="wsp-hero">
                     <div className="wsp-hero-emoji">🗺️</div>
                     <h1 className="wsp-title">Peta Belajar</h1>
-                    <p className="wsp-subtitle">Pilih level untuk mulai mengerjakan soal ✨</p>
                 </div>
 
                 {error && <p className="wsp-error">{error}</p>}
@@ -146,7 +147,7 @@ export default function WeekStudentPage() {
                 ) : dateGroups.length === 0 ? (
                     <div className="wsp-empty">
                         <span className="wsp-empty-icon">📭</span>
-                        <p>Belum ada soal untuk topik ini.</p>
+                        <p>Belum ada soal untuk tema ini.</p>
                     </div>
                 ) : (
                     <div className="wsp-map-wrap">
@@ -180,7 +181,7 @@ export default function WeekStudentPage() {
                             )}
 
                             {/* ── Level nodes ── */}
-                            {dateGroups.map(({ date, count }, idx) => {
+                            {dateGroups.map(({ date, count, stars }, idx) => {
                                 const { meta, dayNum, month, year } = formatDate(date)
                                 const isLeft = idx % 2 === 0
                                 const isDone = completedDates.has(date)
@@ -204,6 +205,11 @@ export default function WeekStudentPage() {
                                         >
                                             <span className="wsp-map-node-lv">Level {idx + 1}</span>
                                             <span className="wsp-map-node-emoji">{isDone ? '✅' : isInProgress ? '🔄' : (meta?.emoji ?? '📅')}</span>
+                                            <StarsDisplay
+                                                count={stars}
+                                                className="wsp-map-node-stars"
+                                                textLabel="bintang hari ini"
+                                            />
                                         </button>
                                         {/* Completion badge */}
                                         {isDone && <span className="wsp-node-badge wsp-node-badge--done">Tinjau Ulang</span>}
@@ -228,6 +234,11 @@ export default function WeekStudentPage() {
                                             </span>
                                             <span className="wsp-map-label-date">{dayNum} {month} {year}</span>
                                             <span className="wsp-map-label-count">{count} soal</span>
+                                            <StarsDisplay
+                                                count={stars}
+                                                className="wsp-map-label-stars"
+                                                textLabel="bintang hari ini"
+                                            />
                                         </div>
                                     </div>
                                 )

@@ -10,14 +10,6 @@ import { apiFetch } from '../../utils/apiFetch'
 
 const emptyForm = { name: '', group: '' }
 
-const RANK_LABELS = {
-    BEGINNER: 'Pemula',
-    INTERMEDIATE: 'Menengah',
-    ADVANCED: 'Mahir',
-    EXPERT: 'Ahli',
-}
-
-
 function DaftarSiswaPage() {
     const [siswaList, setSiswaList] = useState([])
     const [loading, setLoading] = useState(true)

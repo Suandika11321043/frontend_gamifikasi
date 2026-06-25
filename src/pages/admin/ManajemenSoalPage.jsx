@@ -9,6 +9,7 @@ import './ManajemenSoalPage.css'
 import { apiFetch } from '../../utils/apiFetch'
 
 import TopicIcon from '../../components/common/TopicIcon'
+import Modal from '../../components/common/Modal'
 
 function SkeletonCard() {
     return (
@@ -27,6 +28,7 @@ function ManajemenSoalPage() {
     const [loading, setLoading] = useState(true)
     const [fetchError, setFetchError] = useState('')
     const [search, setSearch] = useState('')
+    const [inactiveTopic, setInactiveTopic] = useState(null)
 
     const fetchTema = useCallback(async () => {
         setLoading(true)
@@ -47,6 +49,14 @@ function ManajemenSoalPage() {
         (t.nameTopic ?? '').toLowerCase().includes(search.toLowerCase()) ||
         (t.description ?? '').toLowerCase().includes(search.toLowerCase())
     )
+
+    const handleTopicClick = (tema) => {
+        if (tema.isActive === false) {
+            setInactiveTopic(tema)
+            return
+        }
+        navigate(`/admin/soal/${tema.id}`)
+    }
 
     return (
         <AdminLayout activePath="/admin/soal">
@@ -117,42 +127,80 @@ function ManajemenSoalPage() {
                 </div>
             ) : (
                 <div className="tema-grid soal-tema-grid">
-                    {filtered.map((tema) => (
+                    {filtered.map((tema) => {
+                        const isInactive = tema.isActive === false
+                        return (
                         <div
                             key={tema.id}
-                            className="tema-card soal-tema-card"
-                            onClick={() => navigate(`/admin/soal/${tema.id}`)}
+                            className={`tema-card soal-tema-card${isInactive ? ' tema-card-inactive soal-tema-card--locked' : ''}`}
+                            onClick={() => handleTopicClick(tema)}
                             role="button"
                             tabIndex={0}
-                            aria-label={`Kelola soal untuk tema ${tema.nameTopic}`}
-                            onKeyDown={(e) => e.key === 'Enter' && navigate(`/admin/soal/${tema.id}`)}
+                            aria-label={
+                                isInactive
+                                    ? `Tema ${tema.nameTopic} belum diaktifkan`
+                                    : `Kelola soal untuk tema ${tema.nameTopic}`
+                            }
+                            aria-disabled={isInactive}
+                            onKeyDown={(e) => e.key === 'Enter' && handleTopicClick(tema)}
                         >
                             <div className="tema-card-icon-wrap">
                                 <TopicIcon icon={tema.icon} name={tema.nameTopic} size="lg" />
+                                {isInactive && <div className="soal-tema-lock" aria-hidden="true">🔒</div>}
                             </div>
                             <div className="tema-card-body">
                                 <h3 className="tema-card-name">{tema.nameTopic}</h3>
                                 <p className="tema-card-desc">
                                     {tema.description || <span className="tema-no-desc">Belum ada deskripsi</span>}
                                 </p>
-                                {tema.totalQuestions != null && (
+                                {isInactive ? (
+                                    <span className="soal-tema-inactive-badge">Tema nonaktif</span>
+                                ) : tema.totalQuestions != null && (
                                     <span className="soal-q-count">{tema.totalQuestions} soal</span>
                                 )}
                             </div>
                             <div className="tema-card-actions">
                                 <button
-                                    className="btn-primary soal-kelola-btn"
+                                    className={`btn-primary soal-kelola-btn${isInactive ? ' soal-kelola-btn--locked' : ''}`}
                                     onClick={(e) => {
                                         e.stopPropagation()
-                                        navigate(`/admin/soal/${tema.id}`)
+                                        handleTopicClick(tema)
                                     }}
                                 >
-                                    Kelola Soal <ChevronRight size={14} />
+                                    {isInactive ? '🔒 Terkunci' : <>Kelola Soal <ChevronRight size={14} /></>}
                                 </button>
                             </div>
                         </div>
-                    ))}
+                        )
+                    })}
                 </div>
+            )}
+
+            {inactiveTopic && (
+                <Modal
+                    title="Tema Belum Aktif"
+                    className="modal-confirm"
+                    onClose={() => setInactiveTopic(null)}
+                >
+                    <p>
+                        Silakan aktifkan tema <strong>{inactiveTopic.nameTopic}</strong> terlebih dahulu
+                        melalui halaman Manajemen Tema.
+                    </p>
+                    <div className="modal-actions">
+                        <button className="btn-secondary" onClick={() => setInactiveTopic(null)}>
+                            Tutup
+                        </button>
+                        <button
+                            className="btn-primary"
+                            onClick={() => {
+                                setInactiveTopic(null)
+                                navigate('/admin/tema')
+                            }}
+                        >
+                            Ke Manajemen Tema
+                        </button>
+                    </div>
+                </Modal>
             )}
         </AdminLayout>
     )

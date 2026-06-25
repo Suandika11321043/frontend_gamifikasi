@@ -7,6 +7,7 @@ import MatchReview from '../../components/quiz/MatchReview'
 import MatchQuestion from '../../components/quiz/MatchQuestion'
 import SortingReview from '../../components/quiz/SortingReview'
 import PuzzleHistoryReview from '../../components/quiz/PuzzleHistoryReview'
+import { formatPuzzleResultBadge } from '../../utils/puzzleResult'
 import './QuizStudentPage.css'
 
 function toNumId(v) {
@@ -40,7 +41,9 @@ function normalizeAnswerFields(parsed) {
         })
     }
     const placements = Array.isArray(parsed.placements) ? parsed.placements : []
-    return { selectedOptionIds, orderedOptionIds, matchingPairs, placements }
+    const correctPieces = parsed.correctPieces ?? null
+    const totalPieces = parsed.totalPieces ?? null
+    return { selectedOptionIds, orderedOptionIds, matchingPairs, placements, correctPieces, totalPieces }
 }
 
 function isQuizType(type) {
@@ -119,9 +122,9 @@ function mergeQuestionItem(item, keyQ, topicData) {
     }
 }
 
-function HistorySummary({ questions, topicId, studentId, learningDate, onBack }) {
+function HistorySummary({ questions, topicId, studentId, learningDate, onBack, onBackToMap }) {
     const { correctCount, wrongCount, totalQuestions, totalScore, pct } = computeSummary(questions)
-    const topicName = questions[0]?.topicName ?? `Topik ${topicId}`
+    const topicName = questions[0]?.topicName ?? `Tema ${topicId}`
     const dateLabel = formatLearningDate(learningDate)
 
     return (
@@ -134,7 +137,7 @@ function HistorySummary({ questions, topicId, studentId, learningDate, onBack })
                 <div className="result-circle" style={{ '--pct': `${pct}%` }}>
                     <span className="result-circle__score">{pct}%</span>
                     <span className="result-circle__label">Skor</span>
-                </div>
+            </div>
 
                 <h2 className="result-title">
                     {pct >= 80 ? '🎉 Luar Biasa!' : pct >= 60 ? '👍 Bagus!' : pct >= 40 ? '💪 Terus Semangat!' : '📚 Ayo Coba Lagi!'}
@@ -156,12 +159,12 @@ function HistorySummary({ questions, topicId, studentId, learningDate, onBack })
                     <div className="result-stat">
                         <span className="result-stat__val">{wrongCount}</span>
                         <span className="result-stat__lbl">Salah</span>
-                    </div>
+                                </div>
                     <div className="result-stat">
                         <span className="result-stat__val result-stat__val--points">+{totalScore}</span>
                         <span className="result-stat__lbl">Total Poin</span>
-                    </div>
-                </div>
+                                </div>
+                            </div>
 
                 <p className="history-summary-caption">
                     {correctCount} dari {totalQuestions} soal benar
@@ -195,7 +198,7 @@ function HistorySummary({ questions, topicId, studentId, learningDate, onBack })
                     <button
                         type="button"
                         className="quiz-btn quiz-btn--outline"
-                        onClick={() => navigate(`/student/siswa/${studentId}/topics/${topicId}/weeks`)}
+                        onClick={onBackToMap}
                     >
                         Kembali ke Peta
                     </button>
@@ -203,10 +206,10 @@ function HistorySummary({ questions, topicId, studentId, learningDate, onBack })
                         Tinjau Ulang Soal
                     </button>
                 </div>
+                </div>
             </div>
-        </div>
-    )
-}
+        )
+    }
 
 function HistoryQuestionCard({ item, index, studentId }) {
     if (!item) return null
@@ -245,6 +248,7 @@ function HistoryQuestionCard({ item, index, studentId }) {
     }
 
     const selectedId = item.selectedOptionIds?.[0] ?? null
+    const puzzleBadge = item.questionType === 'PUZZLE' ? formatPuzzleResultBadge(item) : null
 
     return (
         <div
@@ -255,10 +259,16 @@ function HistoryQuestionCard({ item, index, studentId }) {
                 <p className="question-card__num">Soal {index + 1}</p>
                 <TypeBadge type={item.questionType} />
                 {item.correct != null && (
-                    <span className={`history-result-badge history-result-badge--${item.correct ? 'correct' : 'wrong'}`}>
-                        {item.correct ? '✓ Benar' : '✗ Salah'}
-                        {item.earnedScore != null && ` · +${item.earnedScore} poin`}
-                    </span>
+                    puzzleBadge ? (
+                        <span className={`history-result-badge history-result-badge--${puzzleBadge.variant}`}>
+                            {puzzleBadge.text}
+                        </span>
+                    ) : (
+                        <span className={`history-result-badge history-result-badge--${item.correct ? 'correct' : 'wrong'}`}>
+                            {item.correct ? '✓ Benar' : '✗ Salah'}
+                            {item.earnedScore != null && ` · +${item.earnedScore} poin`}
+                        </span>
+                    )
                 )}
             </div>
             <p className="question-card__text">{item.contentInstruction}</p>
@@ -316,6 +326,9 @@ export default function HistoryAnswerPage() {
     const { studentId, topicId, learningDate } = useParams()
     const navigate = useNavigate()
 
+    const mapPath = `/student/siswa/${studentId}/topics/${topicId}/weeks`
+    const goToMap = () => navigate(mapPath)
+
     const [questions, setQuestions] = useState([])
     const [loading, setLoading] = useState(true)
     const [fetchError, setFetchError] = useState('')
@@ -355,7 +368,7 @@ export default function HistoryAnswerPage() {
     const summary = useMemo(() => computeSummary(questions), [questions])
     const currentItem = questions[currentIdx]
     const isLast = currentIdx === questions.length - 1
-    const topicName = currentItem?.topicName ?? questions[0]?.topicName ?? `Topik ${topicId}`
+    const topicName = currentItem?.topicName ?? questions[0]?.topicName ?? `Tema ${topicId}`
     const topicIcon = currentItem?.topicIcon ?? questions[0]?.topicIcon ?? ''
 
     const handlePrev = () => {
@@ -383,7 +396,7 @@ export default function HistoryAnswerPage() {
                 <div className="quiz-decoration quiz-decoration--1" />
                 <div className="quiz-decoration quiz-decoration--2" />
                 <div className="quiz-container">
-                    <button type="button" className="quiz-back-btn" onClick={() => navigate(-1)}>← Kembali</button>
+                    <button type="button" className="quiz-back-btn" onClick={goToMap}>← Kembali</button>
                     <p className="quiz-fetch-error">{fetchError}</p>
                 </div>
             </div>
@@ -396,7 +409,7 @@ export default function HistoryAnswerPage() {
                 <div className="quiz-decoration quiz-decoration--1" />
                 <div className="quiz-decoration quiz-decoration--2" />
                 <div className="quiz-container">
-                    <button type="button" className="quiz-back-btn" onClick={() => navigate(-1)}>← Kembali</button>
+                    <button type="button" className="quiz-back-btn" onClick={goToMap}>← Kembali</button>
                     <p className="quiz-empty">Belum ada riwayat jawaban.</p>
                 </div>
             </div>
@@ -411,6 +424,7 @@ export default function HistoryAnswerPage() {
                 studentId={studentId}
                 learningDate={learningDate}
                 onBack={() => setShowSummary(false)}
+                onBackToMap={goToMap}
             />
         )
     }
@@ -421,7 +435,7 @@ export default function HistoryAnswerPage() {
             <div className="quiz-decoration quiz-decoration--2" />
             <div className="quiz-container">
                 <header className="quiz-header">
-                    <button type="button" className="quiz-back-btn" onClick={() => navigate(-1)}>← Kembali</button>
+                    <button type="button" className="quiz-back-btn" onClick={goToMap}>← Kembali</button>
                     <div className="quiz-header__meta">
                         <span className="quiz-topic-badge">
                             {topicIcon

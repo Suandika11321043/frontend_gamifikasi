@@ -3,18 +3,28 @@ import './PuzzleFeedback.css'
 
 const MASCOTS = { win: '🏆', try: '💪' }
 
-function FeedbackBody({ earned, isCorrect }) {
+function FeedbackBody({ earned, isCorrect, puzzleCorrectPieces, puzzleTotalPieces }) {
+    const isPartial = puzzleTotalPieces > 0
+        && puzzleCorrectPieces != null
+        && puzzleCorrectPieces > 0
+        && puzzleCorrectPieces < puzzleTotalPieces
+
     return (
         <>
             <div className="pz-feedback__sparkles" aria-hidden="true">
                 <span>✨</span><span>⭐</span><span>✨</span>
             </div>
             <div className="pz-feedback__mascot" aria-hidden="true">
-                {isCorrect ? MASCOTS.win : MASCOTS.try}
+                {isCorrect ? MASCOTS.win : isPartial ? '🧩' : MASCOTS.try}
             </div>
             <h3 className="pz-feedback__title">
-                {isCorrect ? 'Berhasil!' : 'Sudah Dikirim!'}
+                {isCorrect ? 'Berhasil!' : isPartial ? 'Hampir Sempurna!' : 'Sudah Dikirim!'}
             </h3>
+            {isPartial && (
+                <p className="pz-feedback__puzzle-meta">
+                    {puzzleCorrectPieces} dari {puzzleTotalPieces} keping benar
+                </p>
+            )}
             <div className="pz-feedback__score-box">
                 <span className="pz-feedback__score-plus">+</span>
                 <span className="pz-feedback__score-num">{earned}</span>
@@ -23,7 +33,9 @@ function FeedbackBody({ earned, isCorrect }) {
             <p className="pz-feedback__msg">
                 {isCorrect
                     ? 'Kamu hebat banget! 🎉'
-                    : 'Tetap semangat ya! Kamu sudah berusaha 💪'}
+                    : isPartial
+                        ? 'Skor dihitung dari keping yang benar. Coba lengkapi semua keping untuk poin penuh! 💪'
+                        : 'Tetap semangat ya! Kamu sudah berusaha 💪'}
             </p>
         </>
     )
@@ -35,14 +47,26 @@ function FeedbackBody({ earned, isCorrect }) {
 export default function QuizFeedbackPopup({
     earned = 0,
     isCorrect = false,
+    puzzleCorrectPieces = null,
+    puzzleTotalPieces = null,
     popup = false,
     onNext,
     isLast = false,
     disabled = false,
 }) {
+    const isPartial = puzzleTotalPieces > 0
+        && puzzleCorrectPieces != null
+        && puzzleCorrectPieces > 0
+        && puzzleCorrectPieces < puzzleTotalPieces
+
     const inner = (
-        <div className={`pz-feedback${isCorrect ? ' pz-feedback--win' : ' pz-feedback--try'}`}>
-            <FeedbackBody earned={earned} isCorrect={isCorrect} />
+        <div className={`pz-feedback${isCorrect ? ' pz-feedback--win' : isPartial ? ' pz-feedback--partial' : ' pz-feedback--try'}`}>
+            <FeedbackBody
+                earned={earned}
+                isCorrect={isCorrect}
+                puzzleCorrectPieces={puzzleCorrectPieces}
+                puzzleTotalPieces={puzzleTotalPieces}
+            />
             {popup && onNext && (
                 <button
                     type="button"

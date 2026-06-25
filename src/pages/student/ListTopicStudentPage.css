@@ -130,10 +130,26 @@
 }
 
 .lt-student-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
     font-size: 0.75rem;
     color: #6b7280;
     font-weight: 500;
     margin: 0.1rem 0 0;
+}
+
+.lt-student-meta-sep {
+    color: #9ca3af;
+}
+
+.lt-student-meta-stars.stars-display-icons {
+    gap: 1px;
+}
+
+.lt-student-meta-stars .stars-display-icon {
+    font-size: 0.75rem;
 }
 
 /* ===========================
@@ -371,19 +387,18 @@
 }
 
 .lt-topic-stars {
-    display: flex;
-    gap: 3px;
-}
-
-.lt-star--on {
+    font-size: 1rem;
+    font-weight: 800;
     color: #f59e0b;
-    font-size: 1.5rem;
-    text-shadow: 0 2px 6px rgba(245, 158, 11, 0.45);
 }
 
-.lt-star--off {
-    color: #d1d5db;
-    font-size: 1.5rem;
+.lt-topic-stars.stars-display-icons {
+    justify-content: center;
+    gap: 2px;
+}
+
+.lt-topic-stars .stars-display-icon {
+    font-size: 1rem;
 }
 
 .lt-topic-score-pill {

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { SortOptionCard } from './SortOptionCard'
+import { shuffleArray } from '../../utils/shuffleArray'
 import './SortOptionCard.css'
 
 const ROW_MAX = 5
@@ -19,7 +20,10 @@ function rowItemBasis(count) {
 }
 
 export default function SortingQuestion({ question, answer, onAnswer }) {
-    const [order, setOrder] = useState(() => answer || question.options.map((o) => o.optionId))
+    const [order, setOrder] = useState(() => {
+        if (answer?.length) return answer
+        return shuffleArray(question.options.map((o) => o.optionId))
+    })
     const [draggingIdx, setDraggingIdx] = useState(null)
     const [layout, setLayout] = useState('horizontal')
     const optionMap = Object.fromEntries(question.options.map((o) => [o.optionId, o]))

@@ -4,6 +4,7 @@ import './ListTopicStudentPage.css'
 import { apiFetch, BASE_URL } from '../../utils/apiFetch'
 
 import TopicIcon from '../../components/common/TopicIcon'
+import StarsDisplay from '../../components/common/StarsDisplay'
 
 function ListTopicStudentPage() {
     const { studentId } = useParams()
@@ -78,26 +79,34 @@ function ListTopicStudentPage() {
                             <div>
                                 <p className="lt-student-name">{siswa.name}</p>
                                 <p className="lt-student-meta">
-                                    {siswa.group} · ⭐ {siswa.totalStars ?? 0} · Skor {siswa.totalEarnedScore ?? 0} · Rank {siswa.rankName ?? 'BEGINNER'}
+                                    <span>{siswa.group}</span>
+                                    <span className="lt-student-meta-sep">·</span>
+                                    <StarsDisplay
+                                        count={siswa.totalStars}
+                                        className="lt-student-meta-stars"
+                                        emptyFallback="—"
+                                    />
+                                    <span className="lt-student-meta-sep">·</span>
+                                    <span>Skor {siswa.totalEarnedScore ?? 0}</span>
                                 </p>
                             </div>
                         </div>
                     )}
                 </header>
 
-                <h2 className="lt-title">📚 Pilih Topik</h2>
-                <p className="lt-subtitle">Pilih topik yang ingin dikerjakan</p>
+                <h2 className="lt-title">📚 Pilih Tema</h2>
+                <p className="lt-subtitle">Pilih tema yang ingin dikerjakan</p>
 
                 {/* Search */}
                 <div className="lt-toolbar">
                     <input
                         className="lt-search"
                         type="text"
-                        placeholder="Cari topik..."
+                        placeholder="Cari tema..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
-                    <span className="lt-count">{filtered.length} topik</span>
+                    <span className="lt-count">{filtered.length} tema</span>
                 </div>
 
                 {/* Error */}
@@ -105,13 +114,17 @@ function ListTopicStudentPage() {
 
                 {/* Topics Grid */}
                 {loading ? (
-                    <p className="lt-empty">Memuat topik...</p>
+                    <p className="lt-empty">Memuat tema...</p>
                 ) : filtered.length === 0 ? (
-                    <p className="lt-empty">Tidak ada topik ditemukan.</p>
+                    <p className="lt-empty">Tidak ada tema ditemukan.</p>
                 ) : (
                     <div className="lt-grid">
                         {filtered.map((topic) => {
                             const isInactive = topic.isActive === false
+                            const progress = progressMap[topic.id]
+                            const topicStars = progress?.starCount ?? 0
+                            const topicScore = progress?.totalEarnedScore ?? 0
+                            const hasProgress = topicStars > 0 || topicScore > 0
                             return (
                                 <div
                                     className={`lt-topic-card${isInactive ? ' lt-topic-card--disabled' : ''}`}
@@ -137,20 +150,23 @@ function ListTopicStudentPage() {
                                         {topic.description && <p className="lt-topic-desc">{topic.description}</p>}
                                         {isInactive ? (
                                             <span className="lt-topic-inactive-notice">Belum diaktifkan</span>
-                                        ) : progressMap[topic.id] ? (
+                                        ) : (
                                             <>
                                                 <div className="lt-topic-progress">
-                                                    <span className="lt-topic-stars">
-                                                        {[1, 2, 3].map((s) => (
-                                                            <span key={s} className={s <= (progressMap[topic.id].starCount ?? 0) ? 'lt-star--on' : 'lt-star--off'}>★</span>
-                                                        ))}
-                                                    </span>
-                                                    <span className="lt-topic-score-pill">🏆 {progressMap[topic.id].totalEarnedScore ?? 0} poin</span>
+                                                    <StarsDisplay
+                                                        count={topicStars}
+                                                        className="lt-topic-stars"
+                                                        textLabel="bintang"
+                                                        emptyFallback="—"
+                                                    />
+                                                    {topicScore > 0 && (
+                                                        <span className="lt-topic-score-pill">🏆 {topicScore} poin</span>
+                                                    )}
                                                 </div>
-                                                <span className="lt-card-cta lt-cta--continue">Lanjutkan ▶</span>
+                                                <span className={`lt-card-cta ${hasProgress ? 'lt-cta--continue' : 'lt-cta--start'}`}>
+                                                    {hasProgress ? 'Lanjutkan ▶' : 'Mulai ✨'}
+                                                </span>
                                             </>
-                                        ) : (
-                                            <span className="lt-card-cta lt-cta--start">Mulai ✨</span>
                                         )}
                                     </div>
                                 </div>

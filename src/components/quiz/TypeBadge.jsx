@@ -1,16 +1,14 @@
-const TYPE_LABELS = {
-    QUIZ: { label: 'Pilihan Ganda', icon: '🅰', color: 'badge--quiz' },
-    MATCH: { label: 'Cocokkan', icon: '🔗', color: 'badge--match' },
-    SORTING: { label: 'Urutkan', icon: '↕', color: 'badge--sort' },
-    DRAG_AND_DROP: { label: 'Seret & Lepas', icon: '✋', color: 'badge--dnd' },
-    PUZZLE: { label: 'Puzzle', icon: '🧩', color: 'badge--puzzle' },
-}
+import { getQuestionTypeConfig } from '../../utils/questionTypes'
+import './TypeBadge.css'
 
-export default function TypeBadge({ type }) {
-    const meta = TYPE_LABELS[type] || { label: type, icon: '❓', color: '' }
+export default function TypeBadge({ type, className = '' }) {
+    const config = getQuestionTypeConfig(type)
     return (
-        <span className={`question-type-badge ${meta.color}`}>
-            {meta.icon} {meta.label}
+        <span
+            className={`type-badge${className ? ` ${className}` : ''}`}
+            style={{ color: config.color, background: config.bg }}
+        >
+            {config.label}
         </span>
     )
 }
