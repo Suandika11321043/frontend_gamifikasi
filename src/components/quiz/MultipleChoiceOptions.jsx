@@ -1,3 +1,4 @@
+import OptionMedia, { getOptionMediaType } from './OptionMedia'
 import './MultipleChoiceOptions.css'
 
 const LETTER_COLORS = [
@@ -54,7 +55,9 @@ export default function MultipleChoiceOptions({
     onSelect,
     disabled = false,
 }) {
-    const allHaveImg = options.length > 0 && options.every((o) => !!o.mediaOpsi)
+    const allHaveImage = options.length > 0 && options.every(
+        (o) => o.mediaOpsi && getOptionMediaType(o.mediaOpsi) === 'image',
+    )
     const isInteractive = mode === 'quiz' && !disabled
 
     if (options.length === 0) {
@@ -62,11 +65,12 @@ export default function MultipleChoiceOptions({
     }
 
     return (
-        <div className={`mc-options${allHaveImg ? ' mc-options--grid' : ''}`}>
+        <div className={`mc-options${allHaveImage ? ' mc-options--grid' : ''}`}>
             {options.map((opt, idx) => {
                 const state = getOptionState(opt, mode, selectedId, showCorrectAnswers)
                 const color = LETTER_COLORS[idx % LETTER_COLORS.length]
                 const letter = String.fromCharCode(65 + idx)
+                const mediaType = opt.mediaOpsi ? getOptionMediaType(opt.mediaOpsi) : null
                 const Tag = isInteractive ? 'button' : 'div'
 
                 return (
@@ -76,7 +80,9 @@ export default function MultipleChoiceOptions({
                         className={[
                             'mc-option',
                             `mc-option--${state}`,
-                            opt.mediaOpsi ? 'mc-option--has-img' : '',
+                            mediaType === 'image' ? 'mc-option--has-img' : '',
+                            mediaType === 'audio' ? 'mc-option--has-audio' : '',
+                            mediaType === 'video' ? 'mc-option--has-video' : '',
                             isInteractive ? 'mc-option--clickable' : '',
                         ].filter(Boolean).join(' ')}
                         style={{
@@ -91,10 +97,9 @@ export default function MultipleChoiceOptions({
                     >
                         <span className="mc-option__letter" aria-hidden="true">{letter}</span>
                         {opt.mediaOpsi && (
-                            <img
-                                src={opt.mediaOpsi}
+                            <OptionMedia
+                                url={opt.mediaOpsi}
                                 alt={opt.teksOpsi || `Pilihan ${letter}`}
-                                className="mc-option__img"
                             />
                         )}
                         <span className="mc-option__text">{opt.teksOpsi}</span>

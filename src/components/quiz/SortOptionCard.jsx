@@ -1,3 +1,4 @@
+import OptionMedia, { getOptionMediaType } from './OptionMedia'
 import './SortOptionCard.css'
 
 const SORT_COLORS = [
@@ -36,6 +37,7 @@ export function SortOptionCard({
     const canNext = onMoveNext != null ? canMoveNext : canMoveRight
     const color = SORT_COLORS[(rank - 1) % SORT_COLORS.length]
     const hasMedia = !!opt?.mediaOpsi
+    const mediaType = hasMedia ? getOptionMediaType(opt.mediaOpsi) : null
     const hasText = !!(opt?.teksOpsi && opt.teksOpsi.trim())
     const contentType = hasMedia ? 'media' : 'text'
 
@@ -45,7 +47,9 @@ export function SortOptionCard({
                 'soc-card',
                 `soc-card--${state}`,
                 `soc-card--${contentType}`,
+                mediaType === 'image' ? 'soc-card--has-image' : '',
                 hasMedia ? 'soc-card--has-media' : '',
+                mediaType === 'audio' ? 'soc-card--has-audio' : '',
                 dragging ? 'soc-card--dragging' : '',
                 isHorizontal ? 'soc-card--layout-horizontal' : 'soc-card--layout-vertical',
             ].filter(Boolean).join(' ')}
@@ -66,7 +70,10 @@ export function SortOptionCard({
 
             <div className="soc-card__body">
                 {hasMedia ? (
-                    <img src={opt.mediaOpsi} alt={opt.teksOpsi || `Urutan ${rank}`} className="soc-card__img" />
+                    <OptionMedia
+                        url={opt.mediaOpsi}
+                        alt={opt.teksOpsi || `Urutan ${rank}`}
+                    />
                 ) : (
                     !isHorizontal && <div className="soc-card__icon" aria-hidden="true">📋</div>
                 )}

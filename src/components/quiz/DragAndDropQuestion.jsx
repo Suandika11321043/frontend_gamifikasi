@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import OptionMedia, { getOptionMediaType } from './OptionMedia'
 
 export default function DragAndDropQuestion({ question, answer, onAnswer }) {
     const items = question.options.filter((o) => o.tipeItem === 'JAWABAN')
@@ -83,7 +84,7 @@ export default function DragAndDropQuestion({ question, answer, onAnswer }) {
                             aria-label={target.teksOpsi}
                         >
                             {target.mediaOpsi && (
-                                <img src={target.mediaOpsi} alt={target.teksOpsi} className="dnd2-target-img" />
+                                <OptionMedia url={target.mediaOpsi} alt={target.teksOpsi} />
                             )}
                             <p className="dnd2-target-label">{target.teksOpsi}</p>
                             {droppedIds.length > 0 && (
@@ -91,10 +92,15 @@ export default function DragAndDropQuestion({ question, answer, onAnswer }) {
                                     {droppedIds.map((dId) => {
                                         const dItem = items.find((i) => i.optionId === dId)
                                         if (!dItem) return null
+                                        const dMediaType = dItem.mediaOpsi ? getOptionMediaType(dItem.mediaOpsi) : null
                                         return (
-                                            <div key={dId} className={`dnd2-placed-chip${dItem.mediaOpsi ? ' dnd2-placed-chip--has-img' : ''}`}>
+                                            <div key={dId} className={[
+                                                'dnd2-placed-chip',
+                                                dMediaType === 'image' ? 'dnd2-placed-chip--has-img' : '',
+                                                dMediaType === 'audio' ? 'dnd2-placed-chip--has-audio' : '',
+                                            ].filter(Boolean).join(' ')}>
                                                 {dItem.mediaOpsi && (
-                                                    <img src={dItem.mediaOpsi} alt={dItem.teksOpsi} className="dnd2-placed-chip__img" />
+                                                    <OptionMedia url={dItem.mediaOpsi} alt={dItem.teksOpsi} />
                                                 )}
                                                 <span className="dnd2-placed-chip__label">{dItem.teksOpsi}</span>
                                                 <button
@@ -117,10 +123,18 @@ export default function DragAndDropQuestion({ question, answer, onAnswer }) {
             <div className="dnd2-chips">
                 {items
                     .filter((i) => !usedItemIds.includes(i.optionId))
-                    .map((item) => (
+                    .map((item) => {
+                        const itemMediaType = item.mediaOpsi ? getOptionMediaType(item.mediaOpsi) : null
+                        return (
                         <div
                             key={item.optionId}
-                            className={`dnd2-chip${draggedId === item.optionId ? ' dnd2-chip--dragging' : ''}${selectedChipId === item.optionId ? ' dnd2-chip--selected' : ''}${item.mediaOpsi ? ' dnd2-chip--has-img' : ''}`}
+                            className={[
+                                'dnd2-chip',
+                                draggedId === item.optionId ? 'dnd2-chip--dragging' : '',
+                                selectedChipId === item.optionId ? 'dnd2-chip--selected' : '',
+                                itemMediaType === 'image' ? 'dnd2-chip--has-img' : '',
+                                itemMediaType === 'audio' ? 'dnd2-chip--has-audio' : '',
+                            ].filter(Boolean).join(' ')}
                             draggable
                             onDragStart={() => { setDraggedId(item.optionId); setSelectedChipId(null) }}
                             onDragEnd={() => { setDraggedId(null); setHoveredTarget(null) }}
@@ -130,11 +144,12 @@ export default function DragAndDropQuestion({ question, answer, onAnswer }) {
                             onKeyDown={(e) => e.key === 'Enter' && handleChipTap(item.optionId)}
                         >
                             {item.mediaOpsi && (
-                                <img src={item.mediaOpsi} alt={item.teksOpsi} className="dnd2-chip__img" />
+                                <OptionMedia url={item.mediaOpsi} alt={item.teksOpsi} />
                             )}
                             <span className="dnd2-chip__label">{item.teksOpsi}</span>
                         </div>
-                    ))}
+                        )
+                    })}
                 {items.filter((i) => !usedItemIds.includes(i.optionId)).length === 0 && (
                     <p className="dnd-all-placed">🎉 Semua jawaban sudah ditempatkan!</p>
                 )}

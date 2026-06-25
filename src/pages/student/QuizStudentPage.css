@@ -1163,8 +1163,106 @@
     min-width: 0;
     word-break: break-word;
     line-height: 1.35;
+    text-align: center;
 }
 
+.match-line-body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+/* Audio / video: stack vertikal di tengah (sama seperti gambar) */
+.match-line-item--has-audio {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    padding: 10px 12px 12px;
+    min-height: auto;
+}
+
+.match-line-item--has-audio .match-line-num {
+    position: absolute;
+    top: 6px;
+    left: 8px;
+}
+
+.match-line-item--has-audio .match-line-body {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    width: 100%;
+}
+
+.match-line-item--has-audio .match-line-text {
+    flex: none;
+    width: 100%;
+    text-align: center;
+    white-space: normal;
+}
+
+.match-line-item--has-audio .option-media--audio,
+.match-line-item--has-audio .option-media--video {
+    width: 100%;
+    max-width: 100%;
+    align-self: center;
+    justify-content: center;
+}
+
+.match-line-item--has-audio .option-media__player {
+    width: 100%;
+    max-width: 100%;
+    height: 38px;
+    accent-color: #6366f1;
+}
+
+/* Gambar: stack vertikal di tengah */
+.match-line-item--has-image {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    padding: 10px 12px 12px;
+    min-height: auto;
+}
+
+.match-line-item--has-image .match-line-num {
+    position: absolute;
+    top: 6px;
+    left: 8px;
+}
+
+.match-line-item--has-image .match-line-body {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    width: 100%;
+}
+
+.match-line-item--has-image .option-media--image {
+    width: 100%;
+    max-width: 140px;
+    align-self: center;
+    margin-inline: auto;
+}
+
+.match-line-item--has-image .option-media__img {
+    width: 100%;
+    max-height: 100px;
+    height: auto;
+    object-fit: contain;
+}
+
+.match-line-item--has-image .match-line-text {
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+/* Legacy img class — keep for review components */
 .match-line-media {
     width: 52px;
     height: 52px;
@@ -1174,33 +1272,6 @@
     border: 2px solid #e5e7eb;
     background: #f8fafc;
     padding: 2px;
-}
-
-.match-line-item:has(.match-line-media) {
-    flex-direction: column;
-    align-items: stretch;
-    text-align: center;
-    padding: 10px 12px 12px;
-    min-height: auto;
-}
-
-.match-line-item:has(.match-line-media) .match-line-media {
-    width: 100%;
-    max-width: 140px;
-    height: auto;
-    max-height: 100px;
-    align-self: center;
-    object-fit: contain;
-}
-
-.match-line-item:has(.match-line-media) .match-line-num {
-    position: absolute;
-    top: 6px;
-    left: 8px;
-}
-
-.match-line-item:has(.match-line-media) .match-line-text {
-    font-size: 0.85rem;
 }
 
 /* Connection dot at each item's edge */
@@ -2114,6 +2185,17 @@
 
 .dnd2-chip--has-img {
     min-width: 80px;
+}
+
+.dnd2-chip--has-audio {
+    min-width: auto;
+    max-width: 100%;
+    padding: 0.4rem 0.6rem;
+    gap: 0.35rem;
+}
+
+.dnd2-placed-chip--has-audio {
+    border-radius: 14px;
 }
 
 .dnd2-chip__img {

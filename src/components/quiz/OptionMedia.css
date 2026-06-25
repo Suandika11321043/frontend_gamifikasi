@@ -1,0 +1,250 @@
+/* ── Base wrapper ───────────────────────────────────────────── */
+.option-media {
+    flex-shrink: 0;
+    min-width: 0;
+}
+
+.option-media__img {
+    display: block;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: #fff;
+}
+
+/* ── Audio / video pill ─────────────────────────────────────── */
+.option-media--audio,
+.option-media--video {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.55rem 0.35rem 0.4rem;
+    background: rgba(255, 255, 255, 0.92);
+    border: 2px solid rgba(0, 0, 0, 0.06);
+    border-radius: 14px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    max-width: 100%;
+}
+
+.option-media__badge {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    border-radius: 10px;
+    background: linear-gradient(145deg, #fef3c7, #fde68a);
+    border: 1.5px solid #fbbf24;
+    line-height: 1;
+}
+
+.option-media__player {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+    max-width: 200px;
+    height: 32px;
+    border-radius: 8px;
+    outline: none;
+}
+
+.option-media__player--video {
+    max-width: 100%;
+    max-height: 120px;
+    height: auto;
+    border-radius: 10px;
+}
+
+/* ── Multiple choice — audio full width ─────────────────────── */
+.mc-option .option-media--audio,
+.mc-option .option-media--video {
+    width: 100%;
+    max-width: 100%;
+    padding: 0.35rem 0.5rem;
+}
+
+.mc-option .option-media__player {
+    max-width: 100%;
+    width: 100%;
+    flex: 1;
+    height: 38px;
+}
+
+/* grid layout diatur di MultipleChoiceOptions.css */
+.mc-options--grid .mc-option .option-media--image .option-media__img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+}
+
+.mc-options--grid .mc-option .option-media--image {
+    width: 100%;
+}
+
+.mc-option .option-media--image .option-media__img {
+    width: 56px;
+    height: 56px;
+}
+
+/* ── Match lines ────────────────────────────────────────────── */
+.match-line-item .option-media {
+    align-self: center;
+    margin-inline: auto;
+}
+
+.match-line-item .option-media--image .option-media__img {
+    width: 52px;
+    height: 52px;
+    object-fit: contain;
+    padding: 2px;
+    border-color: #e5e7eb;
+    background: #f8fafc;
+    margin-inline: auto;
+}
+
+.match-line-item--has-image .option-media--image .option-media__img {
+    width: 100%;
+    max-width: 140px;
+    max-height: 100px;
+    height: auto;
+}
+
+.match-line-item--has-audio .option-media--audio,
+.match-line-item--has-audio .option-media--video {
+    width: 100%;
+    max-width: 100%;
+    margin-inline: auto;
+}
+
+.match-line-item--has-audio .option-media__player {
+    max-width: 100%;
+    width: 100%;
+}
+
+.match-line-item--has-image .option-media--image {
+    margin-inline: auto;
+}
+
+/* ── Sort cards ─────────────────────────────────────────────── */
+.soc-card .option-media--image {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.soc-card .option-media--image .option-media__img {
+    width: auto;
+    max-width: 100%;
+    max-height: 120px;
+    object-fit: contain;
+    margin-inline: auto;
+}
+
+.soc-card--has-image .soc-card__body {
+    align-items: center;
+}
+
+.soc-card .option-media--audio,
+.soc-card .option-media--video {
+    width: 100%;
+    max-width: 100%;
+}
+
+.soc-card .option-media__player {
+    max-width: 100%;
+}
+
+/* ── Drag & drop ──────────────────────────────────────────────── */
+.dnd2-target-card .option-media--image .option-media__img {
+    width: 100%;
+    max-height: 110px;
+    object-fit: contain;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+}
+
+.dnd2-target-card .option-media--audio,
+.dnd2-target-card .option-media--video {
+    width: 100%;
+    max-width: 100%;
+}
+
+.dnd2-chip .option-media--image .option-media__img {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+}
+
+.dnd2-chip .option-media--audio {
+    padding: 0.2rem 0.35rem;
+    max-width: 150px;
+}
+
+.dnd2-chip .option-media__player {
+    max-width: 110px;
+    height: 28px;
+}
+
+.dnd2-chip .option-media__badge {
+    width: 22px;
+    height: 22px;
+    font-size: 0.7rem;
+}
+
+.dnd2-placed-chip .option-media--image .option-media__img {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+}
+
+.dnd2-placed-chip .option-media--audio {
+    padding: 0.15rem 0.3rem;
+    border-radius: 10px;
+}
+
+.dnd2-placed-chip .option-media__player {
+    max-width: 90px;
+    height: 24px;
+}
+
+.dnd2-placed-chip .option-media__badge {
+    width: 18px;
+    height: 18px;
+    font-size: 0.6rem;
+    border-radius: 6px;
+}
+
+/* ── Match review ───────────────────────────────────────────── */
+.mr-card .option-media--image .option-media__img {
+    width: 100%;
+    max-height: 100px;
+    object-fit: contain;
+}
+
+.mr-card .option-media--audio,
+.mr-card .option-media--video {
+    width: 100%;
+}
+
+.mr-card .option-media__player {
+    max-width: 100%;
+}
+
+@media (max-width: 480px) {
+    .mc-option--has-audio,
+    .mc-option--has-video {
+        grid-template-columns: 36px 1fr;
+    }
+
+    .option-media__player {
+        max-width: 100%;
+    }
+
+    .dnd2-chip .option-media--audio {
+        max-width: 130px;
+    }
+}
