@@ -9,7 +9,7 @@ import '../../pages/admin/DashboardPage.css'
 import './ManajemenTemaPage.css'
 import './ManajemenSoalPage.css'
 import { apiFetch } from '../../utils/apiFetch'
-import { buildDuplicateQuestionFormData, copyQuestionAttachments } from '../../utils/duplicateQuestion'
+import { duplicateQuestionToDate } from '../../utils/duplicateQuestion'
 
 const MONTHS = [
     { num: 1, label: 'Januari', short: 'Jan' },
@@ -231,9 +231,7 @@ export default function SoalByTemaPage() {
             const list = await apiFetch(`/questions/topic/${topicId}/date/${dupFromDate}`)
             const questions = Array.isArray(list) ? list : (list?.data ?? [])
             for (const q of questions) {
-                const fd = await buildDuplicateQuestionFormData(q, topicId, dupNewDate)
-                const newQ = await apiFetch('/questions', { method: 'POST', body: fd })
-                if (newQ?.id) await copyQuestionAttachments(apiFetch, q, newQ.id)
+                await duplicateQuestionToDate(apiFetch, q.id, topicId, dupNewDate)
             }
             setDupFromDate(null)
             fetchGroups()
@@ -389,7 +387,7 @@ export default function SoalByTemaPage() {
                     ) : groups.length === 0 ? (
                         <div className="groups-empty">
                             <span className="groups-empty-icon">📝</span>
-                            <p>Belum ada soal untuk topik ini.</p>
+                            <p>Belum ada soal untuk tema ini.</p>
                             <p style={{ fontSize: 12, color: '#9ca3af', marginTop: 4 }}>
                                 Klik tanggal di kalender untuk mulai membuat soal.
                             </p>

@@ -101,7 +101,6 @@ export default function PuzzleHistoryReview({
     const correctCount = review?.correctPiecesCount
         ?? Object.values(slotMap).filter((p) => p.correct).length
     const progressPct = totalPieces > 0 ? Math.round((correctCount / totalPieces) * 100) : 0
-    const score = review?.earnedScore ?? earnedScore
 
     if (loading) return <p className="pz-loading">Memuat jawaban puzzle...</p>
 
@@ -114,7 +113,7 @@ export default function PuzzleHistoryReview({
             <p className="pz-hint">
                 {placedCount === 0
                     ? '🧩 Belum ada keping yang dipasang'
-                    : `🧩 ${correctCount} dari ${totalPieces} keping benar${score != null ? ` · +${score} poin` : ''}`}
+                    : `🧩 ${correctCount} dari ${totalPieces} keping benar`}
             </p>
 
             <div className={`pz-workspace${referenceImage ? '' : ' pz-workspace--no-ref'}`}>

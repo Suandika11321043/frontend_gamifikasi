@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Search, X, Eye, Pencil, Trash2, Plus, Clock, Calendar, Copy, Lock, Unlock } from 'lucide-react'
 import AdminLayout from '../../components/layout/AdminLayout'
@@ -8,7 +8,9 @@ import '../../pages/admin/DashboardPage.css'
 import './ManajemenTemaPage.css'
 import './ManajemenSoalPage.css'
 import { apiFetch } from '../../utils/apiFetch'
-import { buildDuplicateQuestionFormData, copyQuestionAttachments } from '../../utils/duplicateQuestion'
+import { duplicateQuestionToDate } from '../../utils/duplicateQuestion'
+import { QUESTION_TYPES } from '../../utils/questionTypes'
+import TypeBadge from '../../components/quiz/TypeBadge'
 
 const MONTHS = ['', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
     'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
@@ -21,14 +23,6 @@ function formatDisplayDate(dateStr) {
     const jsDay = new Date(y, m - 1, d).getDay()
     return `${JSDAY_NAMES[jsDay]}, ${d} ${MONTHS[m]} ${y}`
 }
-
-const QUESTION_TYPES = [
-    { value: 'QUIZ', label: 'Quiz', color: '#1d4ed8', bg: '#eff6ff' },
-    { value: 'MATCH', label: 'Pasangkan', color: '#166534', bg: '#f0fdf4' },
-    { value: 'SORTING', label: 'Urutkan', color: '#92400e', bg: '#fffbeb' },
-    { value: 'DRAG_AND_DROP', label: 'Drag & Drop', color: '#6b21a8', bg: '#faf5ff' },
-    { value: 'PUZZLE', label: 'Puzzle', color: '#a8a121', bg: '#fafde7' },
-]
 
 const TIPE_ITEM_OPTIONS = {
     MATCH: [
@@ -61,11 +55,6 @@ function MediaCell({ url }) {
     return <a href={url} target="_blank" rel="noreferrer" className="opsi-img-link"><img src={url} alt="media" className="opsi-img-thumb" /></a>
 }
 
-function TypeBadge({ type }) {
-    const config = QUESTION_TYPES.find((t) => t.value === type) || { label: type, color: '#374151', bg: '#f3f4f6' }
-    return <span className="type-badge" style={{ color: config.color, background: config.bg }}>{config.label}</span>
-}
-
 function SoalQuestionsPage() {
     const { topicId, learningDate } = useParams()
     const navigate = useNavigate()
@@ -87,6 +76,7 @@ function SoalQuestionsPage() {
     const [audioFile, setAudioFile] = useState(null)
     const [existingAudio, setExistingAudio] = useState(null)
     const [editId, setEditId] = useState(null)
+    const [typeLocked, setTypeLocked] = useState(false)
     const [showModal, setShowModal] = useState(false)
     const [error, setError] = useState('')
     const [saving, setSaving] = useState(false)
@@ -238,7 +228,7 @@ function SoalQuestionsPage() {
 
     const openAdd = () => {
         setForm(emptyQForm); setImageFile(null); setImagePreview(null)
-        setAudioFile(null); setExistingAudio(null); setEditId(null); setError(''); setShowModal(true)
+        setAudioFile(null); setExistingAudio(null); setEditId(null); setTypeLocked(false); setError(''); setShowModal(true)
     }
 
     const openEdit = (q) => {
@@ -250,7 +240,7 @@ function SoalQuestionsPage() {
         })
         setImageFile(null); setImagePreview(q.contentImage ?? null)
         setAudioFile(null); setExistingAudio(q.contentAudio ?? null)
-        setEditId(q.id); setError(''); setShowModal(true)
+        setEditId(q.id); setTypeLocked(!!q.questionTypeLocked); setError(''); setShowModal(true)
     }
 
     const handleQChange = (e) => setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -303,6 +293,7 @@ function SoalQuestionsPage() {
 
     const closeOpsiModal = () => {
         setShowOpsiModal(false); setActiveQuestion(null); setOptionsList([]); setRelationsList([]); setEditingOptId(null)
+        fetchQuestions()
     }
 
     const handleOptChange = (e) => {
@@ -350,14 +341,14 @@ function SoalQuestionsPage() {
             if (editingOptId !== null) await apiFetch(`/question-options/${editingOptId}`, { method: 'PUT', body: fd })
             else await apiFetch('/question-options', { method: 'POST', body: fd })
             setOptForm(emptyOptForm); setEditingOptId(null); setMediaOpsiFile(null); setMediaOpsiPreview(null)
-            fetchOptions(activeQuestion.id)
+            fetchOptions(activeQuestion.id); fetchQuestions()
         } catch (err) { setOptionError(err.message) }
         finally { setSavingOpt(false) }
     }
 
     const handleDeleteOption = async (optId) => {
         if (isAvailable) return
-        try { await apiFetch(`/question-options/${optId}`, { method: 'DELETE' }); fetchOptions(activeQuestion.id) }
+        try { await apiFetch(`/question-options/${optId}`, { method: 'DELETE' }); fetchOptions(activeQuestion.id); fetchQuestions() }
         catch (err) { setOptionError(err.message) }
     }
 
@@ -383,14 +374,14 @@ function SoalQuestionsPage() {
                     opsiJawabanId: Number(relForm.opsiJawabanId),
                 }),
             })
-            setRelForm(emptyRelForm); fetchRelations(activeQuestion.id)
+            setRelForm(emptyRelForm); fetchRelations(activeQuestion.id); fetchQuestions()
         } catch (err) { setRelError(err.message) }
         finally { setSavingRel(false) }
     }
 
     const handleDeleteRelation = async (relId) => {
         if (isAvailable) return
-        try { await apiFetch(`/matching-relations/${relId}`, { method: 'DELETE' }); fetchRelations(activeQuestion.id) }
+        try { await apiFetch(`/matching-relations/${relId}`, { method: 'DELETE' }); fetchRelations(activeQuestion.id); fetchQuestions() }
         catch (err) { setRelError(err.message) }
     }
 
@@ -406,7 +397,7 @@ function SoalQuestionsPage() {
             if (puzzleImageFile) fd.append('image', puzzleImageFile)
             if (puzzleData?.id) await apiFetch(`/jigsaw/puzzles/${puzzleData.id}`, { method: 'PUT', body: fd })
             else { fd.append('questionId', activeQuestion.id); await apiFetch('/jigsaw/puzzles', { method: 'POST', body: fd }) }
-            fetchPuzzle(activeQuestion.id); setPuzzleImageFile(null)
+            fetchPuzzle(activeQuestion.id); setPuzzleImageFile(null); fetchQuestions()
         } catch (err) { setPuzzleError(err.message) }
         finally { setSavingPuzzle(false) }
     }
@@ -417,7 +408,7 @@ function SoalQuestionsPage() {
         setSavingPuzzle(true); setPuzzleError('')
         try {
             await apiFetch(`/jigsaw/puzzles/${puzzleData.id}`, { method: 'DELETE' })
-            setPuzzleData(null); setPuzzleForm({ gridRows: '3', gridCols: '3' }); setPiecesList([])
+            setPuzzleData(null); setPuzzleForm({ gridRows: '3', gridCols: '3' }); setPiecesList([]); fetchQuestions()
         } catch (err) { setPuzzleError(err.message) }
         finally { setSavingPuzzle(false) }
     }
@@ -455,6 +446,11 @@ function SoalQuestionsPage() {
     const pertanyaanOpts = optionsList.filter((o) => o.tipeItem === 'PERTANYAAN')
     const jawabanOpts = optionsList.filter((o) => o.tipeItem === 'JAWABAN')
     const getOptLabel = (id) => { const o = optionsList.find((x) => x.id === id); return o ? o.teksOpsi : `#${id}` }
+
+    const sortingItemsByCreation = useMemo(
+        () => [...optionsList].sort((a, b) => (a.id ?? 0) - (b.id ?? 0)),
+        [optionsList],
+    )
 
     const isRelation = activeQuestion && NEEDS_RELATION.includes(activeQuestion.questionType)
     const tipeItemOptions = activeQuestion ? (TIPE_ITEM_OPTIONS[activeQuestion.questionType] ?? []) : []
@@ -500,9 +496,7 @@ function SoalQuestionsPage() {
         setDuplicating(true); setDupErr('')
         try {
             for (const q of questionList) {
-                const fd = await buildDuplicateQuestionFormData(q, topicId, dupDateVal)
-                const newQ = await apiFetch('/questions', { method: 'POST', body: fd })
-                if (newQ?.id) await copyQuestionAttachments(apiFetch, q, newQ.id)
+                await duplicateQuestionToDate(apiFetch, q.id, topicId, dupDateVal)
             }
             setShowDuplicate(false)
         } catch (err) { setDupErr(err.message) }
@@ -665,18 +659,29 @@ function SoalQuestionsPage() {
                     {/* Tipe Soal */}
                     <div className="form-group">
                         <label>Tipe Soal</label>
+                        {typeLocked && (
+                            <p className="field-hint qtype-locked-hint">
+                                Tipe soal terkunci karena opsi atau konfigurasi puzzle sudah diatur. Hapus semua opsi/konfigurasi di Kelola Opsi untuk mengganti tipe.
+                            </p>
+                        )}
                         <div className="qtype-selector">
-                            {QUESTION_TYPES.map((t) => (
+                            {QUESTION_TYPES.map((t) => {
+                                const isSelected = form.questionType === t.value
+                                const isDisabled = typeLocked && !isSelected
+                                return (
                                 <button
                                     key={t.value}
                                     type="button"
-                                    className={`qtype-option${form.questionType === t.value ? ' selected' : ''}`}
-                                    style={form.questionType === t.value ? { background: t.bg, color: t.color, borderColor: t.color } : {}}
-                                    onClick={() => setForm((prev) => ({ ...prev, questionType: t.value }))}
+                                    disabled={isDisabled}
+                                    className={`qtype-option${isSelected ? ' selected' : ''}${isDisabled ? ' qtype-option--locked' : ''}`}
+                                    style={isSelected ? { background: t.bg, color: t.color, borderColor: t.color } : {}}
+                                    onClick={() => !isDisabled && setForm((prev) => ({ ...prev, questionType: t.value }))}
+                                    title={isDisabled ? 'Hapus opsi/konfigurasi terlebih dahulu' : undefined}
                                 >
                                     {t.label}
                                 </button>
-                            ))}
+                                )
+                            })}
                         </div>
                     </div>
 
@@ -1288,7 +1293,8 @@ function SoalQuestionsPage() {
                                         <div className="sort-section-info">
                                             <p className="match-step-title">Item yang Perlu Diurutkan</p>
                                             <p className="match-step-desc">
-                                                Tambahkan semua item beserta nomor urut yang benar. Siswa akan melihat item dalam urutan acak dan harus menyusunnya dengan benar.
+                                                Isi <strong>nomor urutan benar</strong> per item (1 = posisi pertama, 2 = kedua, dst).
+                                                Daftar item tidak diurutkan otomatis — siswa melihat urutan acak saat mengerjakan.
                                             </p>
                                         </div>
                                         {!loadingOptions && optionsList.length > 0 && (
@@ -1306,9 +1312,7 @@ function SoalQuestionsPage() {
                                         </div>
                                     ) : (
                                         <div className="sort-ordered-list">
-                                            {[...optionsList]
-                                                .sort((a, b) => (a.urutanBenar ?? 999) - (b.urutanBenar ?? 999))
-                                                .map((opt) => (
+                                            {sortingItemsByCreation.map((opt) => (
                                                     <div key={opt.id}
                                                         className={`sort-item-card${editingOptId === opt.id ? ' sort-item-card--editing' : ''}`}>
                                                         <span className="sort-item-num">{opt.urutanBenar ?? '?'}</span>

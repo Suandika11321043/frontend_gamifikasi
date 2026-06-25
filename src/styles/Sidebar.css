@@ -57,7 +57,8 @@
     font-weight: 700;
     color: #e2e8f0;
     letter-spacing: 1px;
-    white-space: nowrap;
+    line-height: 1.3;
+    overflow-wrap: break-word;
 }
 
 .sidebar-toggle {
@@ -89,7 +90,7 @@
 
 .nav-item {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 10px;
     padding: 10px 14px;
     border-radius: 8px;
@@ -97,15 +98,17 @@
     text-decoration: none;
     font-size: 14px;
     font-weight: 500;
+    line-height: 1.35;
     transition: background 0.2s, color 0.2s;
 }
 
 .nav-item--direct {
-    white-space: nowrap;
-    overflow: hidden;
+    white-space: normal;
+    overflow-wrap: break-word;
 }
 
 .sidebar--collapsed .nav-item--direct {
+    align-items: center;
     justify-content: center;
     padding: 10px;
 }
@@ -114,6 +117,7 @@
     display: flex;
     align-items: center;
     flex-shrink: 0;
+    margin-top: 1px;
 }
 
 .nav-item:hover,
@@ -130,7 +134,7 @@
 
 .nav-group-toggle {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 10px;
     padding: 10px 10px;
     border-radius: 8px;
@@ -139,12 +143,12 @@
     color: #94a3b8;
     font-size: 14px;
     font-weight: 500;
+    line-height: 1.35;
     cursor: pointer;
     text-align: left;
     transition: background 0.2s, color 0.2s;
     width: 100%;
-    white-space: nowrap;
-    overflow: hidden;
+    white-space: normal;
 }
 
 .nav-group-toggle:hover,
@@ -154,6 +158,7 @@
 }
 
 .sidebar--collapsed .nav-group-toggle {
+    align-items: center;
     justify-content: center;
     padding: 10px;
 }
@@ -162,12 +167,14 @@
     display: flex;
     align-items: center;
     flex-shrink: 0;
+    margin-top: 1px;
 }
 
 .nav-group-label {
     flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    min-width: 0;
+    white-space: normal;
+    overflow-wrap: break-word;
 }
 
 .nav-arrow {
@@ -175,6 +182,7 @@
     align-items: center;
     flex-shrink: 0;
     color: #64748b;
+    margin-top: 2px;
 }
 
 /* ── Sub items ────────────────────────────────────────── */
@@ -188,7 +196,7 @@
 
 .nav-sub-item {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 8px;
     padding: 8px 14px;
     border-radius: 6px;
@@ -196,9 +204,11 @@
     text-decoration: none;
     font-size: 13px;
     font-weight: 500;
+    line-height: 1.35;
     transition: background 0.2s, color 0.2s;
     border-left: 2px solid #2d2d4e;
-    white-space: nowrap;
+    white-space: normal;
+    overflow-wrap: break-word;
 }
 
 .nav-sub-item:hover,
@@ -212,6 +222,7 @@
     display: flex;
     align-items: center;
     flex-shrink: 0;
+    margin-top: 1px;
 }
 
 /* ── Logout (header icon button) ─────────────────────── */
