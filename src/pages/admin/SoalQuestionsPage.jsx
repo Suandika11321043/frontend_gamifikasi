@@ -44,8 +44,53 @@ const emptyRelForm = { opsiPertanyaanId: '', opsiJawabanId: '' }
 function getMediaType(url) {
     if (!url) return null
     const path = url.toLowerCase().split('?')[0]
-    if (/\.(mp3|wav|ogg|aac|m4a|flac)$/.test(path)) return 'audio'
+    if (/\.(mp3|wav|ogg|aac|m4a|flac|opus|webm)$/.test(path)) return 'audio'
+    if (/\/video\/upload\//i.test(url)) return 'audio'
     return 'image'
+}
+
+function detectFileMediaType(file) {
+    if (!file) return null
+    if (file.type.startsWith('audio/')) return 'audio'
+    if (file.type.startsWith('image/')) return 'image'
+    const name = (file.name || '').toLowerCase()
+    if (/\.(mp3|wav|ogg|aac|m4a|flac|opus|webm)$/i.test(name)) return 'audio'
+    return 'image'
+}
+
+function previewUrlFromFile(file) {
+    if (!file) return null
+    if (file.type.startsWith('image/') || file.type.startsWith('audio/')) {
+        return URL.createObjectURL(file)
+    }
+    const name = (file.name || '').toLowerCase()
+    if (/\.(mp3|wav|ogg|aac|m4a|flac|opus)$/i.test(name)) return URL.createObjectURL(file)
+    if (/\.(jpe?g|png|gif|webp|svg)$/i.test(name)) return URL.createObjectURL(file)
+    return null
+}
+
+function revokePreviewUrl(url) {
+    if (url?.startsWith('blob:')) URL.revokeObjectURL(url)
+}
+
+function MediaOpsiPreview({ url, kind, imgClassName = 'quiz-media-preview-img', audioClassName = 'quiz-opt-saved-audio quiz-media-preview-audio' }) {
+    if (!url) return null
+    const type = kind ?? getMediaType(url)
+    if (type === 'audio') {
+        return <audio controls preload="metadata" src={url} className={audioClassName} />
+    }
+    return <img src={url} alt="preview media" className={imgClassName} />
+}
+
+function MediaOpsiPreviewBox({ url, kind, fileName, imgClassName, audioClassName, className = '' }) {
+    if (!url) return null
+    return (
+        <div className={`opsi-media-preview-box${className ? ` ${className}` : ''}`}>
+            <span className="opsi-media-preview-box__label">Preview media</span>
+            <MediaOpsiPreview url={url} kind={kind} imgClassName={imgClassName} audioClassName={audioClassName} />
+            {fileName && <span className="file-selected">✓ {fileName}</span>}
+        </div>
+    )
 }
 
 function MediaCell({ url }) {
@@ -111,6 +156,7 @@ function SoalQuestionsPage() {
     const [editingOptId, setEditingOptId] = useState(null)
     const [mediaOpsiFile, setMediaOpsiFile] = useState(null)
     const [mediaOpsiPreview, setMediaOpsiPreview] = useState(null)
+    const [mediaOpsiPreviewKind, setMediaOpsiPreviewKind] = useState(null)
     const [optionError, setOptionError] = useState('')
     const [savingOpt, setSavingOpt] = useState(false)
 
@@ -283,7 +329,8 @@ function SoalQuestionsPage() {
 
     const openOpsiModal = (q) => {
         setActiveQuestion(q); setOptForm(emptyOptForm); setEditingOptId(null); setEditingPieceId(null)
-        setMediaOpsiFile(null); setOptionError(''); setRelForm(emptyRelForm); setRelError('')
+        setMediaOpsiPreview((prev) => { revokePreviewUrl(prev); return null })
+        setMediaOpsiFile(null); setMediaOpsiPreviewKind(null); setOptionError(''); setRelForm(emptyRelForm); setRelError('')
         setPuzzleData(null); setPuzzleForm({ gridRows: '3', gridCols: '3' }); setPuzzleImageFile(null); setPuzzleError('')
         setPiecesList([]); setPieceForm(emptyPieceForm); setPieceImageFile(null); setEditingPieceId(null); setPieceError('')
         setShowOpsiModal(true)
@@ -293,6 +340,8 @@ function SoalQuestionsPage() {
 
     const closeOpsiModal = () => {
         setShowOpsiModal(false); setActiveQuestion(null); setOptionsList([]); setRelationsList([]); setEditingOptId(null)
+        setMediaOpsiPreview((prev) => { revokePreviewUrl(prev); return null })
+        setMediaOpsiFile(null); setMediaOpsiPreviewKind(null)
         fetchQuestions()
     }
 
@@ -305,12 +354,29 @@ function SoalQuestionsPage() {
         if (isAvailable) return
         setOptForm({ teksOpsi: opt.teksOpsi ?? '', kunciJawaban: opt.kunciJawaban ?? false, urutanBenar: opt.urutanBenar ?? '', tipeItem: opt.tipeItem ?? '' })
         setEditingOptId(opt.id); setMediaOpsiFile(null)
-        // show existing media as starting preview
-        const existingMedia = opt.mediaOpsi ?? null
-        setMediaOpsiPreview(existingMedia && /\.(jpe?g|png|gif|webp|svg)$/i.test(existingMedia.split('?')[0]) ? existingMedia : null)
+        setMediaOpsiPreview(opt.mediaOpsi ?? null)
+        setMediaOpsiPreviewKind(opt.mediaOpsi ? getMediaType(opt.mediaOpsi) : null)
     }
 
-    const cancelEditOption = () => { setOptForm(emptyOptForm); setEditingOptId(null); setMediaOpsiFile(null); setMediaOpsiPreview(null) }
+    const resetMediaOpsi = () => {
+        setMediaOpsiPreview((prev) => {
+            revokePreviewUrl(prev)
+            return null
+        })
+        setMediaOpsiFile(null)
+        setMediaOpsiPreviewKind(null)
+    }
+
+    const selectMediaOpsiFile = (file) => {
+        setMediaOpsiPreview((prev) => {
+            revokePreviewUrl(prev)
+            return file ? previewUrlFromFile(file) : null
+        })
+        setMediaOpsiPreviewKind(file ? detectFileMediaType(file) : null)
+        setMediaOpsiFile(file)
+    }
+
+    const cancelEditOption = () => { setOptForm(emptyOptForm); setEditingOptId(null); resetMediaOpsi() }
 
     const handleSaveOption = async () => {
         if (isAvailable) return
@@ -340,7 +406,7 @@ function SoalQuestionsPage() {
             else if (NEEDS_RELATION.includes(qType)) { if (optForm.tipeItem) fd.append('tipeItem', optForm.tipeItem) }
             if (editingOptId !== null) await apiFetch(`/question-options/${editingOptId}`, { method: 'PUT', body: fd })
             else await apiFetch('/question-options', { method: 'POST', body: fd })
-            setOptForm(emptyOptForm); setEditingOptId(null); setMediaOpsiFile(null); setMediaOpsiPreview(null)
+            setOptForm(emptyOptForm); setEditingOptId(null); resetMediaOpsi()
             fetchOptions(activeQuestion.id); fetchQuestions()
         } catch (err) { setOptionError(err.message) }
         finally { setSavingOpt(false) }
@@ -977,22 +1043,15 @@ function SoalQuestionsPage() {
                                                                 Tandai sebagai jawaban benar
                                                             </label>
                                                             <div className="quiz-media-preview-block">
-                                                                {mediaOpsiPreview ? (
-                                                                    <img src={mediaOpsiPreview} alt="preview media" className="quiz-media-preview-img" />
-                                                                ) : (
-                                                                    optionsList.find(o => o.id === editingOptId)?.mediaOpsi && getMediaType(optionsList.find(o => o.id === editingOptId).mediaOpsi) === 'audio' && (
-                                                                        <audio controls src={optionsList.find(o => o.id === editingOptId).mediaOpsi} className="quiz-opt-saved-audio" />
-                                                                    )
-                                                                )}
+                                                                <MediaOpsiPreviewBox
+                                                                    url={mediaOpsiPreview}
+                                                                    kind={mediaOpsiPreviewKind}
+                                                                    fileName={mediaOpsiFile?.name}
+                                                                />
                                                                 <label className="file-upload-btn file-upload-btn--sm">
                                                                     📎 {mediaOpsiFile ? 'Ganti Media' : (optionsList.find(o => o.id === editingOptId)?.mediaOpsi ? 'Ganti Media' : 'Pilih Media')}
                                                                     <input type="file" accept="image/*,audio/*" style={{ display: 'none' }}
-                                                                        onChange={(e) => {
-                                                                            const f = e.target.files[0] || null
-                                                                            setMediaOpsiFile(f)
-                                                                            if (f && f.type.startsWith('image/')) setMediaOpsiPreview(URL.createObjectURL(f))
-                                                                            else setMediaOpsiPreview(null)
-                                                                        }} />
+                                                                        onChange={(e) => selectMediaOpsiFile(e.target.files[0] || null)} />
                                                                 </label>
                                                                 {mediaOpsiFile && <span className="file-selected">✓ {mediaOpsiFile.name}</span>}
                                                             </div>
@@ -1004,14 +1063,19 @@ function SoalQuestionsPage() {
                                                             </div>
                                                         </div>
                                                     ) : (
+                                                        (() => {
+                                                            const mediaType = opt.mediaOpsi ? getMediaType(opt.mediaOpsi) : null
+                                                            return (
                                                         <>
-                                                            {opt.mediaOpsi && getMediaType(opt.mediaOpsi) === 'image' && (
-                                                                <img src={opt.mediaOpsi} alt="media opsi" className="quiz-opt-saved-img" />
-                                                            )}
-                                                            {opt.mediaOpsi && getMediaType(opt.mediaOpsi) === 'audio' && (
-                                                                <audio controls src={opt.mediaOpsi} className="quiz-opt-saved-audio" />
-                                                            )}
-                                                            <span className="quiz-opt-text">{opt.teksOpsi}</span>
+                                                            <div className={`quiz-opt-main${mediaType === 'audio' ? ' quiz-opt-main--has-audio' : ''}${mediaType === 'image' ? ' quiz-opt-main--has-image' : ''}`}>
+                                                                {mediaType === 'image' && (
+                                                                    <MediaOpsiPreview url={opt.mediaOpsi} imgClassName="quiz-opt-saved-img" />
+                                                                )}
+                                                                <span className="quiz-opt-text">{opt.teksOpsi}</span>
+                                                                {mediaType === 'audio' && (
+                                                                    <MediaOpsiPreview url={opt.mediaOpsi} audioClassName="quiz-opt-saved-audio quiz-opt-audio" />
+                                                                )}
+                                                            </div>
                                                             {opt.kunciJawaban && <span className="quiz-correct-badge">✓ Benar</span>}
                                                             <div className="quiz-opt-actions">
                                                                 {!isAvailable && (
@@ -1026,6 +1090,8 @@ function SoalQuestionsPage() {
                                                                 )}
                                                             </div>
                                                         </>
+                                                            )
+                                                        })()
                                                     )}
                                                 </div>
                                             ))}
@@ -1052,13 +1118,7 @@ function SoalQuestionsPage() {
                                             <label className="file-upload-btn file-upload-btn--sm" title="Lampirkan gambar / audio">
                                                 📎
                                                 <input type="file" accept="image/*,audio/*" style={{ display: 'none' }}
-                                                    onChange={(e) => {
-                                                        const f = e.target.files[0] || null
-                                                        setMediaOpsiFile(f)
-                                                        if (f && f.type.startsWith('image/')) setMediaOpsiPreview(URL.createObjectURL(f))
-                                                        else if (f) setMediaOpsiPreview(null)
-                                                        else setMediaOpsiPreview(null)
-                                                    }} />
+                                                    onChange={(e) => selectMediaOpsiFile(e.target.files[0] || null)} />
                                             </label>
                                             <button
                                                 className="btn-primary quiz-add-opt-btn"
@@ -1070,14 +1130,12 @@ function SoalQuestionsPage() {
                                         </div>
                                     )}
                                     {!editingOptId && (mediaOpsiPreview || mediaOpsiFile) && (
-                                        <div className="quiz-add-media-preview">
-                                            {mediaOpsiPreview && (
-                                                <img src={mediaOpsiPreview} alt="preview media" className="quiz-media-preview-img" />
-                                            )}
-                                            {mediaOpsiFile && (
-                                                <span className="file-selected">✓ {mediaOpsiFile.name}</span>
-                                            )}
-                                        </div>
+                                        <MediaOpsiPreviewBox
+                                            className="quiz-add-media-preview"
+                                            url={mediaOpsiPreview}
+                                            kind={mediaOpsiPreviewKind}
+                                            fileName={mediaOpsiFile?.name}
+                                        />
                                     )}
                                     {!loadingOptions && optionsList.length === 0 && (
                                         <p className="opsi-empty" style={{ marginTop: 0 }}>Belum ada pilihan. Gunakan baris di atas untuk menambah.</p>
@@ -1113,12 +1171,19 @@ function SoalQuestionsPage() {
                                                 {loadingOptions ? <p className="tema-loading">Memuat...</p>
                                                     : pertanyaanOpts.length === 0
                                                         ? <p className="match-col-empty">Belum ada item di sisi ini</p>
-                                                        : pertanyaanOpts.map((opt) => (
-                                                            <div key={opt.id} className={`match-item-card match-item-card--left${editingOptId === opt.id ? ' match-item-card--editing' : ''}`}>
-                                                                {opt.mediaOpsi && getMediaType(opt.mediaOpsi) === 'image' && (
-                                                                    <img src={opt.mediaOpsi} alt="" className="match-item-thumb" />
-                                                                )}
-                                                                <span className="match-item-text">{opt.teksOpsi}</span>
+                                                        : pertanyaanOpts.map((opt) => {
+                                                            const mediaType = opt.mediaOpsi ? getMediaType(opt.mediaOpsi) : null
+                                                            return (
+                                                            <div key={opt.id} className={`match-item-card match-item-card--left${editingOptId === opt.id ? ' match-item-card--editing' : ''}${mediaType === 'audio' ? ' match-item-card--has-audio' : ''}${mediaType === 'image' ? ' match-item-card--has-image' : ''}`}>
+                                                                <div className="match-item-main">
+                                                                    {mediaType === 'image' && (
+                                                                        <MediaOpsiPreview url={opt.mediaOpsi} imgClassName="match-item-thumb" />
+                                                                    )}
+                                                                    <span className="match-item-text">{opt.teksOpsi}</span>
+                                                                    {mediaType === 'audio' && (
+                                                                        <MediaOpsiPreview url={opt.mediaOpsi} audioClassName="match-item-audio" />
+                                                                    )}
+                                                                </div>
                                                                 <div className="match-item-actions">
                                                                     {!isAvailable && (
                                                                     <>
@@ -1128,7 +1193,7 @@ function SoalQuestionsPage() {
                                                                     )}
                                                                 </div>
                                                             </div>
-                                                        ))}
+                                                        )})}
                                             </div>
                                             <div className="match-col">
                                                 <div className="match-col-header match-col-header--right">
@@ -1138,12 +1203,19 @@ function SoalQuestionsPage() {
                                                 {loadingOptions ? <p className="tema-loading">Memuat...</p>
                                                     : jawabanOpts.length === 0
                                                         ? <p className="match-col-empty">Belum ada item di sisi ini</p>
-                                                        : jawabanOpts.map((opt) => (
-                                                            <div key={opt.id} className={`match-item-card match-item-card--right${editingOptId === opt.id ? ' match-item-card--editing' : ''}`}>
-                                                                {opt.mediaOpsi && getMediaType(opt.mediaOpsi) === 'image' && (
-                                                                    <img src={opt.mediaOpsi} alt="" className="match-item-thumb" />
-                                                                )}
-                                                                <span className="match-item-text">{opt.teksOpsi}</span>
+                                                        : jawabanOpts.map((opt) => {
+                                                            const mediaType = opt.mediaOpsi ? getMediaType(opt.mediaOpsi) : null
+                                                            return (
+                                                            <div key={opt.id} className={`match-item-card match-item-card--right${editingOptId === opt.id ? ' match-item-card--editing' : ''}${mediaType === 'audio' ? ' match-item-card--has-audio' : ''}${mediaType === 'image' ? ' match-item-card--has-image' : ''}`}>
+                                                                <div className="match-item-main">
+                                                                    {mediaType === 'image' && (
+                                                                        <MediaOpsiPreview url={opt.mediaOpsi} imgClassName="match-item-thumb" />
+                                                                    )}
+                                                                    <span className="match-item-text">{opt.teksOpsi}</span>
+                                                                    {mediaType === 'audio' && (
+                                                                        <MediaOpsiPreview url={opt.mediaOpsi} audioClassName="match-item-audio" />
+                                                                    )}
+                                                                </div>
                                                                 <div className="match-item-actions">
                                                                     {!isAvailable && (
                                                                     <>
@@ -1153,7 +1225,7 @@ function SoalQuestionsPage() {
                                                                     )}
                                                                 </div>
                                                             </div>
-                                                        ))}
+                                                        )})}
                                             </div>
                                         </div>
 
@@ -1191,12 +1263,7 @@ function SoalQuestionsPage() {
                                                     📎
                                                     <input type="file" accept="image/*,audio/*" style={{ display: 'none' }}
                                                         disabled={!editingOptId && !optForm.tipeItem}
-                                                        onChange={(e) => {
-                                                            const f = e.target.files[0] || null
-                                                            setMediaOpsiFile(f)
-                                                            if (f?.type.startsWith('image/')) setMediaOpsiPreview(URL.createObjectURL(f))
-                                                            else setMediaOpsiPreview(null)
-                                                        }} />
+                                                        onChange={(e) => selectMediaOpsiFile(e.target.files[0] || null)} />
                                                 </label>
                                                 {editingOptId ? (
                                                     <>
@@ -1212,8 +1279,13 @@ function SoalQuestionsPage() {
                                                     </button>
                                                 )}
                                             </div>
-                                            {mediaOpsiPreview && <img src={mediaOpsiPreview} alt="preview" className="quiz-media-preview-img" style={{ marginTop: 6 }} />}
-                                            {mediaOpsiFile && !mediaOpsiPreview && <span className="file-selected">✓ {mediaOpsiFile.name}</span>}
+                                            {mediaOpsiPreview && (
+                                                <MediaOpsiPreviewBox
+                                                    url={mediaOpsiPreview}
+                                                    kind={mediaOpsiPreviewKind}
+                                                    fileName={mediaOpsiFile?.name}
+                                                />
+                                            )}
                                             {!editingOptId && !optForm.tipeItem && (
                                                 <p className="match-hint-text">⬆ Pilih sisi yang ingin ditambahkan itemnya terlebih dahulu.</p>
                                             )}
@@ -1312,14 +1384,13 @@ function SoalQuestionsPage() {
                                         </div>
                                     ) : (
                                         <div className="sort-ordered-list">
-                                            {sortingItemsByCreation.map((opt) => (
+                                            {sortingItemsByCreation.map((opt) => {
+                                                const mediaType = opt.mediaOpsi ? getMediaType(opt.mediaOpsi) : null
+                                                return (
                                                     <div key={opt.id}
-                                                        className={`sort-item-card${editingOptId === opt.id ? ' sort-item-card--editing' : ''}`}>
+                                                        className={`sort-item-card${editingOptId === opt.id ? ' sort-item-card--editing' : ''}${mediaType === 'audio' ? ' sort-item-card--has-audio' : ''}`}>
                                                         <span className="sort-item-num">{opt.urutanBenar ?? '?'}</span>
-                                                        <div className="sort-item-body">
-                                                            {opt.mediaOpsi && getMediaType(opt.mediaOpsi) === 'image' && (
-                                                                <img src={opt.mediaOpsi} alt="" className="sort-item-thumb" />
-                                                            )}
+                                                        <div className={`sort-item-body${mediaType === 'audio' ? ' sort-item-body--has-audio' : ''}${mediaType === 'image' ? ' sort-item-body--has-image' : ''}`}>
                                                             {editingOptId === opt.id && !isAvailable ? (
                                                                 <div className="sort-inline-edit">
                                                                     <input
@@ -1346,16 +1417,17 @@ function SoalQuestionsPage() {
                                                                         <label className="file-upload-btn file-upload-btn--sm">
                                                                             📎 Media
                                                                             <input type="file" accept="image/*,audio/*" style={{ display: 'none' }}
-                                                                                onChange={(e) => {
-                                                                                    const f = e.target.files[0] || null
-                                                                                    setMediaOpsiFile(f)
-                                                                                    if (f?.type.startsWith('image/')) setMediaOpsiPreview(URL.createObjectURL(f))
-                                                                                    else setMediaOpsiPreview(null)
-                                                                                }} />
+                                                                                onChange={(e) => selectMediaOpsiFile(e.target.files[0] || null)} />
                                                                         </label>
-                                                                        {mediaOpsiPreview && <img src={mediaOpsiPreview} alt="preview" className="sort-edit-preview" />}
-                                                                        {mediaOpsiFile && !mediaOpsiPreview && <span className="file-selected">✓ {mediaOpsiFile.name}</span>}
                                                                     </div>
+                                                                    {mediaOpsiPreview && (
+                                                                        <MediaOpsiPreviewBox
+                                                                            url={mediaOpsiPreview}
+                                                                            kind={mediaOpsiPreviewKind}
+                                                                            fileName={mediaOpsiFile?.name}
+                                                                            imgClassName="sort-edit-preview"
+                                                                        />
+                                                                    )}
                                                                     <div className="sort-edit-actions">
                                                                         <button className="btn-secondary" onClick={cancelEditOption} disabled={savingOpt}>Batal</button>
                                                                         <button className="btn-primary" onClick={handleSaveOption} disabled={savingOpt || !optForm.teksOpsi.trim()}>
@@ -1364,7 +1436,15 @@ function SoalQuestionsPage() {
                                                                     </div>
                                                                 </div>
                                                             ) : (
-                                                                <span className="sort-item-text">{opt.teksOpsi}</span>
+                                                                <>
+                                                                    {mediaType === 'image' && (
+                                                                        <MediaOpsiPreview url={opt.mediaOpsi} imgClassName="sort-item-thumb" />
+                                                                    )}
+                                                                    <span className="sort-item-text">{opt.teksOpsi}</span>
+                                                                    {mediaType === 'audio' && (
+                                                                        <MediaOpsiPreview url={opt.mediaOpsi} audioClassName="sort-item-audio" />
+                                                                    )}
+                                                                </>
                                                             )}
                                                         </div>
                                                         {editingOptId !== opt.id && !isAvailable && (
@@ -1374,56 +1454,55 @@ function SoalQuestionsPage() {
                                                             </div>
                                                         )}
                                                     </div>
-                                                ))}
+                                                )
+                                            })}
                                         </div>
                                     )}
 
                                     {/* Add new item */}
                                     {!editingOptId && !isAvailable && (
                                         <div className="sort-add-form">
-                                            <div className="sort-add-num-wrap">
-                                                <span className="sort-add-num-label">Urutan</span>
+                                            <div className="sort-add-form__row">
+                                                <div className="sort-add-num-wrap">
+                                                    <span className="sort-add-num-label">Urutan</span>
+                                                    <input
+                                                        name="urutanBenar"
+                                                        type="number"
+                                                        min="1"
+                                                        value={optForm.urutanBenar}
+                                                        onChange={handleOptChange}
+                                                        placeholder={(optionsList.length + 1).toString()}
+                                                        className="sort-order-input"
+                                                    />
+                                                </div>
                                                 <input
-                                                    name="urutanBenar"
-                                                    type="number"
-                                                    min="1"
-                                                    value={optForm.urutanBenar}
+                                                    name="teksOpsi"
+                                                    value={optForm.teksOpsi}
                                                     onChange={handleOptChange}
-                                                    placeholder={(optionsList.length + 1).toString()}
-                                                    className="sort-order-input"
+                                                    placeholder="Ketik teks item..."
+                                                    className="match-add-input"
                                                 />
+                                                <label className="file-upload-btn file-upload-btn--sm" title="Lampirkan gambar / audio">
+                                                    📎
+                                                    <input type="file" accept="image/*,audio/*" style={{ display: 'none' }}
+                                                        onChange={(e) => selectMediaOpsiFile(e.target.files[0] || null)} />
+                                                </label>
+                                                <button
+                                                    className="btn-primary quiz-add-opt-btn"
+                                                    onClick={handleSaveOption}
+                                                    disabled={savingOpt || !optForm.teksOpsi.trim()}
+                                                >
+                                                    {savingOpt ? '...' : '+ Tambah'}
+                                                </button>
                                             </div>
-                                            <input
-                                                name="teksOpsi"
-                                                value={optForm.teksOpsi}
-                                                onChange={handleOptChange}
-                                                placeholder="Ketik teks item..."
-                                                className="match-add-input"
-                                            />
-                                            <label className="file-upload-btn file-upload-btn--sm" title="Lampirkan gambar / audio">
-                                                📎
-                                                <input type="file" accept="image/*,audio/*" style={{ display: 'none' }}
-                                                    onChange={(e) => {
-                                                        const f = e.target.files[0] || null
-                                                        setMediaOpsiFile(f)
-                                                        if (f?.type.startsWith('image/')) setMediaOpsiPreview(URL.createObjectURL(f))
-                                                        else setMediaOpsiPreview(null)
-                                                    }} />
-                                            </label>
-                                            <button
-                                                className="btn-primary quiz-add-opt-btn"
-                                                onClick={handleSaveOption}
-                                                disabled={savingOpt || !optForm.teksOpsi.trim()}
-                                            >
-                                                {savingOpt ? '...' : '+ Tambah'}
-                                            </button>
+                                            {mediaOpsiPreview && (
+                                                <MediaOpsiPreviewBox
+                                                    url={mediaOpsiPreview}
+                                                    kind={mediaOpsiPreviewKind}
+                                                    fileName={mediaOpsiFile?.name}
+                                                />
+                                            )}
                                         </div>
-                                    )}
-                                    {!editingOptId && !isAvailable && mediaOpsiPreview && (
-                                        <img src={mediaOpsiPreview} alt="preview" className="quiz-media-preview-img" style={{ marginLeft: 8 }} />
-                                    )}
-                                    {!editingOptId && !isAvailable && mediaOpsiFile && !mediaOpsiPreview && (
-                                        <span className="file-selected" style={{ marginLeft: 8 }}>✓ {mediaOpsiFile.name}</span>
                                     )}
                                 </div>
                             )}

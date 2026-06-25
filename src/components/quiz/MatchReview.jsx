@@ -1,3 +1,4 @@
+import OptionMedia from './OptionMedia'
 import './MatchReview.css'
 
 const PAIR_COLORS = [
@@ -32,7 +33,7 @@ function MatchOptionCard({ opt, side, index, empty }) {
         >
             <span className="mr-card__side-badge">{side === 'question' ? '💬' : '✅'}</span>
             {hasMedia && (
-                <img src={opt.mediaOpsi} alt={opt.teksOpsi || 'Media'} className="mr-card__img" />
+                <OptionMedia url={opt.mediaOpsi} alt={opt.teksOpsi || 'Media'} />
             )}
             {hasText && <span className="mr-card__text">{opt.teksOpsi}</span>}
             {!hasMedia && !hasText && <span className="mr-card__text mr-card__text--muted">—</span>}

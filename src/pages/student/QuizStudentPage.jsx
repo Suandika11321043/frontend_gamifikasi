@@ -640,9 +640,7 @@ function QuizStudentPage() {
                             <img src={currentQuestion.contentImage} alt="Gambar soal" className="question-card__img" />
                         )}
                         {currentQuestion.contentAudio && (
-                            <audio controls className="question-card__audio">
-                                <source src={currentQuestion.contentAudio} />
-                            </audio>
+                            <audio controls preload="metadata" src={currentQuestion.contentAudio} className="question-card__audio" />
                         )}
 
                         {currentQuestion.questionType === 'QUIZ' && (

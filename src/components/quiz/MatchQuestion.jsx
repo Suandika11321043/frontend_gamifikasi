@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
+import OptionMedia, { getOptionMediaType } from './OptionMedia'
 
 function normalizeMatchAnswer(answer) {
     const raw = answer || {}
@@ -175,26 +176,34 @@ export default function MatchQuestion({ question, answer, onAnswer, readOnly = f
                         const isMatched = matchAnswer[p.optionId] !== undefined
                         const isDragging = dragging === p.optionId
                         const color = colorOf(p.optionId)
+                        const mediaType = p.mediaOpsi ? getOptionMediaType(p.mediaOpsi) : null
                         return (
                             <div
                                 key={p.optionId}
                                 ref={(el) => { leftRefs.current[p.optionId] = el }}
-                                className={`match-line-item match-line-item--left${isMatched ? ' match-line-item--matched' : ''}${!readOnly && isDragging ? ' match-line-item--active' : ''}`}
+                                className={[
+                                    'match-line-item',
+                                    'match-line-item--left',
+                                    isMatched ? 'match-line-item--matched' : '',
+                                    !readOnly && isDragging ? 'match-line-item--active' : '',
+                                    mediaType === 'audio' || mediaType === 'video' ? 'match-line-item--has-audio' : '',
+                                    mediaType === 'image' ? 'match-line-item--has-image' : '',
+                                ].filter(Boolean).join(' ')}
                                 style={(isMatched || (!readOnly && isDragging)) ? { '--mc': color } : undefined}
                                 onMouseDown={readOnly ? undefined : (e) => onMouseDown(e, p.optionId)}
                                 onTouchStart={readOnly ? undefined : (e) => onTouchStart(e, p.optionId)}
                             >
                                 <span className="match-line-num">{idx + 1}</span>
-                                {p.mediaOpsi && (
-                                    <img
-                                        src={p.mediaOpsi}
-                                        alt={p.teksOpsi || 'Media pertanyaan'}
-                                        className="match-line-media"
-                                        loading="lazy"
-                                        onLoad={readOnly ? bumpLayout : undefined}
-                                    />
-                                )}
-                                <span className="match-line-text">{p.teksOpsi}</span>
+                                <div className="match-line-body">
+                                    {p.mediaOpsi && (
+                                        <OptionMedia
+                                            url={p.mediaOpsi}
+                                            alt={p.teksOpsi || 'Media pertanyaan'}
+                                            onLoad={readOnly ? bumpLayout : undefined}
+                                        />
+                                    )}
+                                    <span className="match-line-text">{p.teksOpsi}</span>
+                                </div>
                                 {!readOnly && isMatched && (
                                     <button
                                         className="match-line-del"
@@ -220,11 +229,19 @@ export default function MatchQuestion({ question, answer, onAnswer, readOnly = f
                         const isMatched = matchedPId !== undefined
                         const isTarget = !readOnly && dragging != null && !isMatched
                         const color = isMatched ? colorOf(matchedPId) : undefined
+                        const mediaType = j.mediaOpsi ? getOptionMediaType(j.mediaOpsi) : null
                         return (
                             <div
                                 key={j.optionId}
                                 ref={(el) => { rightRefs.current[j.optionId] = el }}
-                                className={`match-line-item match-line-item--right${isMatched ? ' match-line-item--matched' : ''}${isTarget ? ' match-line-item--target' : ''}`}
+                                className={[
+                                    'match-line-item',
+                                    'match-line-item--right',
+                                    isMatched ? 'match-line-item--matched' : '',
+                                    isTarget ? 'match-line-item--target' : '',
+                                    mediaType === 'audio' || mediaType === 'video' ? 'match-line-item--has-audio' : '',
+                                    mediaType === 'image' ? 'match-line-item--has-image' : '',
+                                ].filter(Boolean).join(' ')}
                                 style={isMatched ? { '--mc': color } : undefined}
                                 data-jid={j.optionId}
                                 onMouseUp={readOnly ? undefined : () => onMouseUpAnswer(j.optionId)}
@@ -233,16 +250,16 @@ export default function MatchQuestion({ question, answer, onAnswer, readOnly = f
                                     className="match-line-node match-line-node--l"
                                     style={isMatched ? { background: color, borderColor: color } : undefined}
                                 />
-                                {j.mediaOpsi && (
-                                    <img
-                                        src={j.mediaOpsi}
-                                        alt={j.teksOpsi || 'Media jawaban'}
-                                        className="match-line-media"
-                                        loading="lazy"
-                                        onLoad={readOnly ? bumpLayout : undefined}
-                                    />
-                                )}
-                                <span className="match-line-text">{j.teksOpsi}</span>
+                                <div className="match-line-body">
+                                    {j.mediaOpsi && (
+                                        <OptionMedia
+                                            url={j.mediaOpsi}
+                                            alt={j.teksOpsi || 'Media jawaban'}
+                                            onLoad={readOnly ? bumpLayout : undefined}
+                                        />
+                                    )}
+                                    <span className="match-line-text">{j.teksOpsi}</span>
+                                </div>
                             </div>
                         )
                     })}
