@@ -218,11 +218,87 @@
 }
 
 /* Kotak kosong — pakai inset shadow, bukan border (tidak makan ruang) */
-.pz-slot:not(.pz-slot--filled) {
-    background: rgba(255, 255, 255, 0.55);
+.pz-slot--empty {
+    background: rgba(255, 255, 255, 0.45);
     box-shadow: inset 0 0 0 2px #c7d2fe;
-    overflow: hidden;
+    overflow: visible;
     z-index: 0;
+}
+
+.pz-slot--empty.pz-slot--has-ghost {
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: inset 0 0 0 2px #a5b4fc;
+    overflow: visible;
+}
+
+/* Siluet bentuk keping di wadah kosong */
+.pz-slot-ghost {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: calc(var(--pz-cell) * var(--pz-overlap));
+    height: calc(var(--pz-cell) * var(--pz-overlap));
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    line-height: 0;
+    opacity: 0.38;
+    filter: saturate(0.35) brightness(1.15);
+    z-index: 0;
+}
+
+.pz-slot-ghost .pz-piece-img {
+    cursor: default;
+    pointer-events: none;
+    -webkit-user-drag: none;
+}
+
+/* Salah tempat — tepi merah */
+.pz-slot--wrong {
+    box-shadow: inset 0 0 0 3px #ef4444, 0 0 0 1px rgba(239, 68, 68, 0.25) !important;
+    z-index: 3;
+    animation: pzSlotWrong 0.45s ease-out;
+}
+
+.pz-slot--wrong.pz-slot--filled {
+    background: transparent;
+}
+
+.pz-slot--right.pz-slot--filled {
+    box-shadow: none;
+}
+
+/* Salah tempat — tepi merah mengikuti bentuk keping (bukan isi penuh) */
+.pz-piece-layer--wrong .pz-piece-img,
+.pz-piece-img--wrong {
+    filter:
+        drop-shadow(0 0 0.5px #ef4444)
+        drop-shadow(0 0 1px #ef4444)
+        drop-shadow(0 0 2px #dc2626)
+        drop-shadow(0 0 3px rgba(239, 68, 68, 0.85));
+    animation: pzPieceWrong 0.45s ease-out;
+}
+
+.pz-piece-layer--right .pz-piece-img,
+.pz-piece-img--right {
+    filter:
+        drop-shadow(0 0 0.5px rgba(74, 222, 128, 0.9))
+        drop-shadow(0 0 1.5px rgba(34, 197, 94, 0.65));
+}
+
+/* Keping benar — terkunci, tidak bisa dipindah */
+.pz-slot--locked {
+    cursor: default;
+    z-index: 2;
+}
+
+.pz-piece-layer--locked {
+    pointer-events: none;
+}
+
+.pz-piece-img--locked {
+    cursor: default;
+    -webkit-user-drag: none;
+    user-select: none;
 }
 
 .pz-slot-num {
@@ -255,7 +331,7 @@
     z-index: 4;
 }
 
-.pz-slot--active .pz-piece-layer {
+.pz-slot--active .pz-piece-layer:not(.pz-piece-layer--wrong) .pz-piece-img {
     filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.85));
 }
 
@@ -348,13 +424,62 @@
 }
 
 @keyframes pzSlotPulse {
-    0%, 100% { box-shadow: inset 0 0 0 0 rgba(99, 102, 241, 0.2); }
-    50% { box-shadow: inset 0 0 0 3px rgba(99, 102, 241, 0.15); }
+
+    0%,
+    100% {
+        box-shadow: inset 0 0 0 0 rgba(99, 102, 241, 0.2);
+    }
+
+    50% {
+        box-shadow: inset 0 0 0 3px rgba(99, 102, 241, 0.15);
+    }
+}
+
+@keyframes pzPieceWrong {
+    0% {
+        filter: drop-shadow(0 0 0 rgba(239, 68, 68, 0));
+    }
+
+    60% {
+        filter:
+            drop-shadow(0 0 1px #ef4444)
+            drop-shadow(0 0 3px #dc2626)
+            drop-shadow(0 0 5px rgba(239, 68, 68, 0.9));
+    }
+
+    100% {
+        filter:
+            drop-shadow(0 0 0.5px #ef4444)
+            drop-shadow(0 0 1px #ef4444)
+            drop-shadow(0 0 2px #dc2626)
+            drop-shadow(0 0 3px rgba(239, 68, 68, 0.85));
+    }
+}
+
+@keyframes pzSlotWrong {
+    0% {
+        box-shadow: inset 0 0 0 0 rgba(239, 68, 68, 0);
+    }
+
+    60% {
+        box-shadow: inset 0 0 0 4px #ef4444;
+    }
+
+    100% {
+        box-shadow: inset 0 0 0 3px #ef4444, 0 0 0 1px rgba(239, 68, 68, 0.25);
+    }
 }
 
 @keyframes pzTrayPulse {
-    0%, 100% { box-shadow: 0 4px 0 #f9a8d4; }
-    50% { box-shadow: 0 4px 0 #f9a8d4, 0 0 0 4px rgba(244, 114, 182, 0.2); }
+
+    0%,
+    100% {
+        box-shadow: 0 4px 0 #f9a8d4;
+    }
+
+    50% {
+        box-shadow: 0 4px 0 #f9a8d4, 0 0 0 4px rgba(244, 114, 182, 0.2);
+    }
 }
 
 @media (max-width: 720px) {
