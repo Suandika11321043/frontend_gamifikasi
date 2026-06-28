@@ -34,6 +34,7 @@ function AppRoutes() {
     <>
       <LoadingOverlay />
       <Routes>
+        <Route path="/" element={<Navigate to="/student" replace />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/dashboard" element={<AdminRoute><DashboardPage /></AdminRoute>} />
         <Route path="/admin/siswa" element={<AdminRoute><DaftarSiswaPage /></AdminRoute>} />

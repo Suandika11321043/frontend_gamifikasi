@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { apiFetch } from '../../utils/apiFetch'
 import './PuzzleQuestion.css'
 
@@ -15,7 +15,9 @@ export default function PuzzleQuestion({ question, answer, onAnswer }) {
     const [activeFromSlot, setActiveFromSlot] = useState(null)
     const [hoveredSlot, setHoveredSlot] = useState(null)
     const [progress, setProgress] = useState(null)
+    const [lockedSlots, setLockedSlots] = useState(() => new Set())
     const progressTimerRef = useRef(null)
+    const restoredProgressRef = useRef(false)
 
     useEffect(() => {
         setLoadingPuzzle(true)
@@ -30,8 +32,85 @@ export default function PuzzleQuestion({ question, answer, onAnswer }) {
     const placedPieceIds = new Set(Object.values(placements))
     const trayPieces = (puzzleData?.pieces ?? []).filter((p) => !placedPieceIds.has(p.id))
 
+    /** Siluet keping per slot (pieceIndex = posisi grid saat puzzle dibuat). */
+    const ghostBySlot = useMemo(() => {
+        const map = {}
+        for (const p of puzzleData?.pieces ?? []) {
+            if (p.pieceIndex != null) map[p.pieceIndex] = p
+        }
+        return map
+    }, [puzzleData])
+
+    /** Benar/salah per slot dari API progress (tanpa bocorkan correctPosition). */
+    const slotStatus = useMemo(() => {
+        const map = {}
+        for (const r of progress?.pieceResults ?? []) {
+            if (r.placedPosition == null) continue
+            map[r.placedPosition] = r.isCorrect === true ? 'ok' : r.isCorrect === false ? 'bad' : null
+        }
+        return map
+    }, [progress])
+
+    const isPieceCorrectAtSlot = (pieceId, slotIdx) => {
+        const piece = pieceMap[pieceId]
+        return piece?.pieceIndex != null && Number(piece.pieceIndex) === Number(slotIdx)
+    }
+
+    const mergeLockedFromResults = (results) => {
+        if (!results?.length) return
+        setLockedSlots((prev) => {
+            const next = new Set(prev)
+            for (const r of results) {
+                if (r.isCorrect === true && r.placedPosition != null) {
+                    next.add(Number(r.placedPosition))
+                }
+            }
+            return next.size === prev.size ? prev : next
+        })
+    }
+
+    const mergeLockedFromPlacements = (placementsMap) => {
+        setLockedSlots((prev) => {
+            const next = new Set(prev)
+            for (const [slot, pieceId] of Object.entries(placementsMap)) {
+                if (isPieceCorrectAtSlot(pieceId, slot)) next.add(Number(slot))
+            }
+            return next.size === prev.size ? prev : next
+        })
+    }
+
+    useEffect(() => {
+        restoredProgressRef.current = false
+        setLockedSlots(new Set())
+        setProgress(null)
+    }, [question.questionId])
+
+    useEffect(() => {
+        if (!puzzleData || restoredProgressRef.current) return
+        restoredProgressRef.current = true
+
+        const entries = Object.entries(placements)
+        if (entries.length === 0) return
+
+        mergeLockedFromPlacements(Object.fromEntries(entries))
+        const arr = entries.map(([slot, pieceId]) => ({
+            pieceId: Number(pieceId),
+            placedPosition: Number(slot),
+        }))
+        apiFetch('/jigsaw/progress', {
+            method: 'POST',
+            body: JSON.stringify({ questionId: question.questionId, placements: arr }),
+        })
+            .then((res) => {
+                setProgress(res)
+                mergeLockedFromResults(res?.pieceResults)
+            })
+            .catch(() => { /* ignore */ })
+    }, [puzzleData, question.questionId])
+
     const commit = (newPlacements) => {
         setPlacements(newPlacements)
+        mergeLockedFromPlacements(newPlacements)
         const arr = Object.entries(newPlacements).map(([slot, pieceId]) => ({
             pieceId: Number(pieceId),
             placedPosition: Number(slot),
@@ -46,6 +125,7 @@ export default function PuzzleQuestion({ question, answer, onAnswer }) {
                         body: JSON.stringify({ questionId: question.questionId, placements: arr }),
                     })
                     setProgress(res)
+                    mergeLockedFromResults(res?.pieceResults)
                 } catch { /* ignore */ }
             }, 400)
         } else {
@@ -55,6 +135,8 @@ export default function PuzzleQuestion({ question, answer, onAnswer }) {
 
     const placeOnSlot = (slotIdx) => {
         if (activePieceId == null) return
+        if (lockedSlots.has(slotIdx)) return
+        if (activeFromSlot !== null && lockedSlots.has(activeFromSlot)) return
         const next = { ...placements }
         if (activeFromSlot !== null) delete next[activeFromSlot]
         if (activeFromSlot !== null && next[slotIdx] !== undefined) {
@@ -69,6 +151,7 @@ export default function PuzzleQuestion({ question, answer, onAnswer }) {
 
     const returnToTray = () => {
         if (activeFromSlot === null) { setActivePieceId(null); return }
+        if (lockedSlots.has(activeFromSlot)) { setActivePieceId(null); setActiveFromSlot(null); return }
         const next = { ...placements }
         delete next[activeFromSlot]
         commit(next)
@@ -77,6 +160,7 @@ export default function PuzzleQuestion({ question, answer, onAnswer }) {
     }
 
     const handleSlotClick = (slotIdx) => {
+        if (lockedSlots.has(slotIdx)) return
         const pieceId = placements[slotIdx]
         if (activePieceId != null) {
             placeOnSlot(slotIdx)
@@ -136,36 +220,52 @@ export default function PuzzleQuestion({ question, answer, onAnswer }) {
                         <div
                             className="pz-grid"
                             onDragOver={(e) => e.preventDefault()}
-                            onDrop={(e) => { e.preventDefault(); returnToTray() }}
+                            onDrop={(e) => { e.preventDefault(); if (activeFromSlot === null || !lockedSlots.has(activeFromSlot)) returnToTray() }}
                         >
                             {Array.from({ length: totalSlots }, (_, slotIdx) => {
                                 const pieceId = placements[slotIdx]
                                 const piece = pieceId != null ? pieceMap[pieceId] : null
+                                const ghost = ghostBySlot[slotIdx]
+                                const status = slotStatus[slotIdx]
+                                const isLocked = lockedSlots.has(slotIdx)
                                 const isActive = activePieceId != null && activeFromSlot === slotIdx
-                                const isHovered = hoveredSlot === slotIdx
+                                const isHovered = hoveredSlot === slotIdx && !isLocked
                                 return (
                                     <div
                                         key={slotIdx}
-                                        className={`pz-slot${piece ? ' pz-slot--filled' : ''}${isHovered && activePieceId != null ? ' pz-slot--hover' : ''}${isActive ? ' pz-slot--active' : ''}${activePieceId != null && !piece ? ' pz-slot--droppable' : ''}`}
-                                        onDragOver={(e) => { e.preventDefault(); setHoveredSlot(slotIdx) }}
+                                        className={`pz-slot${piece ? ' pz-slot--filled' : ' pz-slot--empty'}${ghost ? ' pz-slot--has-ghost' : ''}${isLocked ? ' pz-slot--locked' : ''}${!isLocked && status === 'bad' ? ' pz-slot--wrong' : ''}${!isLocked && status === 'ok' ? ' pz-slot--right' : ''}${isHovered && activePieceId != null ? ' pz-slot--hover' : ''}${isActive ? ' pz-slot--active' : ''}${activePieceId != null && !piece && !isLocked ? ' pz-slot--droppable' : ''}`}
+                                        onDragOver={(e) => { if (isLocked) return; e.preventDefault(); setHoveredSlot(slotIdx) }}
                                         onDragLeave={() => setHoveredSlot(null)}
-                                        onDrop={(e) => { e.preventDefault(); placeOnSlot(slotIdx) }}
+                                        onDrop={(e) => { e.preventDefault(); if (!isLocked) placeOnSlot(slotIdx) }}
                                         onClick={() => handleSlotClick(slotIdx)}
                                     >
+                                        {ghost && !piece && (
+                                            <span className="pz-slot-ghost" aria-hidden="true">
+                                                <img
+                                                    src={ghost.pieceImageUrl}
+                                                    alt=""
+                                                    className="pz-piece-img"
+                                                />
+                                            </span>
+                                        )}
                                         {piece ? (
-                                            <span className="pz-piece-layer">
+                                            <span className={`pz-piece-layer${isLocked ? ' pz-piece-layer--locked' : ''}${!isLocked && status === 'bad' ? ' pz-piece-layer--wrong' : ''}${isLocked || status === 'ok' ? ' pz-piece-layer--right' : ''}`}>
                                                 <img
                                                     src={piece.pieceImageUrl}
                                                     alt={`keping ${slotIdx + 1}`}
-                                                    className="pz-piece-img"
-                                                    draggable
-                                                    onDragStart={() => { setActivePieceId(pieceId); setActiveFromSlot(slotIdx) }}
+                                                    className={`pz-piece-img${isLocked ? ' pz-piece-img--locked' : ''}${!isLocked && status === 'bad' ? ' pz-piece-img--wrong' : ''}${isLocked || status === 'ok' ? ' pz-piece-img--right' : ''}`}
+                                                    draggable={!isLocked}
+                                                    onDragStart={(e) => {
+                                                        if (isLocked) { e.preventDefault(); return }
+                                                        setActivePieceId(pieceId)
+                                                        setActiveFromSlot(slotIdx)
+                                                    }}
                                                     onDragEnd={() => { setActivePieceId(null); setActiveFromSlot(null); setHoveredSlot(null) }}
                                                 />
                                             </span>
-                                        ) : (
+                                        ) : !ghost ? (
                                             <span className="pz-slot-num">{slotIdx + 1}</span>
-                                        )}
+                                        ) : null}
                                     </div>
                                 )
                             })}
@@ -176,7 +276,7 @@ export default function PuzzleQuestion({ question, answer, onAnswer }) {
                         className={`pz-tray${activePieceId != null && activeFromSlot !== null ? ' pz-tray--droppable' : ''}`}
                         onDragOver={(e) => e.preventDefault()}
                         onDrop={(e) => { e.preventDefault(); returnToTray() }}
-                        onClick={() => { if (activePieceId != null && activeFromSlot !== null) returnToTray() }}
+                        onClick={() => { if (activePieceId != null && activeFromSlot !== null && !lockedSlots.has(activeFromSlot)) returnToTray() }}
                     >
                         <p className="pz-tray-label">
                             {allPlaced ? '🎉 Semua keping sudah dipasang!' : `Keping tersedia (${trayPieces.length})`}
