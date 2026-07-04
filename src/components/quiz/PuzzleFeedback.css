@@ -123,9 +123,46 @@
 }
 
 .pz-popup {
+    position: relative;
     width: 100%;
     max-width: 340px;
     animation: pzPopupIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.pz-popup__close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
+    color: #64748b;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.12);
+    transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+.pz-popup__close:hover:not(:disabled) {
+    background: #ffffff;
+    color: #1e293b;
+    transform: scale(1.05);
+}
+
+.pz-popup__close:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.pz-popup__close:focus-visible {
+    outline: 2px solid #6366f1;
+    outline-offset: 2px;
 }
 
 .pz-popup .pz-feedback {

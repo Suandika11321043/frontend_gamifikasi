@@ -1,4 +1,5 @@
 import { createPortal } from 'react-dom'
+import { X } from 'lucide-react'
 import './PuzzleFeedback.css'
 
 const MASCOTS = { win: '🏆', try: '💪' }
@@ -51,6 +52,7 @@ export default function QuizFeedbackPopup({
     puzzleTotalPieces = null,
     popup = false,
     onNext,
+    onClose,
     isLast = false,
     disabled = false,
 }) {
@@ -82,9 +84,24 @@ export default function QuizFeedbackPopup({
 
     if (!popup) return inner
 
+    const handleClose = () => {
+        if (disabled) return
+        if (onClose) onClose()
+        else if (onNext) onNext()
+    }
+
     return createPortal(
         <div className="pz-popup-overlay" role="presentation">
             <div className="pz-popup" role="dialog" aria-modal="true" aria-label="Hasil jawaban">
+                <button
+                    type="button"
+                    className="pz-popup__close"
+                    onClick={handleClose}
+                    disabled={disabled}
+                    aria-label="Tutup"
+                >
+                    <X size={22} strokeWidth={2.25} aria-hidden="true" />
+                </button>
                 {inner}
             </div>
         </div>,

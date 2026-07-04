@@ -1,4 +1,4 @@
-const SAVE_INTERVAL_MS = 5000
+const SAVE_INTERVAL_MS = 20000
 
 export function getTimerStorageKey(studentId, scopeId, questionId) {
     return `quiz_timer_${studentId}_${scopeId}_${questionId}`

@@ -50,10 +50,19 @@ function ManajemenTemaPage() {
         (t.description ?? '').toLowerCase().includes(search.toLowerCase())
     )
 
+    const revokeIconPreview = useCallback((preview) => {
+        if (preview?.startsWith('blob:')) {
+            URL.revokeObjectURL(preview)
+        }
+    }, [])
+
     const openAdd = () => {
         setForm(emptyForm)
         setIconFile(null)
-        setIconPreview(null)
+        setIconPreview((prev) => {
+            revokeIconPreview(prev)
+            return null
+        })
         setEditId(null)
         setError('')
         setShowModal(true)
@@ -66,7 +75,10 @@ function ManajemenTemaPage() {
             active: tema.isActive !== false,
         })
         setIconFile(null)
-        setIconPreview(tema.icon ?? null)
+        setIconPreview((prev) => {
+            revokeIconPreview(prev)
+            return tema.icon ?? null
+        })
         setEditId(tema.id)
         setError('')
         setShowModal(true)
@@ -75,6 +87,11 @@ function ManajemenTemaPage() {
     const closeModal = () => {
         setShowModal(false)
         setError('')
+        setIconFile(null)
+        setIconPreview((prev) => {
+            revokeIconPreview(prev)
+            return null
+        })
     }
 
     const handleChange = (e) => {
@@ -86,7 +103,10 @@ function ManajemenTemaPage() {
         const file = e.target.files[0]
         if (!file) return
         setIconFile(file)
-        setIconPreview(URL.createObjectURL(file))
+        setIconPreview((prev) => {
+            revokeIconPreview(prev)
+            return URL.createObjectURL(file)
+        })
     }
 
     const handleSave = async () => {
@@ -108,6 +128,11 @@ function ManajemenTemaPage() {
             } else {
                 await apiFetch('/topics', { method: 'POST', body: fd })
             }
+            setIconPreview((prev) => {
+                revokeIconPreview(prev)
+                return null
+            })
+            setIconFile(null)
             setShowModal(false)
             fetchTema()
         } catch (err) {
