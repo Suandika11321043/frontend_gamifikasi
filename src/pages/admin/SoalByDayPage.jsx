@@ -19,7 +19,7 @@ const DAY_META = {
     SELASA: { label: 'Selasa',  color: '#16a34a', bg: '#dcfce7' },
     RABU:   { label: 'Rabu',    color: '#d97706', bg: '#fef3c7' },
     KAMIS:  { label: 'Kamis',   color: '#9333ea', bg: '#f3e8ff' },
-    JUMAT:  { label: "Jum'at",  color: '#dc2626', bg: '#fee2e2' },
+    JUMAT:  { label: "Jumat",  color: '#dc2626', bg: '#fee2e2' },
 }
 
 function buildCells(year, month) {
