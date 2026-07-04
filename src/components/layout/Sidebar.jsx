@@ -31,7 +31,7 @@ const navGroups = [
         label: 'Profil dan Kemajuan Siswa',
         icon: <Users size={18} />,
         children: [
-            { label: 'Daftar Siswa', path: '/admin/siswa', icon: <Users size={16} /> },
+            { label: 'Manajemen Daftar Siswa', path: '/admin/siswa', icon: <Users size={16} /> },
         ],
     },
 ]
