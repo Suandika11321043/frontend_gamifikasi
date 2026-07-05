@@ -58,11 +58,10 @@ export async function apiFetch(path, options = {}) {
             throw new Error('Tidak dapat terhubung ke server. Periksa koneksi Anda.')
         }
 
-        // Token expired / unauthorized → auto-logout
         if (res.status === 401) {
             localStorage.removeItem('token')
             _onAuthExpired?.()
-            throw new Error('Sesi telah berakhir. Silakan login kembali.')
+            throw new Error('Sesi Anda telah berakhir. Silakan masuk kembali.')
         }
 
         if (res.status === 204) return null
@@ -75,6 +74,7 @@ export async function apiFetch(path, options = {}) {
         if (!res.ok) {
             throw new Error(extractErrorMessage(data, res.status))
         }
+
         return data
     } finally {
         _activeCount--

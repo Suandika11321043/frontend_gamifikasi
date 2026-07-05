@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { login } from '../services/authService'
+import { getErrorMessage } from '../utils/apiFetch'
 import './LoginPage.css'
 
 function LoginPage() {
@@ -34,7 +35,7 @@ function LoginPage() {
 
             navigate('/dashboard')
         } catch (err) {
-            setError(err.message || 'Tidak dapat terhubung ke server. Coba lagi nanti.')
+            setError(getErrorMessage(err, 'Gagal masuk ke sistem. Silakan coba lagi.'))
         } finally {
             setLoading(false)
         }

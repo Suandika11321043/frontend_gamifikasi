@@ -41,7 +41,7 @@ function ManajemenTemaPage() {
             const data = await apiFetch('/topics')
             setTemaList(Array.isArray(data) ? data : [])
         } catch (err) {
-            setFetchError(err.message)
+            setFetchError(getErrorMessage(err, 'Gagal memuat daftar tema. Silakan coba lagi.'))
         } finally {
             setLoading(false)
         }
@@ -148,7 +148,7 @@ function ManajemenTemaPage() {
             setShowModal(false)
             fetchTema()
         } catch (err) {
-            setError(err.message)
+            setError(getErrorMessage(err, 'Gagal menyimpan tema. Silakan coba lagi.'))
         } finally {
             setSaving(false)
         }

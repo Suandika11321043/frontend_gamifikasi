@@ -1,4 +1,5 @@
 ﻿import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import LoadingOverlay from './components/common/LoadingOverlay'
 import LoginPage from './pages/LoginPage'
@@ -29,9 +30,26 @@ function AdminRoute({ children }) {
   return children
 }
 
+// Hapus token admin saat berada di area siswa (/student/...)
+function ClearTokenOnStudentRoute() {
+  const location = useLocation()
+  const { clearToken } = useAuth()
+
+  useEffect(() => {
+    const onStudentArea = location.pathname === '/student'
+      || location.pathname.startsWith('/student/')
+    if (onStudentArea) {
+      clearToken()
+    }
+  }, [location.pathname, clearToken])
+
+  return null
+}
+
 function AppRoutes() {
   return (
     <>
+      <ClearTokenOnStudentRoute />
       <LoadingOverlay />
       <Routes>
         <Route path="/" element={<Navigate to="/student" replace />} />
