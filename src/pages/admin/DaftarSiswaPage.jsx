@@ -7,6 +7,7 @@ import '../../styles/common.css'
 import '../../pages/admin/DashboardPage.css'
 import './DaftarSiswaPage.css'
 import { apiFetch } from '../../utils/apiFetch'
+import { validateImageFile } from '../../utils/validateFile'
 
 const emptyForm = { name: '', group: '' }
 
@@ -24,6 +25,9 @@ function DaftarSiswaPage() {
     const [detailSiswa, setDetailSiswa] = useState(null)
     const [deleteId, setDeleteId] = useState(null)
     const [error, setError] = useState('')
+    const [pageError, setPageError] = useState('')
+    const [deleteError, setDeleteError] = useState('')
+    const [deleting, setDeleting] = useState(false)
     const [saving, setSaving] = useState(false)
 
     const fetchSiswa = useCallback(async () => {
@@ -46,10 +50,19 @@ function DaftarSiswaPage() {
         (s.group ?? '').toLowerCase().includes(search.toLowerCase())
     )
 
+    const revokeAvatarPreview = useCallback((preview) => {
+        if (preview?.startsWith('blob:')) {
+            URL.revokeObjectURL(preview)
+        }
+    }, [])
+
     const openAdd = () => {
         setForm(emptyForm)
         setAvatarFile(null)
-        setAvatarPreview(null)
+        setAvatarPreview((prev) => {
+            revokeAvatarPreview(prev)
+            return null
+        })
         setEditId(null)
         setError('')
         setShowModal(true)
@@ -61,7 +74,10 @@ function DaftarSiswaPage() {
             group: siswa.group ?? '',
         })
         setAvatarFile(null)
-        setAvatarPreview(siswa.avatar ?? null)
+        setAvatarPreview((prev) => {
+            revokeAvatarPreview(prev)
+            return siswa.avatar ?? null
+        })
         setEditId(siswa.id)
         setError('')
         setShowModal(true)
@@ -75,12 +91,24 @@ function DaftarSiswaPage() {
     const handleAvatarChange = (e) => {
         const file = e.target.files[0]
         if (!file) return
+        const fileErr = validateImageFile(file)
+        if (fileErr) {
+            setError(fileErr)
+            e.target.value = ''
+            return
+        }
+        setError('')
         setAvatarFile(file)
-        setAvatarPreview(URL.createObjectURL(file))
+        setAvatarPreview((prev) => {
+            revokeAvatarPreview(prev)
+            return URL.createObjectURL(file)
+        })
     }
 
     const handleSave = async () => {
-        if (!form.name.trim() || !form.group.trim()) {
+        const name = form.name.trim()
+        const group = form.group.trim()
+        if (!name || !group) {
             setError('Nama dan kelompok wajib diisi.')
             return
         }
@@ -88,8 +116,8 @@ function DaftarSiswaPage() {
         setError('')
         try {
             const fd = new FormData()
-            fd.append('name', form.name)
-            fd.append('group', form.group)
+            fd.append('name', name)
+            fd.append('group', group)
             if (avatarFile) fd.append('avatar', avatarFile)
 
             if (editId) {
@@ -97,6 +125,11 @@ function DaftarSiswaPage() {
             } else {
                 await apiFetch('/students', { method: 'POST', body: fd })
             }
+            setAvatarPreview((prev) => {
+                revokeAvatarPreview(prev)
+                return null
+            })
+            setAvatarFile(null)
             setShowModal(false)
             fetchSiswa()
         } catch (err) {
@@ -107,14 +140,28 @@ function DaftarSiswaPage() {
     }
 
     const handleDelete = async () => {
+        setDeleting(true)
+        setDeleteError('')
         try {
             await apiFetch(`/students/${deleteId}`, { method: 'DELETE' })
             setDeleteId(null)
+            setPageError('')
             fetchSiswa()
         } catch (err) {
-            setError(err.message)
-            setDeleteId(null)
+            setDeleteError(err.message)
+        } finally {
+            setDeleting(false)
         }
+    }
+
+    const closeModal = () => {
+        setShowModal(false)
+        setError('')
+        setAvatarFile(null)
+        setAvatarPreview((prev) => {
+            revokeAvatarPreview(prev)
+            return null
+        })
     }
 
     const isEditing = editId !== null
@@ -158,6 +205,7 @@ function DaftarSiswaPage() {
             </div>
 
             {fetchError && <p className="modal-error">{fetchError}</p>}
+            {pageError && <p className="modal-error">{pageError}</p>}
 
             <div className="table-wrapper">
                 <table>
@@ -212,7 +260,7 @@ function DaftarSiswaPage() {
             {showModal && (
                 <Modal
                     title={modalTitle}
-                    onClose={() => setShowModal(false)}
+                    onClose={closeModal}
                 >
                     {error && <p className="modal-error">{error}</p>}
 
@@ -275,7 +323,7 @@ function DaftarSiswaPage() {
                     </div>
 
                     <div className="modal-actions">
-                        <button className="btn-secondary" onClick={() => setShowModal(false)} disabled={saving}>
+                        <button className="btn-secondary" onClick={closeModal} disabled={saving}>
                             Batal
                         </button>
                         <button className="btn-primary" onClick={handleSave} disabled={saving}>
@@ -318,15 +366,16 @@ function DaftarSiswaPage() {
                 <Modal
                     title="Hapus Siswa?"
                     className="modal-confirm"
-                    onClose={() => setDeleteId(null)}
+                    onClose={() => { setDeleteId(null); setDeleteError('') }}
                 >
                     <p>Data siswa ini akan dihapus secara permanen.</p>
+                    {deleteError && <p className="modal-error">{deleteError}</p>}
                     <div className="modal-actions">
-                        <button className="btn-secondary" onClick={() => setDeleteId(null)}>
+                        <button className="btn-secondary" onClick={() => { setDeleteId(null); setDeleteError('') }}>
                             Batal
                         </button>
-                        <button className="btn-danger" onClick={handleDelete}>
-                            Hapus
+                        <button className="btn-danger" onClick={handleDelete} disabled={deleting}>
+                            {deleting ? 'Menghapus...' : 'Hapus'}
                         </button>
                     </div>
                 </Modal>

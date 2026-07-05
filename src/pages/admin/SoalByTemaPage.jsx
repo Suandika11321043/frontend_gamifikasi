@@ -10,6 +10,7 @@ import './ManajemenTemaPage.css'
 import './ManajemenSoalPage.css'
 import { apiFetch } from '../../utils/apiFetch'
 import { duplicateQuestionToDate } from '../../utils/duplicateQuestion'
+import { appendQuestionUpdateFields, isWeekendDate } from '../../utils/validateFile'
 
 const MONTHS = [
     { num: 1, label: 'Januari', short: 'Jan' },
@@ -188,21 +189,16 @@ export default function SoalByTemaPage() {
 
     const handleReschedule = async () => {
         if (!newDate || newDate === rescheduleDate) { setRescheduleErr('Pilih tanggal yang berbeda.'); return }
+        if (isWeekendDate(newDate)) { setRescheduleErr('Sabtu/Minggu bukan hari belajar.'); return }
         if (activeDates.has(newDate)) { setRescheduleErr(`Tanggal ${newDate} sudah memiliki soal. Pilih tanggal lain.`); return }
         setRescheduling(true); setRescheduleErr('')
         try {
-            // Fetch all question IDs for old date, then update each
             const list = await apiFetch(`/questions/topic/${topicId}/date/${rescheduleDate}`)
             const questions = Array.isArray(list) ? list : (list?.data ?? [])
             await Promise.all(
                 questions.map((q) => {
                     const fd = new FormData()
-                    fd.append('topicId', topicId)
-                    fd.append('learningDate', newDate)
-                    fd.append('questionType', q.questionType ?? 'QUIZ')
-                    fd.append('contentInstruction', q.contentInstruction ?? '')
-                    if (q.timeLimitMinutes) fd.append('timeLimitMinutes', q.timeLimitMinutes)
-                    if (q.scorePoint) fd.append('scorePoint', q.scorePoint)
+                    appendQuestionUpdateFields(fd, q, { topicId, learningDate: newDate })
                     return apiFetch(`/questions/${q.id}`, { method: 'PUT', body: fd })
                 })
             )

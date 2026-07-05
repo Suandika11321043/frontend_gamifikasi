@@ -9,6 +9,7 @@ import './ManajemenTemaPage.css'
 import './ManajemenSoalPage.css'
 import { apiFetch } from '../../utils/apiFetch'
 import { duplicateQuestionToDate } from '../../utils/duplicateQuestion'
+import { appendQuestionUpdateFields, isWeekendDate, validateAudioFile, validateImageFile } from '../../utils/validateFile'
 import { QUESTION_TYPES } from '../../utils/questionTypes'
 import TypeBadge from '../../components/quiz/TypeBadge'
 
@@ -292,11 +293,19 @@ function SoalQuestionsPage() {
     const handleQChange = (e) => setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
 
     const handleSaveQuestion = async () => {
-        if (!form.contentInstruction.trim()) { setError('Instruksi soal wajib diisi.'); return }
+        const instruction = form.contentInstruction.trim()
+        if (!instruction) { setError('Instruksi soal wajib diisi.'); return }
         const score = Number(form.scorePoint)
         if (!form.scorePoint || Number.isNaN(score) || score <= 0) {
             setError('Poin soal wajib diisi (minimal 1).')
             return
+        }
+        if (form.timeLimitMinutes) {
+            const timer = Number(form.timeLimitMinutes)
+            if (Number.isNaN(timer) || timer <= 0 || timer > 60) {
+                setError('Batas waktu harus antara 1–60 menit.')
+                return
+            }
         }
         setSaving(true); setError('')
         try {
@@ -304,7 +313,7 @@ function SoalQuestionsPage() {
             fd.append('topicId', topicId)
             fd.append('learningDate', learningDate)
             fd.append('questionType', form.questionType)
-            fd.append('contentInstruction', form.contentInstruction)
+            fd.append('contentInstruction', instruction)
             if (form.timeLimitMinutes && Number(form.timeLimitMinutes) > 0) fd.append('timeLimitMinutes', form.timeLimitMinutes)
             fd.append('scorePoint', form.scorePoint)
             if (imageFile) fd.append('contentImage', imageFile)
@@ -527,20 +536,13 @@ function SoalQuestionsPage() {
 
     const handleReschedule = async () => {
         if (!newDateVal || newDateVal === learningDate) { setRescheduleErr('Pilih tanggal yang berbeda.'); return }
-        const [y, m, d] = newDateVal.split('-').map(Number)
-        const jsDay = new Date(y, m - 1, d).getDay()
-        if (jsDay === 0 || jsDay === 6) { setRescheduleErr('Sabtu/Minggu bukan hari belajar.'); return }
+        if (isWeekendDate(newDateVal)) { setRescheduleErr('Sabtu/Minggu bukan hari belajar.'); return }
         setRescheduling(true); setRescheduleErr('')
         try {
             await Promise.all(
                 questionList.map((q) => {
                     const fd = new FormData()
-                    fd.append('topicId', topicId)
-                    fd.append('learningDate', newDateVal)
-                    fd.append('questionType', q.questionType ?? 'QUIZ')
-                    fd.append('contentInstruction', q.contentInstruction ?? '')
-                    if (q.timeLimitMinutes) fd.append('timeLimitMinutes', q.timeLimitMinutes)
-                    if (q.scorePoint) fd.append('scorePoint', q.scorePoint)
+                    appendQuestionUpdateFields(fd, q, { topicId, learningDate: newDateVal })
                     return apiFetch(`/questions/${q.id}`, { method: 'PUT', body: fd })
                 })
             )
@@ -780,7 +782,11 @@ function SoalQuestionsPage() {
                                         style={{ display: 'none' }}
                                         onChange={(e) => {
                                             const f = e.target.files[0]
-                                            if (f) { setImageFile(f); setImagePreview(URL.createObjectURL(f)) }
+                                            if (f) {
+                                                const fileErr = validateImageFile(f)
+                                                if (fileErr) { setError(fileErr); e.target.value = ''; return }
+                                                setImageFile(f); setImagePreview(URL.createObjectURL(f))
+                                            }
                                         }}
                                     />
                                 </label>
@@ -799,7 +805,13 @@ function SoalQuestionsPage() {
                                         type="file"
                                         accept="audio/*"
                                         style={{ display: 'none' }}
-                                        onChange={(e) => { const f = e.target.files[0]; if (f) setAudioFile(f) }}
+                                        onChange={(e) => {
+                                            const f = e.target.files[0]
+                                            if (!f) return
+                                            const fileErr = validateAudioFile(f)
+                                            if (fileErr) { setError(fileErr); e.target.value = ''; return }
+                                            setAudioFile(f)
+                                        }}
                                     />
                                 </label>
                             </div>

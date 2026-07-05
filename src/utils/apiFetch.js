@@ -22,6 +22,21 @@ export function setOnAuthExpired(fn) {
     _onAuthExpired = fn
 }
 
+function extractErrorMessage(data, status) {
+    if (data?.message) return data.message
+    if (data?.error) return data.error
+    if (data?.detail) return data.detail
+    if (Array.isArray(data?.errors) && data.errors[0]?.defaultMessage) {
+        return data.errors[0].defaultMessage
+    }
+    if (status === 400) return 'Permintaan tidak valid.'
+    if (status === 404) return 'Data tidak ditemukan.'
+    if (status === 409) return 'Konflik data. Periksa kembali input Anda.'
+    if (status === 413) return 'Ukuran file melebihi batas maksimal 5MB.'
+    if (status >= 500) return 'Terjadi kesalahan server. Silakan coba lagi.'
+    return `Error ${status}`
+}
+
 // ── Shared fetch wrapper ──────────────────────────────────────────
 export async function apiFetch(path, options = {}) {
     const token = localStorage.getItem('token')
@@ -36,7 +51,12 @@ export async function apiFetch(path, options = {}) {
     _notify()
 
     try {
-        const res = await fetch(`${BASE_URL}${path}`, { ...options, headers })
+        let res
+        try {
+            res = await fetch(`${BASE_URL}${path}`, { ...options, headers })
+        } catch {
+            throw new Error('Tidak dapat terhubung ke server. Periksa koneksi Anda.')
+        }
 
         // Token expired / unauthorized → auto-logout
         if (res.status === 401) {
@@ -46,12 +66,14 @@ export async function apiFetch(path, options = {}) {
         }
 
         if (res.status === 204) return null
-        const data = await res.json().catch(() => ({}))
+
+        const contentType = res.headers.get('content-type') ?? ''
+        const data = contentType.includes('application/json')
+            ? await res.json().catch(() => ({}))
+            : {}
+
         if (!res.ok) {
-            const msg = data.message || data.error || data.detail
-                || (typeof data === 'string' && data)
-                || `Error ${res.status}`
-            throw new Error(msg)
+            throw new Error(extractErrorMessage(data, res.status))
         }
         return data
     } finally {
