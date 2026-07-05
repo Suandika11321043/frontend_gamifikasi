@@ -6,6 +6,7 @@ import '../../styles/common.css'
 import '../../pages/admin/DashboardPage.css'
 import './ManajemenTemaPage.css'
 import { apiFetch } from '../../utils/apiFetch'
+import { validateImageFile } from '../../utils/validateFile'
 
 const emptyForm = { nameTopic: '', description: '', active: true }
 
@@ -28,6 +29,9 @@ function ManajemenTemaPage() {
     const [deleteId, setDeleteId] = useState(null)
 
     const [error, setError] = useState('')
+    const [pageError, setPageError] = useState('')
+    const [deleteError, setDeleteError] = useState('')
+    const [deleting, setDeleting] = useState(false)
     const [saving, setSaving] = useState(false)
 
     const fetchTema = useCallback(async () => {
@@ -102,6 +106,13 @@ function ManajemenTemaPage() {
     const handleIconChange = (e) => {
         const file = e.target.files[0]
         if (!file) return
+        const fileErr = validateImageFile(file)
+        if (fileErr) {
+            setError(fileErr)
+            e.target.value = ''
+            return
+        }
+        setError('')
         setIconFile(file)
         setIconPreview((prev) => {
             revokeIconPreview(prev)
@@ -110,7 +121,8 @@ function ManajemenTemaPage() {
     }
 
     const handleSave = async () => {
-        if (!form.nameTopic.trim()) {
+        const nameTopic = form.nameTopic.trim()
+        if (!nameTopic) {
             setError('Nama tema wajib diisi.')
             return
         }
@@ -118,8 +130,8 @@ function ManajemenTemaPage() {
         setError('')
         try {
             const fd = new FormData()
-            fd.append('nameTopic', form.nameTopic)
-            fd.append('description', form.description)
+            fd.append('nameTopic', nameTopic)
+            fd.append('description', form.description.trim())
             fd.append('isActive', form.active ? 'true' : 'false')
             if (iconFile) fd.append('icon', iconFile)
 
@@ -143,27 +155,30 @@ function ManajemenTemaPage() {
     }
 
     const handleDelete = async () => {
+        setDeleting(true)
+        setDeleteError('')
         try {
             await apiFetch(`/topics/${deleteId}`, { method: 'DELETE' })
             setDeleteId(null)
+            setPageError('')
             fetchTema()
         } catch (err) {
-            setError(err.message)
-            setDeleteId(null)
+            setDeleteError(err.message)
+        } finally {
+            setDeleting(false)
         }
     }
 
     const handleToggleActive = async (tema) => {
         const newActive = tema.isActive === false
         const endpoint = tema.isActive !== false ? `/topics/${tema.id}/deactivate` : `/topics/${tema.id}/activate`
-        // Optimistic update — geser toggle langsung sebelum server merespons
+        setPageError('')
         setTemaList((prev) => prev.map((t) => t.id === tema.id ? { ...t, isActive: newActive } : t))
         try {
             await apiFetch(endpoint, { method: 'PATCH' })
         } catch (err) {
-            // Revert jika gagal
             setTemaList((prev) => prev.map((t) => t.id === tema.id ? { ...t, isActive: tema.isActive } : t))
-            setError(err.message)
+            setPageError(err.message)
         }
     }
 
@@ -201,6 +216,7 @@ function ManajemenTemaPage() {
             </div>
 
             {fetchError && <p className="modal-error">{fetchError}</p>}
+            {pageError && <p className="modal-error">{pageError}</p>}
 
             {loading ? (
                 <p className="tema-loading">Memuat data...</p>
@@ -371,15 +387,16 @@ function ManajemenTemaPage() {
                 <Modal
                     title="Hapus Tema?"
                     className="modal-confirm"
-                    onClose={() => setDeleteId(null)}
+                    onClose={() => { setDeleteId(null); setDeleteError('') }}
                 >
-                    <p>Tema ini akan dihapus secara permanen.</p>
+                    <p>Tema ini akan dihapus secara permanen beserta semua soal terkait.</p>
+                    {deleteError && <p className="modal-error">{deleteError}</p>}
                     <div className="modal-actions">
-                        <button className="btn-secondary" onClick={() => setDeleteId(null)}>
+                        <button className="btn-secondary" onClick={() => { setDeleteId(null); setDeleteError('') }}>
                             Batal
                         </button>
-                        <button className="btn-danger" onClick={handleDelete}>
-                            Hapus
+                        <button className="btn-danger" onClick={handleDelete} disabled={deleting}>
+                            {deleting ? 'Menghapus...' : 'Hapus'}
                         </button>
                     </div>
                 </Modal>

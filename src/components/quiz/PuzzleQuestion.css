@@ -421,6 +421,8 @@
     height: 100%;
     object-fit: contain;
     border-radius: 8px;
+    cursor: grab;
+    -webkit-user-drag: element;
 }
 
 @keyframes pzSlotPulse {
