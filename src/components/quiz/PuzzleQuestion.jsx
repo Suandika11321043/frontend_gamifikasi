@@ -18,6 +18,8 @@ export default function PuzzleQuestion({ question, answer, onAnswer }) {
     const [lockedSlots, setLockedSlots] = useState(() => new Set())
     const progressTimerRef = useRef(null)
     const restoredProgressRef = useRef(false)
+    /** Ref agar pieceId tetap tersedia saat onDrop (onDragEnd bisa reset state lebih dulu). */
+    const dragRef = useRef({ pieceId: null, fromSlot: null })
 
     useEffect(() => {
         setLoadingPuzzle(true)
@@ -108,6 +110,31 @@ export default function PuzzleQuestion({ question, answer, onAnswer }) {
             .catch(() => { /* ignore */ })
     }, [puzzleData, question.questionId])
 
+    const beginDrag = (pieceId, fromSlot, e) => {
+        dragRef.current = { pieceId, fromSlot }
+        setActivePieceId(pieceId)
+        setActiveFromSlot(fromSlot)
+        if (e?.dataTransfer) {
+            e.dataTransfer.effectAllowed = 'move'
+            e.dataTransfer.setData('text/plain', String(pieceId))
+        }
+    }
+
+    const endDrag = () => {
+        dragRef.current = { pieceId: null, fromSlot: null }
+        setActivePieceId(null)
+        setActiveFromSlot(null)
+        setHoveredSlot(null)
+    }
+
+    const getDragContext = () => {
+        const { pieceId, fromSlot } = dragRef.current
+        return {
+            pieceId: pieceId ?? activePieceId,
+            fromSlot: fromSlot !== undefined && fromSlot !== null ? fromSlot : activeFromSlot,
+        }
+    }
+
     const commit = (newPlacements) => {
         setPlacements(newPlacements)
         mergeLockedFromPlacements(newPlacements)
@@ -134,29 +161,34 @@ export default function PuzzleQuestion({ question, answer, onAnswer }) {
     }
 
     const placeOnSlot = (slotIdx) => {
-        if (activePieceId == null) return
+        const { pieceId: draggingId, fromSlot: draggingFrom } = getDragContext()
+        if (draggingId == null) return
         if (lockedSlots.has(slotIdx)) return
-        if (activeFromSlot !== null && lockedSlots.has(activeFromSlot)) return
+        if (draggingFrom !== null && lockedSlots.has(draggingFrom)) return
         const next = { ...placements }
-        if (activeFromSlot !== null) delete next[activeFromSlot]
-        if (activeFromSlot !== null && next[slotIdx] !== undefined) {
-            next[activeFromSlot] = next[slotIdx]
+        if (draggingFrom !== null) delete next[draggingFrom]
+        if (draggingFrom !== null && next[slotIdx] !== undefined) {
+            next[draggingFrom] = next[slotIdx]
         }
-        next[slotIdx] = activePieceId
+        next[slotIdx] = draggingId
         commit(next)
-        setActivePieceId(null)
-        setActiveFromSlot(null)
-        setHoveredSlot(null)
+        endDrag()
     }
 
     const returnToTray = () => {
-        if (activeFromSlot === null) { setActivePieceId(null); return }
-        if (lockedSlots.has(activeFromSlot)) { setActivePieceId(null); setActiveFromSlot(null); return }
+        const { pieceId: draggingId, fromSlot: draggingFrom } = getDragContext()
+        if (draggingFrom === null) {
+            if (draggingId == null) endDrag()
+            return
+        }
+        if (lockedSlots.has(draggingFrom)) {
+            endDrag()
+            return
+        }
         const next = { ...placements }
-        delete next[activeFromSlot]
+        delete next[draggingFrom]
         commit(next)
-        setActivePieceId(null)
-        setActiveFromSlot(null)
+        endDrag()
     }
 
     const handleSlotClick = (slotIdx) => {
@@ -191,8 +223,8 @@ export default function PuzzleQuestion({ question, answer, onAnswer }) {
         <div className="pz-wrap">
             <p className="pz-hint">
                 {activePieceId
-                    ? '👉 Ketuk kotak untuk menempatkan keping'
-                    : '🧩 Ketuk keping lalu ketuk kotak untuk menyusun puzzle!'}
+                    ? '👉 Seret atau ketuk kotak untuk menempatkan keping'
+                    : '🧩 Seret keping ke kotak, atau ketuk keping lalu ketuk kotak!'}
             </p>
 
             <div className={`pz-workspace${referenceImage ? '' : ' pz-workspace--no-ref'}`}>
@@ -220,7 +252,11 @@ export default function PuzzleQuestion({ question, answer, onAnswer }) {
                         <div
                             className="pz-grid"
                             onDragOver={(e) => e.preventDefault()}
-                            onDrop={(e) => { e.preventDefault(); if (activeFromSlot === null || !lockedSlots.has(activeFromSlot)) returnToTray() }}
+                            onDrop={(e) => {
+                                e.preventDefault()
+                                const { fromSlot } = getDragContext()
+                                if (fromSlot !== null && !lockedSlots.has(fromSlot)) returnToTray()
+                            }}
                         >
                             {Array.from({ length: totalSlots }, (_, slotIdx) => {
                                 const pieceId = placements[slotIdx]
@@ -234,9 +270,9 @@ export default function PuzzleQuestion({ question, answer, onAnswer }) {
                                     <div
                                         key={slotIdx}
                                         className={`pz-slot${piece ? ' pz-slot--filled' : ' pz-slot--empty'}${ghost ? ' pz-slot--has-ghost' : ''}${isLocked ? ' pz-slot--locked' : ''}${!isLocked && status === 'bad' ? ' pz-slot--wrong' : ''}${!isLocked && status === 'ok' ? ' pz-slot--right' : ''}${isHovered && activePieceId != null ? ' pz-slot--hover' : ''}${isActive ? ' pz-slot--active' : ''}${activePieceId != null && !piece && !isLocked ? ' pz-slot--droppable' : ''}`}
-                                        onDragOver={(e) => { if (isLocked) return; e.preventDefault(); setHoveredSlot(slotIdx) }}
+                                        onDragOver={(e) => { if (isLocked) return; e.preventDefault(); e.dataTransfer.dropEffect = 'move'; setHoveredSlot(slotIdx) }}
                                         onDragLeave={() => setHoveredSlot(null)}
-                                        onDrop={(e) => { e.preventDefault(); if (!isLocked) placeOnSlot(slotIdx) }}
+                                        onDrop={(e) => { e.preventDefault(); e.stopPropagation(); if (!isLocked) placeOnSlot(slotIdx) }}
                                         onClick={() => handleSlotClick(slotIdx)}
                                     >
                                         {ghost && !piece && (
@@ -257,10 +293,9 @@ export default function PuzzleQuestion({ question, answer, onAnswer }) {
                                                     draggable={!isLocked}
                                                     onDragStart={(e) => {
                                                         if (isLocked) { e.preventDefault(); return }
-                                                        setActivePieceId(pieceId)
-                                                        setActiveFromSlot(slotIdx)
+                                                        beginDrag(pieceId, slotIdx, e)
                                                     }}
-                                                    onDragEnd={() => { setActivePieceId(null); setActiveFromSlot(null); setHoveredSlot(null) }}
+                                                    onDragEnd={endDrag}
                                                 />
                                             </span>
                                         ) : !ghost ? (
@@ -274,7 +309,7 @@ export default function PuzzleQuestion({ question, answer, onAnswer }) {
 
                     <div
                         className={`pz-tray${activePieceId != null && activeFromSlot !== null ? ' pz-tray--droppable' : ''}`}
-                        onDragOver={(e) => e.preventDefault()}
+                        onDragOver={(e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move' }}
                         onDrop={(e) => { e.preventDefault(); returnToTray() }}
                         onClick={() => { if (activePieceId != null && activeFromSlot !== null && !lockedSlots.has(activeFromSlot)) returnToTray() }}
                     >
@@ -286,12 +321,16 @@ export default function PuzzleQuestion({ question, answer, onAnswer }) {
                                 <div
                                     key={piece.id}
                                     className={`pz-piece${activePieceId === piece.id ? ' pz-piece--selected' : ''}`}
-                                    draggable
-                                    onDragStart={() => { setActivePieceId(piece.id); setActiveFromSlot(null) }}
-                                    onDragEnd={() => { setActivePieceId(null); setActiveFromSlot(null) }}
                                     onClick={(e) => { e.stopPropagation(); handlePieceTrayClick(piece.id) }}
                                 >
-                                    <img src={piece.pieceImageUrl} alt="keping" className="pz-piece-img" />
+                                    <img
+                                        src={piece.pieceImageUrl}
+                                        alt="keping"
+                                        className="pz-piece-img"
+                                        draggable
+                                        onDragStart={(e) => beginDrag(piece.id, null, e)}
+                                        onDragEnd={endDrag}
+                                    />
                                 </div>
                             ))}
                         </div>

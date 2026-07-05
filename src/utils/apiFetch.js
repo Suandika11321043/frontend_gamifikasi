@@ -22,48 +22,19 @@ export function setOnAuthExpired(fn) {
     _onAuthExpired = fn
 }
 
-const STATUS_MESSAGES = {
-    400: 'Permintaan tidak valid. Periksa kembali data yang Anda masukkan.',
-    403: 'Anda tidak memiliki izin untuk melakukan tindakan ini.',
-    404: 'Data yang diminta tidak ditemukan.',
-    409: 'Data bentrok dengan data yang sudah ada. Periksa kembali input Anda.',
-    413: 'Ukuran file melebihi batas maksimal 5 MB.',
-    500: 'Terjadi kesalahan pada server. Silakan coba lagi beberapa saat.',
-}
-
-const TECHNICAL_ERROR_PATTERN = /can't access property|is null|is undefined|TypeError|ReferenceError|SyntaxError|Failed to fetch|NetworkError|Load failed/i
-
-/**
- * Ambil pesan error yang aman dan formal untuk ditampilkan ke pengguna.
- */
-export function getErrorMessage(err, fallback = 'Terjadi kesalahan. Silakan coba lagi.') {
-    if (!err) return fallback
-    if (typeof err === 'string') {
-        return TECHNICAL_ERROR_PATTERN.test(err) ? fallback : err
-    }
-    const msg = err.message
-    if (!msg || typeof msg !== 'string') return fallback
-    if (TECHNICAL_ERROR_PATTERN.test(msg)) return fallback
-    if (msg.startsWith('Error ')) return fallback
-    return msg
-}
-
 function extractErrorMessage(data, status) {
-    const body = data && typeof data === 'object' ? data : {}
-    if (body.message) return body.message
-    if (body.error) return body.error
-    if (body.detail) return body.detail
-    if (Array.isArray(body.errors) && body.errors[0]?.defaultMessage) {
-        return body.errors[0].defaultMessage
+    if (data?.message) return data.message
+    if (data?.error) return data.error
+    if (data?.detail) return data.detail
+    if (Array.isArray(data?.errors) && data.errors[0]?.defaultMessage) {
+        return data.errors[0].defaultMessage
     }
-    return STATUS_MESSAGES[status] ?? 'Operasi gagal. Silakan coba lagi.'
-}
-
-/** Normalisasi respons API menjadi array (hindari akses .data pada null). */
-export function unwrapList(data) {
-    if (Array.isArray(data)) return data
-    if (data && Array.isArray(data.data)) return data.data
-    return []
+    if (status === 400) return 'Permintaan tidak valid.'
+    if (status === 404) return 'Data tidak ditemukan.'
+    if (status === 409) return 'Konflik data. Periksa kembali input Anda.'
+    if (status === 413) return 'Ukuran file melebihi batas maksimal 5MB.'
+    if (status >= 500) return 'Terjadi kesalahan server. Silakan coba lagi.'
+    return `Error ${status}`
 }
 
 // ── Shared fetch wrapper ──────────────────────────────────────────
@@ -84,7 +55,7 @@ export async function apiFetch(path, options = {}) {
         try {
             res = await fetch(`${BASE_URL}${path}`, { ...options, headers })
         } catch {
-            throw new Error('Tidak dapat terhubung ke server. Periksa koneksi internet Anda.')
+            throw new Error('Tidak dapat terhubung ke server. Periksa koneksi Anda.')
         }
 
         if (res.status === 401) {
@@ -96,14 +67,9 @@ export async function apiFetch(path, options = {}) {
         if (res.status === 204) return null
 
         const contentType = res.headers.get('content-type') ?? ''
-        let data = null
-        if (contentType.includes('application/json')) {
-            try {
-                data = await res.json()
-            } catch {
-                data = null
-            }
-        }
+        const data = contentType.includes('application/json')
+            ? await res.json().catch(() => ({}))
+            : {}
 
         if (!res.ok) {
             throw new Error(extractErrorMessage(data, res.status))
