@@ -24,6 +24,41 @@ import {
 } from '../../utils/quizTimer'
 import './QuizStudentPage.css'
 
+async function fetchAnswerDetails(apiFetch, studentId, topicId, learningDate) {
+    const dateParam = learningDate ? `?date=${learningDate}` : ''
+    try {
+        const data = await apiFetch(`/quiz/students/${studentId}/topics/${topicId}/answers${dateParam}`)
+        return Array.isArray(data) ? data : (data?.data ?? [])
+    } catch {
+        return []
+    }
+}
+
+function buildAnswerHistoryEntry(question, detail) {
+    if (detail?.correct != null) {
+        return {
+            questionId: question.questionId,
+            correct: detail.correct,
+            earnedScore: detail.earnedScore ?? 0,
+            questionType: detail.questionType ?? question.questionType,
+        }
+    }
+    return {
+        questionId: question.questionId,
+        correct: false,
+        earnedScore: 0,
+        questionType: question.questionType,
+        unanswered: true,
+    }
+}
+
+function buildAnswerHistoryFromDetails(questionList, answerDetails) {
+    const detailMap = Object.fromEntries(
+        (Array.isArray(answerDetails) ? answerDetails : []).map((d) => [d.questionId, d])
+    )
+    return questionList.map((q) => buildAnswerHistoryEntry(q, detailMap[q.questionId]))
+}
+
 // ── Main Page ─────────────────────────────────────────────────────
 function QuizStudentPage() {
     const { studentId, topicId, learningDate, weekId, dayId } = useParams()
@@ -56,6 +91,8 @@ function QuizStudentPage() {
     const [scorePoints, setScorePoints] = useState({})
     const submitFnRef = useRef(null)
     const lastServerSaveRef = useRef(0)
+    /** Hanya true setelah countdown dimulai di sesi ini — cegah auto-submit saat refresh. */
+    const countdownActiveRef = useRef(false)
     const timerScopeId = learningDate ?? dayId ?? topicId
     // { [questionId]: answer data } — pre-loaded from server so already-answered questions are view-only
     const [answeredMap, setAnsweredMap] = useState({})
@@ -121,10 +158,20 @@ function QuizStudentPage() {
             setTimeLimits(limits)
             setScorePoints(scoreMap)
 
-            // Mark already-answered questions as view-only
+            // Muat jawaban dari server agar progress tetap setelah refresh
+            const answerDetails = await fetchAnswerDetails(apiFetch, studentId, topicId, learningDate)
+            const detailMap = Object.fromEntries(answerDetails.map((d) => [d.questionId, d]))
             const aMap = {}
             questionList.forEach((q) => {
-                if (answeredIds.has(q.questionId)) {
+                const detail = detailMap[q.questionId]
+                if (detail?.correct != null) {
+                    aMap[q.questionId] = {
+                        questionId: q.questionId,
+                        isReviewOnly: true,
+                        correct: detail.correct,
+                        earnedScore: detail.earnedScore ?? 0,
+                    }
+                } else if (answeredIds.has(q.questionId)) {
                     aMap[q.questionId] = { questionId: q.questionId, isReviewOnly: true }
                 }
             })
@@ -149,9 +196,13 @@ function QuizStudentPage() {
         let score = 0
         questions.forEach((q) => {
             const ans = answeredMap[q.questionId]
-            // Skip review-only entries — they have no real score data to restore
-            if (ans && !ans.isReviewOnly) {
-                history.push({ questionId: q.questionId, correct: ans.correct ?? false, earnedScore: ans.earnedScore ?? 0 })
+            if (ans && typeof ans.correct === 'boolean') {
+                history.push({
+                    questionId: q.questionId,
+                    correct: ans.correct,
+                    earnedScore: ans.earnedScore ?? 0,
+                    questionType: q.questionType,
+                })
                 if (ans.correct) correct++
                 score += ans.earnedScore ?? 0
             }
@@ -184,28 +235,31 @@ function QuizStudentPage() {
             return
         }
         setTimerTotal(limit)
+        countdownActiveRef.current = false
         let cancelled = false
         const storageKey = getTimerStorageKey(studentId, timerScopeId, currentQuestion.questionId)
 
-        ;(async () => {
-            let restored = null
-            const serverTimer = await fetchTimerFromServer(apiFetch, studentId, topicId, currentQuestion.questionId)
-            if (serverTimer) {
-                restored = computeRemainingFromServer(serverTimer, limit)
-            }
-            if (restored == null) {
-                restored = readLocalTimer(storageKey, limit)
-            }
-            if (restored == null) restored = limit
+            ; (async () => {
+                let restored = null
+                const serverTimer = await fetchTimerFromServer(apiFetch, studentId, topicId, currentQuestion.questionId)
+                if (serverTimer) {
+                    restored = computeRemainingFromServer(serverTimer, limit)
+                }
+                if (restored == null) {
+                    restored = readLocalTimer(storageKey, limit)
+                }
+                if (restored == null) restored = limit
 
-            if (cancelled) return
-            if (restored <= 0) {
-                submitFnRef.current?.(true)
-                return
-            }
-            setTimeLeft(restored)
-            writeLocalTimer(storageKey, restored)
-        })()
+                if (cancelled) return
+                if (restored <= 0) {
+                    // Waktu habis saat reload — tampilkan 0 tanpa kirim jawaban otomatis
+                    setTimeLeft(0)
+                    return
+                }
+                countdownActiveRef.current = true
+                setTimeLeft(restored)
+                writeLocalTimer(storageKey, restored)
+            })()
 
         return () => { cancelled = true }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -215,7 +269,10 @@ function QuizStudentPage() {
     useEffect(() => {
         if (timeLeft === null || phase !== 'quiz' || !currentQuestion) return
         if (timeLeft <= 0) {
-            submitFnRef.current?.(true)
+            if (countdownActiveRef.current) {
+                countdownActiveRef.current = false
+                submitFnRef.current?.()
+            }
             return
         }
         const storageKey = getTimerStorageKey(studentId, timerScopeId, currentQuestion.questionId)
@@ -229,7 +286,7 @@ function QuizStudentPage() {
                 topicId,
                 questionId: currentQuestion.questionId,
                 remainingSeconds: timeLeft,
-            }).catch(() => {})
+            }).catch(() => { })
         }
 
         const id = setTimeout(() => setTimeLeft((t) => Math.max(0, t - 1)), 1000)
@@ -246,7 +303,7 @@ function QuizStudentPage() {
                 topicId,
                 questionId: currentQuestion.questionId,
                 remainingSeconds: timeLeft,
-            }).catch(() => {})
+            }).catch(() => { })
         }
 
         const onVisibility = () => {
@@ -402,7 +459,16 @@ function QuizStudentPage() {
                     totalQuestions: questions.length,
                 }),
             })
-            setResult(finishData)
+            const answerDetails = await fetchAnswerDetails(apiFetch, studentId, topicId, learningDate)
+            const history = buildAnswerHistoryFromDetails(questions, answerDetails)
+            setAnswerHistory(history)
+            setCorrectCount(history.filter((h) => h.correct).length)
+            setTotalScore(history.reduce((sum, h) => sum + (h.earnedScore ?? 0), 0))
+            setResult(finishData ?? {
+                correctCount: history.filter((h) => h.correct).length,
+                totalQuestions: questions.length,
+                totalEarnedScore: history.reduce((sum, h) => sum + (h.earnedScore ?? 0), 0),
+            })
             setPhase('result')
         } catch (err) {
             setSubmitError(err.message)
@@ -424,6 +490,14 @@ function QuizStudentPage() {
             setPhase('quiz')
         } else {
             if (answeredMap[currentQuestion?.questionId]?.isReviewOnly) {
+                setPhase('finishing')
+                try {
+                    const answerDetails = await fetchAnswerDetails(apiFetch, studentId, topicId, learningDate)
+                    const history = buildAnswerHistoryFromDetails(questions, answerDetails)
+                    setAnswerHistory(history)
+                    setCorrectCount(history.filter((h) => h.correct).length)
+                    setTotalScore(history.reduce((sum, h) => sum + (h.earnedScore ?? 0), 0))
+                } catch { /* keep restored history */ }
                 setPhase('result')
                 return
             }
@@ -486,6 +560,15 @@ function QuizStudentPage() {
         const pct = total > 0 ? Math.round((correct / total) * 100) : 0
         const stars = result?.starsEarned ?? 0
         const finalTotalStars = result?.totalStars ?? 0
+        const resultDetails = answerHistory.length > 0
+            ? answerHistory
+            : questions.map((q) => ({
+                questionId: q.questionId,
+                correct: false,
+                earnedScore: 0,
+                questionType: q.questionType,
+                unanswered: true,
+            }))
 
         return (
             <div className="quiz-wrapper">
@@ -520,7 +603,7 @@ function QuizStudentPage() {
                             <span className="result-stat__lbl">Salah</span>
                         </div>
                         <div className="result-stat">
-                            <span className="result-stat__val result-stat__val--points">+{totalScore}</span>
+                            <span className="result-stat__val result-stat__val--points">+{result?.totalEarnedScore ?? totalScore}</span>
                             <span className="result-stat__lbl">Total Skor</span>
                         </div>
                         {finalTotalStars > 0 && (
@@ -532,10 +615,10 @@ function QuizStudentPage() {
                     </div>
 
                     {/* Per-question answer details */}
-                    {answerHistory.length > 0 && (
+                    {resultDetails.length > 0 && (
                         <div className="result-details">
                             <p className="result-details__title">Rincian Jawaban</p>
-                            {answerHistory.map((d, idx) => {
+                            {resultDetails.map((d, idx) => {
                                 const puzzleBadge = d.questionType === 'PUZZLE' ? formatPuzzleResultBadge(d) : null
                                 const rowClass = puzzleBadge
                                     ? `result-detail-row result-detail-row--${puzzleBadge.variant}`
@@ -545,6 +628,11 @@ function QuizStudentPage() {
                                         <span className="result-detail-num">Soal {idx + 1}</span>
                                         {puzzleBadge ? (
                                             <span className="result-detail-puzzle">{puzzleBadge.text}</span>
+                                        ) : d.unanswered ? (
+                                            <>
+                                                <span className="result-detail-icon">—</span>
+                                                <span className="result-detail-score">belum dijawab</span>
+                                            </>
                                         ) : (
                                             <>
                                                 <span className="result-detail-icon">{d.correct ? '✓' : '✗'}</span>
