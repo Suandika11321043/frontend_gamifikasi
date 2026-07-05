@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import AvatarImg from '../../components/common/AvatarImg'
 import StarsDisplay from '../../components/common/StarsDisplay'
 import './DaftarSiswaStudentPage.css'
-import { apiFetch, BASE_URL } from '../../utils/apiFetch'
+import { apiFetch, BASE_URL, getErrorMessage, unwrapList } from '../../utils/apiFetch'
 
 function DaftarSiswaStudentPage() {
     const navigate = useNavigate()
@@ -17,9 +17,9 @@ function DaftarSiswaStudentPage() {
         setFetchError('')
         try {
             const data = await apiFetch('/students')
-            setSiswaList(Array.isArray(data) ? data : (data.data ?? []))
+            setSiswaList(unwrapList(data))
         } catch (err) {
-            setFetchError(err.message)
+            setFetchError(getErrorMessage(err, 'Gagal memuat daftar siswa. Silakan coba lagi.'))
         } finally {
             setLoading(false)
         }

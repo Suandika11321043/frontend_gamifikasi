@@ -6,7 +6,7 @@ import Modal from '../../components/common/Modal'
 import '../../styles/common.css'
 import '../../pages/admin/DashboardPage.css'
 import './DaftarSiswaPage.css'
-import { apiFetch } from '../../utils/apiFetch'
+import { apiFetch, getErrorMessage, unwrapList } from '../../utils/apiFetch'
 
 const emptyForm = { name: '', group: '' }
 
@@ -31,9 +31,9 @@ function DaftarSiswaPage() {
         setFetchError('')
         try {
             const data = await apiFetch('/students')
-            setSiswaList(Array.isArray(data) ? data : (data?.data ?? []))
+            setSiswaList(unwrapList(data))
         } catch (err) {
-            setFetchError(err.message)
+            setFetchError(getErrorMessage(err, 'Gagal memuat daftar siswa. Silakan coba lagi.'))
         } finally {
             setLoading(false)
         }
@@ -100,7 +100,7 @@ function DaftarSiswaPage() {
             setShowModal(false)
             fetchSiswa()
         } catch (err) {
-            setError(err.message)
+            setError(getErrorMessage(err, 'Gagal menyimpan data siswa. Silakan coba lagi.'))
         } finally {
             setSaving(false)
         }
@@ -112,7 +112,7 @@ function DaftarSiswaPage() {
             setDeleteId(null)
             fetchSiswa()
         } catch (err) {
-            setError(err.message)
+            setError(getErrorMessage(err, 'Gagal menghapus data siswa. Silakan coba lagi.'))
             setDeleteId(null)
         }
     }

@@ -25,6 +25,12 @@ export function AuthProvider({ children }) {
         }
     }
 
+    const clearToken = useCallback(() => {
+        clearTimer()
+        localStorage.removeItem('token')
+        setToken(null)
+    }, [])
+
     const doLogout = useCallback(() => {
         clearTimer()
         localStorage.removeItem('token')
@@ -68,7 +74,7 @@ export function AuthProvider({ children }) {
     }, [token, doLogout])
 
     return (
-        <AuthContext.Provider value={{ token, isLoggedIn: !!token, expired, saveToken, logout }}>
+        <AuthContext.Provider value={{ token, isLoggedIn: !!token, expired, saveToken, logout, clearToken }}>
             {children}
         </AuthContext.Provider>
     )

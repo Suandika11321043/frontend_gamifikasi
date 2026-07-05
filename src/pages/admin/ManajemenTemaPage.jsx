@@ -5,7 +5,7 @@ import Modal from '../../components/common/Modal'
 import '../../styles/common.css'
 import '../../pages/admin/DashboardPage.css'
 import './ManajemenTemaPage.css'
-import { apiFetch } from '../../utils/apiFetch'
+import { apiFetch, getErrorMessage } from '../../utils/apiFetch'
 
 const emptyForm = { nameTopic: '', description: '', active: true }
 
@@ -37,7 +37,7 @@ function ManajemenTemaPage() {
             const data = await apiFetch('/topics')
             setTemaList(Array.isArray(data) ? data : [])
         } catch (err) {
-            setFetchError(err.message)
+            setFetchError(getErrorMessage(err, 'Gagal memuat daftar tema. Silakan coba lagi.'))
         } finally {
             setLoading(false)
         }
@@ -111,7 +111,7 @@ function ManajemenTemaPage() {
             setShowModal(false)
             fetchTema()
         } catch (err) {
-            setError(err.message)
+            setError(getErrorMessage(err, 'Gagal menyimpan tema. Silakan coba lagi.'))
         } finally {
             setSaving(false)
         }
@@ -123,7 +123,7 @@ function ManajemenTemaPage() {
             setDeleteId(null)
             fetchTema()
         } catch (err) {
-            setError(err.message)
+            setError(getErrorMessage(err, 'Gagal menghapus tema. Silakan coba lagi.'))
             setDeleteId(null)
         }
     }
@@ -138,7 +138,7 @@ function ManajemenTemaPage() {
         } catch (err) {
             // Revert jika gagal
             setTemaList((prev) => prev.map((t) => t.id === tema.id ? { ...t, isActive: tema.isActive } : t))
-            setError(err.message)
+            setError(getErrorMessage(err, 'Gagal mengubah status tema. Silakan coba lagi.'))
         }
     }
 
