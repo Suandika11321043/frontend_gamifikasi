@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<mockup version="1.0" skin="sketch" mockupW="1280" mockupH="800" measuredW="1280" measuredH="800">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::BrowserWindow"
+ x="0" y="0" w="1280" h="800"
+ measuredW="450" measuredH="400" zOrder="1"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Gamifikasi%0Ahttp%3A%2F%2Flocalhost%3A5173</text>
+      </controlProperties>
+    </control>
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::Canvas"
+ x="420" y="120" w="440" h="520"
+ measuredW="440" measuredH="520" zOrder="2"
+ locked="false" isInGroup="-1">
+    </control>
+    <control controlID="2" controlTypeID="com.balsamiq.mockups::Canvas"
+ x="600" y="152" w="80" h="80"
+ measuredW="80" measuredH="80" zOrder="3"
+ locked="false" isInGroup="-1">
+    </control>
+    <control controlID="3" controlTypeID="com.balsamiq.mockups::Label"
+ x="640" y="200" w="-1" h="-1"
+ measuredW="40" measuredH="21" zOrder="4"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>LOGO</text>
+        <bold>true</bold>
+      </controlProperties>
+    </control>
+    <control controlID="4" controlTypeID="com.balsamiq.mockups::Title"
+ x="540" y="250" w="-1" h="-1"
+ measuredW="200" measuredH="40" zOrder="5"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Halo%2C%20Sobat%21</text>
+        <size>24</size>
+      </controlProperties>
+    </control>
+    <control controlID="5" controlTypeID="com.balsamiq.mockups::Label"
+ x="500" y="290" w="-1" h="-1"
+ measuredW="280" measuredH="21" zOrder="6"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Yuk%20masuk%20dan%20mulai%20belajar%20seru%21</text>
+      </controlProperties>
+    </control>
+    <control controlID="6" controlTypeID="com.balsamiq.mockups::Label"
+ x="468" y="340" w="-1" h="-1"
+ measuredW="80" measuredH="21" zOrder="7"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Username</text>
+        <bold>true</bold>
+      </controlProperties>
+    </control>
+    <control controlID="7" controlTypeID="com.balsamiq.mockups::Canvas"
+ x="468" y="360" w="344" h="44"
+ measuredW="344" measuredH="44" zOrder="8"
+ locked="false" isInGroup="-1">
+    </control>
+    <control controlID="8" controlTypeID="com.balsamiq.mockups::Label"
+ x="484" y="388" w="-1" h="-1"
+ measuredW="60" measuredH="21" zOrder="9"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>admin</text>
+      </controlProperties>
+    </control>
+    <control controlID="9" controlTypeID="com.balsamiq.mockups::Label"
+ x="468" y="420" w="-1" h="-1"
+ measuredW="80" measuredH="21" zOrder="10"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Password</text>
+        <bold>true</bold>
+      </controlProperties>
+    </control>
+    <control controlID="10" controlTypeID="com.balsamiq.mockups::Canvas"
+ x="468" y="440" w="344" h="44"
+ measuredW="344" measuredH="44" zOrder="11"
+ locked="false" isInGroup="-1">
+    </control>
+    <control controlID="11" controlTypeID="com.balsamiq.mockups::Label"
+ x="484" y="468" w="-1" h="-1"
+ measuredW="60" measuredH="21" zOrder="12"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>........</text>
+      </controlProperties>
+    </control>
+    <control controlID="12" controlTypeID="com.balsamiq.mockups::Button"
+ x="560" y="520" w="-1" h="-1"
+ measuredW="160" measuredH="27" zOrder="13"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Ayo%20Masuk%21</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

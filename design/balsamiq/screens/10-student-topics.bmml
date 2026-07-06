@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<mockup version="1.0" skin="sketch" mockupW="1280" mockupH="800" measuredW="1280" measuredH="800">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::BrowserWindow"
+ x="0" y="0" w="1280" h="800"
+ measuredW="450" measuredH="400" zOrder="1"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Gamifikasi%0Ahttp%3A%2F%2Flocalhost%3A5173</text>
+      </controlProperties>
+    </control>
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::Button"
+ x="40" y="60" w="-1" h="-1"
+ measuredW="100" measuredH="27" zOrder="2"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>%E2%86%90%20Kembali</text>
+      </controlProperties>
+    </control>
+    <control controlID="2" controlTypeID="com.balsamiq.mockups::Canvas"
+ x="160" y="60" w="340" h="52"
+ measuredW="340" measuredH="52" zOrder="3"
+ locked="false" isInGroup="-1">
+    </control>
+    <control controlID="3" controlTypeID="com.balsamiq.mockups::Canvas"
+ x="172" y="70" w="32" h="32"
+ measuredW="32" measuredH="32" zOrder="4"
+ locked="false" isInGroup="-1">
+    </control>
+    <control controlID="4" controlTypeID="com.balsamiq.mockups::Label"
+ x="184" y="90" w="-1" h="-1"
+ measuredW="8" measuredH="21" zOrder="5"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>T</text>
+        <bold>true</bold>
+      </controlProperties>
+    </control>
+    <control controlID="5" controlTypeID="com.balsamiq.mockups::SubTitle"
+ x="216" y="72" w="-1" h="-1"
+ measuredW="80" measuredH="27" zOrder="6"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Tesa</text>
+      </controlProperties>
+    </control>
+    <control controlID="6" controlTypeID="com.balsamiq.mockups::Label"
+ x="216" y="94" w="-1" h="-1"
+ measuredW="320" measuredH="21" zOrder="7"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>TK%20A%20%7C%200%20bintang%20%7C%20Skor%200%20%7C%20Rank%20BEGINNER</text>
+      </controlProperties>
+    </control>
+    <control controlID="7" controlTypeID="com.balsamiq.mockups::Title"
+ x="40" y="140" w="-1" h="-1"
+ measuredW="240" measuredH="40" zOrder="8"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Pilih%20Topik</text>
+        <size>24</size>
+      </controlProperties>
+    </control>
+    <control controlID="8" controlTypeID="com.balsamiq.mockups::Label"
+ x="40" y="178" w="-1" h="-1"
+ measuredW="320" measuredH="21" zOrder="9"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Pilih%20topik%20yang%20ingin%20dikerjakan</text>
+      </controlProperties>
+    </control>
+    <control controlID="9" controlTypeID="com.balsamiq.mockups::SearchBox"
+ x="40" y="210" w="1080" h="-1"
+ measuredW="1080" measuredH="30" zOrder="10"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Cari%20topik...</text>
+      </controlProperties>
+    </control>
+    <control controlID="10" controlTypeID="com.balsamiq.mockups::Label"
+ x="1150" y="216" w="-1" h="-1"
+ measuredW="80" measuredH="21" zOrder="11"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>1%20topik</text>
+      </controlProperties>
+    </control>
+    <control controlID="11" controlTypeID="com.balsamiq.mockups::Canvas"
+ x="40" y="260" w="1200" h="64"
+ measuredW="1200" measuredH="64" zOrder="12"
+ locked="false" isInGroup="-1">
+    </control>
+    <control controlID="12" controlTypeID="com.balsamiq.mockups::Canvas"
+ x="56" y="272" w="40" h="40"
+ measuredW="40" measuredH="40" zOrder="13"
+ locked="false" isInGroup="-1">
+    </control>
+    <control controlID="13" controlTypeID="com.balsamiq.mockups::Label"
+ x="72" y="298" w="-1" h="-1"
+ measuredW="10" measuredH="21" zOrder="14"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>K</text>
+        <bold>true</bold>
+      </controlProperties>
+    </control>
+    <control controlID="14" controlTypeID="com.balsamiq.mockups::SubTitle"
+ x="112" y="284" w="-1" h="-1"
+ measuredW="200" measuredH="27" zOrder="15"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>kewarganegaraan</text>
+      </controlProperties>
+    </control>
+    <control controlID="15" controlTypeID="com.balsamiq.mockups::Label"
+ x="1200" y="292" w="-1" h="-1"
+ measuredW="12" measuredH="21" zOrder="16"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>%3E</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

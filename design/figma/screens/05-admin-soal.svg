@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="640" viewBox="0 0 1100 640">
+  <rect width="1100" height="640" fill="#FFFFFF"/>
+  <rect x="0.5" y="0.5" width="1099" height="639" fill="none" stroke="#1A1A1A" stroke-width="1"/>
+  <text x="24" y="28" font-family="Inter,Arial,sans-serif" font-size="14" font-weight="600" fill="#18181B">Manajemen Soal</text>
+  <text x="24" y="46" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">/admin/soal</text>
+  <rect x="24" y="64" width="200" height="552" fill="#E4E4E7" stroke="#A1A1AA" stroke-width="1"/>
+  <rect x="36" y="80" width="176" height="28" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="1"/>
+  <text x="124.0" y="98.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">Gamifikasi</text>
+  <rect x="36" y="114" width="176" height="24" rx="4" fill="#F4F4F5" stroke="#A1A1AA" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="124.0" y="130.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">Manajemen Pembelajaran</text>
+  <rect x="36" y="144" width="176" height="24" rx="4" fill="#F4F4F5" stroke="#A1A1AA" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="124.0" y="160.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">  Manajemen Soal</text>
+  <rect x="36" y="174" width="176" height="24" rx="4" fill="#F4F4F5" stroke="#A1A1AA" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="124.0" y="190.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">  Manajemen Tema</text>
+  <rect x="36" y="204" width="176" height="24" rx="4" fill="#F4F4F5" stroke="#A1A1AA" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="124.0" y="220.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">Profil dan Kemajuan</text>
+  <rect x="36" y="234" width="176" height="24" rx="4" fill="#F4F4F5" stroke="#A1A1AA" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="124.0" y="250.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">  Daftar Siswa</text>
+  <rect x="36" y="264" width="176" height="24" rx="4" fill="#F4F4F5" stroke="#A1A1AA" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="124.0" y="280.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">Keluar</text>
+  <rect x="248" y="64" width="200" height="32" rx="4" fill="#F4F4F5" stroke="#A1A1AA" stroke-width="1"/>
+  <text x="348.0" y="84.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">Manajemen Soal</text>
+  <rect x="976" y="64" width="100" height="48" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="1"/>
+  <text x="1026.0" y="92.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">Total Tema</text>
+  <rect x="248" y="120" width="300" height="36" rx="4" fill="#F4F4F5" stroke="#A1A1AA" stroke-width="1"/>
+  <text x="398.0" y="142.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">[ Cari tema... ]</text>
+  <rect x="248.0" y="172" width="270.6666666666667" height="80" rx="4" fill="#F4F4F5" stroke="#A1A1AA" stroke-width="1"/>
+  <text x="383.33333333333337" y="216.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">Ikon Kewarganegaraan</text>
+  <rect x="248.0" y="260" width="270.6666666666667" height="36" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="1"/>
+  <text x="383.33333333333337" y="282.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">Kelola Soal</text>
+  <rect x="526.6666666666667" y="172" width="270.6666666666667" height="80" rx="4" fill="#F4F4F5" stroke="#A1A1AA" stroke-width="1"/>
+  <text x="662.0000000000001" y="216.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">Ikon Matematika</text>
+  <rect x="526.6666666666667" y="260" width="270.6666666666667" height="36" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="1"/>
+  <text x="662.0000000000001" y="282.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">Kelola Soal</text>
+  <rect x="805.3333333333334" y="172" width="270.6666666666667" height="80" rx="4" fill="#F4F4F5" stroke="#A1A1AA" stroke-width="1"/>
+  <text x="940.6666666666667" y="216.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">Ikon Seni</text>
+  <rect x="805.3333333333334" y="260" width="270.6666666666667" height="36" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="1"/>
+  <text x="940.6666666666667" y="282.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">Kelola Soal</text></svg>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="720" viewBox="0 0 390 720">
+  <rect x="0" y="0" width="390" height="720" rx="0" fill="#f5f5f5"/>
+  <rect x="16" y="20" width="80" height="34" rx="10" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1.5"/>
+  <text x="56" y="42" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">← Kembali</text>
+  <rect x="104" y="20" width="270" height="48" rx="12" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1.5"/>
+  <circle cx="128" cy="44" r="16" fill="#000000"/>
+  <text x="128" y="49" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">T</text>
+  <text x="152" y="38" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="700" fill="#1a1a1a" text-anchor="start">Tesa</text>
+  <text x="152" y="54" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="9" fill="#6b7280" text-anchor="start">TK A • ★ 0 • Skor 0 • Rank BEGINNER</text>
+  <rect x="16" y="84" width="12" height="14" rx="2" fill="#FFFFFF" stroke="#000000" stroke-width="1.5"/>
+  <rect x="22" y="80" width="12" height="14" rx="2" fill="#f5f5f5" stroke="#000000" stroke-width="1.5"/>
+  <rect x="28" y="78" width="12" height="14" rx="2" fill="#FFFFFF" stroke="#000000" stroke-width="1.5"/>
+  <text x="44" y="92" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#1a1a1a" text-anchor="start">Pilih Topik</text>
+  <text x="16" y="112" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#6b7280" text-anchor="start">Pilih topik yang ingin dikerjakan</text>
+  <rect x="16" y="128" width="300" height="40" rx="10" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1.5"/>
+  <text x="28" y="154" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" fill="#6b7280" text-anchor="start">Cari topik...</text>
+  <text x="330" y="154" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="500" fill="#1a1a1a" text-anchor="start">1 topik</text>
+  <rect x="16" y="184" width="358" height="64" rx="14" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1.5"/>
+  <rect x="28" y="196" width="48" height="48" rx="10" fill="#000000"/>
+  <text x="52" y="228" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="700" fill="#FFFFFF" text-anchor="middle">K</text>
+  <text x="88" y="224" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#1a1a1a" text-anchor="start">kewarganegaraan</text>
+  <text x="354" y="224" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="20" fill="#1a1a1a" text-anchor="middle">›</text>
+</svg>

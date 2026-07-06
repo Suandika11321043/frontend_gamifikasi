@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="800" viewBox="0 0 1280 800">
+  <rect x="0" y="0" width="1280" height="800" rx="0" fill="#f5f5f5"/>
+  <circle cx="1200" cy="90" r="200" fill="#FFFFFF" stroke="#d4d4d4" stroke-width="1"/>
+  <circle cx="60" cy="740" r="160" fill="#FFFFFF" stroke="#d4d4d4" stroke-width="1"/>
+  <text x="60" y="770" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="28" fill="#6b7280" text-anchor="start">○</text>
+  <text x="1180" y="60" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="24" fill="#6b7280" text-anchor="start">★</text>
+  <text x="640.0" y="100" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="14" font-weight="600" fill="#6b7280" text-anchor="middle">Gamifikasi Belajar</text>
+  <text x="640.0" y="160" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="32" font-weight="800" fill="#1a1a1a" text-anchor="middle">Siap Belajar Hari Ini?</text>
+  <rect x="580.0" y="200" width="120" height="120" rx="60" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1.5"/>
+  <text x="640.0" y="268" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18" font-weight="800" fill="#1a1a1a" text-anchor="middle">MULAI</text>
+  <rect x="340.0" y="360" width="189.33333333333334" height="80" rx="12" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="434.6666666666667" y="406" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="14" font-weight="600" fill="#6b7280" text-anchor="middle">Poin</text>
+  <rect x="545.3333333333334" y="360" width="189.33333333333334" height="80" rx="12" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="640.0" y="406" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="14" font-weight="600" fill="#6b7280" text-anchor="middle">Badge</text>
+  <rect x="750.6666666666667" y="360" width="189.33333333333334" height="80" rx="12" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="845.3333333333334" y="406" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="14" font-weight="600" fill="#6b7280" text-anchor="middle">Rank</text>
+</svg>

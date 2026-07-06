@@ -47,7 +47,7 @@ function LoginPage() {
             <div className="login-card">
                 <div className="login-mascot">🦁</div>
                 <h1 className="login-title">Halo, Sobat!</h1>
-                <p className="login-subtitle">Yuk masuk dan mulai belajar seru! 🎉</p>
+                <p className="login-subtitle">Yuk masuk dan mulai belajar seru! 🚀</p>
 
                 <form className="login-form" onSubmit={handleSubmit} noValidate>
                     {error && <p className="login-error">⚠️ {error}</p>}

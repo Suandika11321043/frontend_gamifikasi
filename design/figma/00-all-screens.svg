@@ -1,0 +1,734 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="3460" height="4768" viewBox="0 0 3460 4768">
+  <rect width="3460" height="4768" fill="#FFFFFF"/>
+  <text x="40" y="28" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#1a1a1a">Gamifikasi PAUD — Mockup Mobile (Hitam Putih)</text>
+  <g id="01-sitemap">
+    <text x="40" y="74" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#6b7280">01-sitemap</text>
+    <svg x="40" y="80" width="900" height="520" viewBox="0 0 900 520">
+
+  <rect width="900" height="520" fill="#FFFFFF"/>
+  <rect x="0.5" y="0.5" width="899" height="519" fill="none" stroke="#1A1A1A" stroke-width="1"/>
+  <text x="24" y="28" font-family="Inter,Arial,sans-serif" font-size="14" font-weight="600" fill="#18181B">Peta Navigasi</text>
+  <text x="24" y="46" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">gamifikasiFE</text>
+  <rect x="380" y="70" width="140" height="44" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="1"/>
+  <text x="450.0" y="96.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">/login</text>  <text x="450" y="128" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="10" fill="#71717A">Login</text>
+  <rect x="380" y="130" width="140" height="44" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="1"/>
+  <text x="450.0" y="156.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">/dashboard</text>  <text x="450" y="188" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="10" fill="#71717A">Dashboard</text>
+  <rect x="100" y="220" width="140" height="44" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="1"/>
+  <text x="170.0" y="246.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">/admin/tema</text>  <text x="170" y="278" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="10" fill="#71717A">Tema</text>
+  <rect x="280" y="220" width="140" height="44" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="1"/>
+  <text x="350.0" y="246.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">/admin/soal</text>  <text x="350" y="278" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="10" fill="#71717A">Soal</text>
+  <rect x="460" y="220" width="140" height="44" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="1"/>
+  <text x="530.0" y="246.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">/admin/soal/:id</text>  <text x="530" y="278" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="10" fill="#71717A">Soal/Tema</text>
+  <rect x="660" y="220" width="140" height="44" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="1"/>
+  <text x="730.0" y="246.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">/admin/siswa</text>  <text x="730" y="278" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="10" fill="#71717A">Siswa</text>
+  <rect x="380" y="310" width="140" height="44" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="1"/>
+  <text x="450.0" y="336.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">/student</text>  <text x="450" y="368" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="10" fill="#71717A">Landing</text>
+  <rect x="160" y="400" width="140" height="44" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="1"/>
+  <text x="230.0" y="426.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">/student/daftar-siswa</text>  <text x="230" y="458" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="10" fill="#71717A">Pilih Siswa</text>
+  <rect x="400" y="400" width="140" height="44" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="1"/>
+  <text x="470.0" y="426.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">/student/.../topics</text>  <text x="470" y="458" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="10" fill="#71717A">Topik</text>
+  <rect x="400" y="470" width="140" height="44" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="1"/>
+  <text x="470.0" y="496.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">/student/.../quiz</text>  <text x="470" y="528" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="10" fill="#71717A">Kuis</text>
+
+    </svg>
+  </g>
+  <g id="02-login">
+    <text x="1180" y="74" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#6b7280">02-login</text>
+    <svg x="1180" y="80" width="390" height="720" viewBox="0 0 390 720">
+
+  <rect x="0" y="0" width="390" height="720" rx="0" fill="#f5f5f5"/>
+  <text x="40" y="80" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="28" fill="#6b7280" text-anchor="start">★</text>
+  <text x="310" y="60" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" fill="#6b7280" text-anchor="start">○</text>
+  <text x="330" y="100" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18" fill="#6b7280" text-anchor="start">★</text>
+  <text x="30" y="620" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="32" fill="#6b7280" text-anchor="start">●</text>
+  <text x="300" y="640" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="36" fill="#6b7280" text-anchor="start">☁</text>
+  <rect x="24" y="120" width="342" height="480" rx="32" fill="#FFFFFF" stroke="#000000" stroke-width="2"/>
+  <rect x="24" y="592" width="342" height="8" rx="4" fill="#6b7280"/>
+  <rect x="163.0" y="144" width="64" height="64" rx="32" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="195.0" y="188" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="10" font-weight="600" fill="#6b7280" text-anchor="middle">LOGO</text>
+  <text x="195.0" y="220" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="26" font-weight="900" fill="#1a1a1a" text-anchor="middle">Halo, Sobat!</text>
+  <text x="195.0" y="248" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="500" fill="#6b7280" text-anchor="middle">Yuk masuk dan mulai belajar seru!</text>
+  <text x="56" y="288" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="700" fill="#1a1a1a" text-anchor="start">Username</text>
+  <rect x="56" y="296" width="278" height="44" rx="8" fill="#333333" stroke="#000000" stroke-width="1"/>
+  <text x="70" y="323.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" fill="#FFFFFF" text-anchor="start">admin</text>
+  <text x="56" y="360" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="700" fill="#1a1a1a" text-anchor="start">Password</text>
+  <rect x="56" y="368" width="278" height="44" rx="8" fill="#333333" stroke="#000000" stroke-width="1"/>
+  <text x="70" y="395.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" fill="#FFFFFF" text-anchor="start">••••••••</text>
+  <rect x="56" y="440" width="278" height="50" rx="18" fill="#000000"/>
+  <rect x="56" y="486" width="278" height="6" rx="3" fill="#333333"/>
+  <text x="195.0" y="470" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="15" font-weight="800" fill="#FFFFFF" text-anchor="middle">Ayo Masuk!</text>
+
+    </svg>
+  </g>
+  <g id="03-dashboard">
+    <text x="2320" y="74" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#6b7280">03-dashboard</text>
+    <svg x="2320" y="80" width="1100" height="720" viewBox="0 0 1100 720">
+
+  <rect x="0" y="0" width="1100" height="720" rx="0" fill="#ebebeb"/>
+  <rect x="0" y="0" width="240" height="720" rx="0" fill="#1a1a1a"/>
+  <text x="16" y="36" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#FFFFFF" text-anchor="start">Gamifikasi</text>
+  <line x1="12" y1="52" x2="228" y2="52" stroke="#6b7280" stroke-width="1"/>
+  <text x="16" y="70" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="500" fill="#FFFFFF" text-anchor="start">Dashboard</text>
+  <text x="216" y="70" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" fill="#9ca3af" text-anchor="middle">▾</text>
+  <text x="16" y="108" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="500" fill="#9ca3af" text-anchor="start">Manajemen Pembelajaran</text>
+  <text x="216" y="108" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" fill="#9ca3af" text-anchor="middle">▾</text>
+  <text x="28" y="148" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="500" fill="#9ca3af" text-anchor="start">Manajemen Soal</text>
+  <text x="28" y="180" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="500" fill="#9ca3af" text-anchor="start">Manajemen Tema</text>
+  <text x="16" y="210" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="500" fill="#9ca3af" text-anchor="start">Profil dan Kemajuan Siswa</text>
+  <text x="216" y="210" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" fill="#9ca3af" text-anchor="middle">▾</text>
+  <text x="28" y="250" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="500" fill="#9ca3af" text-anchor="start">Daftar Siswa</text>
+  <rect x="12" y="672" width="216" height="36" rx="8" fill="transparent" stroke="#FFFFFF" stroke-width="1.5"/>
+  <text x="120.0" y="694" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#FFFFFF" text-anchor="middle">Keluar</text>
+  <text x="272" y="48" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="24" font-weight="700" fill="#1a1a1a" text-anchor="start">Dashboard Admin</text>
+  <rect x="980" y="24" width="80" height="32" rx="16" fill="#000000"/>
+  <text x="1020" y="44" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#FFFFFF" text-anchor="middle">Admin</text>
+  <rect x="272" y="72" width="195.0" height="88" rx="12" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="292" y="108" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="24" fill="#1a1a1a" text-anchor="start">[]</text>
+  <text x="328" y="100" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="700" fill="#1a1a1a" text-anchor="start">4</text>
+  <text x="328" y="122" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#6b7280" text-anchor="start">Total Siswa</text>
+  <rect x="479.0" y="72" width="195.0" height="88" rx="12" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="499.0" y="108" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="24" fill="#1a1a1a" text-anchor="start">?</text>
+  <text x="535.0" y="100" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="700" fill="#1a1a1a" text-anchor="start">13</text>
+  <text x="535.0" y="122" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#6b7280" text-anchor="start">Total Soal</text>
+  <rect x="686.0" y="72" width="195.0" height="88" rx="12" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="706.0" y="108" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="24" fill="#1a1a1a" text-anchor="start">[]</text>
+  <text x="742.0" y="100" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="700" fill="#1a1a1a" text-anchor="start">2</text>
+  <text x="742.0" y="122" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#6b7280" text-anchor="start">Total Tema</text>
+  <rect x="893.0" y="72" width="195.0" height="88" rx="12" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="913.0" y="108" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="24" fill="#1a1a1a" text-anchor="start">*</text>
+  <text x="949.0" y="100" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="700" fill="#1a1a1a" text-anchor="start">618</text>
+  <text x="949.0" y="122" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#6b7280" text-anchor="start">Total Poin Tertinggi</text>
+  <text x="272" y="180" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" font-weight="600" fill="#1a1a1a" text-anchor="start">Peringkat Siswa — Total Poin</text>
+  <rect x="272" y="196" width="796" height="44" rx="10" fill="#000000"/>
+  <rect x="272" y="230" width="796" height="10" rx="0" fill="#000000"/>
+  <text x="292" y="224" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="start">No</text>
+  <text x="332" y="224" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="start">Avatar</text>
+  <text x="392" y="224" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="start">Nama Siswa</text>
+  <text x="532" y="224" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="start">Kelompok</text>
+  <text x="612" y="224" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="start">Total Poin</text>
+  <text x="702" y="224" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="start">Bintang</text>
+  <rect x="272" y="248" width="796" height="44" rx="0" fill="#FFFFFF"/>
+  <text x="288" y="276" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#1a1a1a" text-anchor="start">1</text>
+  <circle cx="348" cy="270" r="18" fill="#000000"/>
+  <text x="348" y="275" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">I</text>
+  <text x="380" y="276" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#1a1a1a" text-anchor="start">ILHAM</text>
+  <text x="520" y="276" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" fill="#1a1a1a" text-anchor="start">TK A</text>
+  <rect x="600" y="258" width="56" height="24" rx="12" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="628.0" y="274.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">618</text>
+  <text x="690" y="276" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" fill="#1a1a1a" text-anchor="start">9</text>
+  <rect x="272" y="292" width="796" height="44" rx="0" fill="#f5f5f5"/>
+  <text x="288" y="320" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#1a1a1a" text-anchor="start">2</text>
+  <circle cx="348" cy="314" r="18" fill="#000000"/>
+  <text x="348" y="319" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">A</text>
+  <text x="380" y="320" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#1a1a1a" text-anchor="start">ANWAR</text>
+  <text x="520" y="320" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" fill="#1a1a1a" text-anchor="start">TK B</text>
+  <rect x="600" y="302" width="56" height="24" rx="12" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="628.0" y="318.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">320</text>
+  <text x="690" y="320" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" fill="#1a1a1a" text-anchor="start">5</text>
+  <rect x="272" y="336" width="796" height="44" rx="0" fill="#FFFFFF"/>
+  <text x="288" y="364" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#1a1a1a" text-anchor="start">3</text>
+  <circle cx="348" cy="358" r="18" fill="#000000"/>
+  <text x="348" y="363" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">R</text>
+  <text x="380" y="364" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#1a1a1a" text-anchor="start">RAHMAT</text>
+  <text x="520" y="364" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" fill="#1a1a1a" text-anchor="start">TK A</text>
+  <rect x="600" y="346" width="56" height="24" rx="12" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="628.0" y="362.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">276</text>
+  <text x="690" y="364" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" fill="#1a1a1a" text-anchor="start">4</text>
+  <rect x="272" y="380" width="796" height="44" rx="0" fill="#f5f5f5"/>
+  <text x="288" y="408" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#1a1a1a" text-anchor="start">4</text>
+  <circle cx="348" cy="402" r="18" fill="#000000"/>
+  <text x="348" y="407" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">J</text>
+  <text x="380" y="408" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#1a1a1a" text-anchor="start">JOKO</text>
+  <text x="520" y="408" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" fill="#1a1a1a" text-anchor="start">TK B</text>
+  <rect x="600" y="390" width="56" height="24" rx="12" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="628.0" y="406.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">11</text>
+  <text x="690" y="408" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" fill="#1a1a1a" text-anchor="start">0</text>
+  <text x="272" y="448" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" font-weight="600" fill="#1a1a1a" text-anchor="start">Peringkat Siswa — Poin per Tema</text>
+  <rect x="900" y="440" width="160" height="32" rx="8" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="980" y="460" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="500" fill="#6b7280" text-anchor="middle">Pilih Tema ▾</text>
+  <rect x="272" y="472" width="390.0" height="140" rx="12" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="288" y="496" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a1a1a" text-anchor="start">KEWARGANEGARAAN</text>
+  <text x="288" y="516" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#1a1a1a" text-anchor="start">1. ILHAM</text>
+  <text x="614.0" y="516" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="end">618</text>
+  <text x="288" y="534" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#1a1a1a" text-anchor="start">2. ANWAR</text>
+  <text x="614.0" y="534" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="end">120</text>
+  <text x="288" y="552" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#1a1a1a" text-anchor="start">3. RAHMAT</text>
+  <text x="614.0" y="552" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="end">80</text>
+  <text x="288" y="570" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#1a1a1a" text-anchor="start">4. JOKO</text>
+  <text x="614.0" y="570" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="end">0</text>
+  <rect x="678.0" y="472" width="390.0" height="140" rx="12" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="694.0" y="496" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a1a1a" text-anchor="start">KEAGAMAAN</text>
+  <rect x="853.0" y="536" width="40" height="40" rx="4" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="873.0" y="578" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle">Belum ada skor.</text>
+
+    </svg>
+  </g>
+  <g id="04-admin-tema">
+    <text x="40" y="662" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#6b7280">04-admin-tema</text>
+    <svg x="40" y="668" width="1100" height="640" viewBox="0 0 1100 640">
+
+  <rect x="0" y="0" width="1100" height="640" rx="0" fill="#ebebeb"/>
+  <rect x="0" y="0" width="240" height="640" rx="0" fill="#1a1a1a"/>
+  <text x="16" y="36" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#FFFFFF" text-anchor="start">Gamifikasi</text>
+  <line x1="12" y1="52" x2="228" y2="52" stroke="#6b7280" stroke-width="1"/>
+  <text x="16" y="70" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="500" fill="#9ca3af" text-anchor="start">Dashboard</text>
+  <text x="216" y="70" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" fill="#9ca3af" text-anchor="middle">▾</text>
+  <rect x="8" y="90" width="224" height="34" rx="8" fill="#000000"/>
+  <text x="16" y="108" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="500" fill="#FFFFFF" text-anchor="start">Manajemen Pembelajaran</text>
+  <text x="216" y="108" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" fill="#9ca3af" text-anchor="middle">▾</text>
+  <text x="28" y="148" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="500" fill="#9ca3af" text-anchor="start">Manajemen Soal</text>
+  <rect x="20" y="162" width="208" height="30" rx="6" fill="#333333"/>
+  <text x="28" y="180" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="start">Manajemen Tema</text>
+  <text x="16" y="210" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="500" fill="#9ca3af" text-anchor="start">Profil dan Kemajuan Siswa</text>
+  <text x="216" y="210" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" fill="#9ca3af" text-anchor="middle">▾</text>
+  <text x="28" y="250" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="500" fill="#9ca3af" text-anchor="start">Daftar Siswa</text>
+  <rect x="12" y="592" width="216" height="36" rx="8" fill="transparent" stroke="#FFFFFF" stroke-width="1.5"/>
+  <text x="120.0" y="614" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#FFFFFF" text-anchor="middle">Keluar</text>
+  <text x="272" y="48" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="24" font-weight="700" fill="#1a1a1a" text-anchor="start">Manajemen Tema</text>
+  <rect x="940" y="28" width="140" height="40" rx="8" fill="#000000"/>
+  <text x="1010.0" y="53.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#FFFFFF" text-anchor="middle">+ Tambah Tema</text>
+  <rect x="272" y="80" width="320" height="38" rx="8" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1.5"/>
+  <text x="286" y="104.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" fill="#6b7280" text-anchor="start">Cari nama atau deskripsi tema...</text>
+  <text x="610" y="106" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="500" fill="#6b7280" text-anchor="start">1 tema</text>
+  <rect x="272" y="140" width="260" height="200" rx="14" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <rect x="362" y="160" width="80" height="80" rx="12" fill="#000000"/>
+  <text x="402" y="212" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="32" font-weight="700" fill="#FFFFFF" text-anchor="middle">K</text>
+  <text x="402" y="260" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#1a1a1a" text-anchor="middle">kewarganegaraan</text>
+  <rect x="292" y="300" width="66" height="28" rx="14" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="325.0" y="318.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">Detail</text>
+  <rect x="364" y="300" width="52" height="28" rx="14" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="390.0" y="318.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">Edit</text>
+  <rect x="436" y="300" width="59" height="28" rx="14" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="465.5" y="318.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">Hapus</text>
+
+    </svg>
+  </g>
+  <g id="05-admin-soal">
+    <text x="1180" y="862" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#6b7280">05-admin-soal</text>
+    <svg x="1180" y="868" width="1100" height="640" viewBox="0 0 1100 640">
+
+  <rect width="1100" height="640" fill="#FFFFFF"/>
+  <rect x="0.5" y="0.5" width="1099" height="639" fill="none" stroke="#1A1A1A" stroke-width="1"/>
+  <text x="24" y="28" font-family="Inter,Arial,sans-serif" font-size="14" font-weight="600" fill="#18181B">Manajemen Soal</text>
+  <text x="24" y="46" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">/admin/soal</text>
+  <rect x="24" y="64" width="200" height="552" fill="#E4E4E7" stroke="#A1A1AA" stroke-width="1"/>
+  <rect x="36" y="80" width="176" height="28" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="1"/>
+  <text x="124.0" y="98.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">Gamifikasi</text>
+  <rect x="36" y="114" width="176" height="24" rx="4" fill="#F4F4F5" stroke="#A1A1AA" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="124.0" y="130.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">Manajemen Pembelajaran</text>
+  <rect x="36" y="144" width="176" height="24" rx="4" fill="#F4F4F5" stroke="#A1A1AA" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="124.0" y="160.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">  Manajemen Soal</text>
+  <rect x="36" y="174" width="176" height="24" rx="4" fill="#F4F4F5" stroke="#A1A1AA" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="124.0" y="190.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">  Manajemen Tema</text>
+  <rect x="36" y="204" width="176" height="24" rx="4" fill="#F4F4F5" stroke="#A1A1AA" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="124.0" y="220.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">Profil dan Kemajuan</text>
+  <rect x="36" y="234" width="176" height="24" rx="4" fill="#F4F4F5" stroke="#A1A1AA" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="124.0" y="250.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">  Daftar Siswa</text>
+  <rect x="36" y="264" width="176" height="24" rx="4" fill="#F4F4F5" stroke="#A1A1AA" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="124.0" y="280.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">Keluar</text>
+  <rect x="248" y="64" width="200" height="32" rx="4" fill="#F4F4F5" stroke="#A1A1AA" stroke-width="1"/>
+  <text x="348.0" y="84.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">Manajemen Soal</text>
+  <rect x="976" y="64" width="100" height="48" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="1"/>
+  <text x="1026.0" y="92.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">Total Tema</text>
+  <rect x="248" y="120" width="300" height="36" rx="4" fill="#F4F4F5" stroke="#A1A1AA" stroke-width="1"/>
+  <text x="398.0" y="142.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">[ Cari tema... ]</text>
+  <rect x="248.0" y="172" width="270.6666666666667" height="80" rx="4" fill="#F4F4F5" stroke="#A1A1AA" stroke-width="1"/>
+  <text x="383.33333333333337" y="216.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">Ikon Kewarganegaraan</text>
+  <rect x="248.0" y="260" width="270.6666666666667" height="36" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="1"/>
+  <text x="383.33333333333337" y="282.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">Kelola Soal</text>
+  <rect x="526.6666666666667" y="172" width="270.6666666666667" height="80" rx="4" fill="#F4F4F5" stroke="#A1A1AA" stroke-width="1"/>
+  <text x="662.0000000000001" y="216.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">Ikon Matematika</text>
+  <rect x="526.6666666666667" y="260" width="270.6666666666667" height="36" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="1"/>
+  <text x="662.0000000000001" y="282.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">Kelola Soal</text>
+  <rect x="805.3333333333334" y="172" width="270.6666666666667" height="80" rx="4" fill="#F4F4F5" stroke="#A1A1AA" stroke-width="1"/>
+  <text x="940.6666666666667" y="216.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">Ikon Seni</text>
+  <rect x="805.3333333333334" y="260" width="270.6666666666667" height="36" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="1"/>
+  <text x="940.6666666666667" y="282.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">Kelola Soal</text>
+    </svg>
+  </g>
+  <g id="06-admin-soal-tema">
+    <text x="2320" y="862" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#6b7280">06-admin-soal-tema</text>
+    <svg x="2320" y="868" width="1100" height="640" viewBox="0 0 1100 640">
+
+  <rect x="0" y="0" width="1100" height="640" rx="0" fill="#ebebeb"/>
+  <rect x="0" y="0" width="240" height="640" rx="0" fill="#1a1a1a"/>
+  <text x="16" y="36" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#FFFFFF" text-anchor="start">Gamifikasi</text>
+  <line x1="12" y1="52" x2="228" y2="52" stroke="#6b7280" stroke-width="1"/>
+  <text x="16" y="70" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="500" fill="#9ca3af" text-anchor="start">Dashboard</text>
+  <text x="216" y="70" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" fill="#9ca3af" text-anchor="middle">▾</text>
+  <rect x="8" y="90" width="224" height="34" rx="8" fill="#000000"/>
+  <text x="16" y="108" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="500" fill="#FFFFFF" text-anchor="start">Manajemen Pembelajaran</text>
+  <text x="216" y="108" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" fill="#9ca3af" text-anchor="middle">▾</text>
+  <rect x="20" y="130" width="208" height="30" rx="6" fill="#333333"/>
+  <text x="28" y="148" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="start">Manajemen Soal</text>
+  <text x="28" y="180" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="500" fill="#9ca3af" text-anchor="start">Manajemen Tema</text>
+  <text x="16" y="210" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="500" fill="#9ca3af" text-anchor="start">Profil dan Kemajuan Siswa</text>
+  <text x="216" y="210" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" fill="#9ca3af" text-anchor="middle">▾</text>
+  <text x="28" y="250" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="500" fill="#9ca3af" text-anchor="start">Daftar Siswa</text>
+  <rect x="12" y="592" width="216" height="36" rx="8" fill="transparent" stroke="#FFFFFF" stroke-width="1.5"/>
+  <text x="120.0" y="614" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#FFFFFF" text-anchor="middle">Keluar</text>
+  <text x="272" y="36" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" fill="#6b7280" text-anchor="start">← Manajemen Soal / kewarganegaraan</text>
+  <text x="272" y="68" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="700" fill="#1a1a1a" text-anchor="start">Soal — kewarganegaraan</text>
+  <text x="550" y="68" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" fill="#6b7280" text-anchor="start">4 soal</text>
+  <rect x="950" y="52" width="130" height="36" rx="8" fill="#000000"/>
+  <text x="1015.0" y="75.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#FFFFFF" text-anchor="middle">+ Tambah Soal</text>
+  <rect x="272" y="100" width="260" height="36" rx="8" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1.5"/>
+  <text x="286" y="123.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" fill="#6b7280" text-anchor="start">Cari instruksi soal...</text>
+  <rect x="550" y="100" width="64" height="36" rx="18" fill="#000000"/>
+  <text x="582.0" y="124" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#FFFFFF" text-anchor="middle">Semua</text>
+  <rect x="622" y="100" width="56" height="36" rx="18" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="650.0" y="124" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="500" fill="#1a1a1a" text-anchor="middle">Quiz</text>
+  <rect x="686" y="100" width="96" height="36" rx="18" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="734.0" y="124" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="500" fill="#1a1a1a" text-anchor="middle">Pasangkan</text>
+  <rect x="790" y="100" width="80" height="36" rx="18" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="830.0" y="124" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="500" fill="#1a1a1a" text-anchor="middle">Urutkan</text>
+  <rect x="878" y="100" width="112" height="36" rx="18" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="934.0" y="124" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="500" fill="#1a1a1a" text-anchor="middle">Drag &amp; Drop</text>
+  <rect x="272" y="156" width="796" height="44" rx="10" fill="#000000"/>
+  <rect x="272" y="190" width="796" height="10" rx="0" fill="#000000"/>
+  <text x="292" y="184" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="start">No</text>
+  <text x="332" y="184" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="start">Tipe</text>
+  <text x="432" y="184" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="start">Instruksi</text>
+  <text x="712" y="184" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="start">Media</text>
+  <text x="812" y="184" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="start">Aksi</text>
+  <rect x="272" y="200" width="796" height="44" rx="0" fill="#FFFFFF"/>
+  <text x="288" y="228" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" fill="#1a1a1a" text-anchor="start">1</text>
+  <rect x="328" y="210" width="48" height="24" rx="12" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="352.0" y="226.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">Quiz</text>
+  <text x="420" y="228" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" fill="#1a1a1a" text-anchor="start">Test</text>
+  <text x="700" y="228" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" fill="#6b7280" text-anchor="start">—</text>
+  <rect x="780" y="208" width="52" height="28" rx="14" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="806.0" y="226.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">Opsi</text>
+  <rect x="842" y="208" width="52" height="28" rx="14" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="868.0" y="226.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">Edit</text>
+  <rect x="904" y="208" width="59" height="28" rx="14" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="933.5" y="226.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">Hapus</text>
+  <rect x="272" y="244" width="796" height="44" rx="0" fill="#FFFFFF"/>
+  <text x="288" y="272" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" fill="#1a1a1a" text-anchor="start">2</text>
+  <rect x="328" y="254" width="88" height="24" rx="12" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="372.0" y="270.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">Pasangkan</text>
+  <text x="420" y="272" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" fill="#1a1a1a" text-anchor="start">Pasangkan</text>
+  <text x="700" y="272" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" fill="#6b7280" text-anchor="start">—</text>
+  <rect x="780" y="252" width="52" height="28" rx="14" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="806.0" y="270.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">Opsi</text>
+  <rect x="842" y="252" width="52" height="28" rx="14" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="868.0" y="270.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">Edit</text>
+  <rect x="904" y="252" width="59" height="28" rx="14" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="933.5" y="270.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">Hapus</text>
+  <rect x="272" y="288" width="796" height="44" rx="0" fill="#FFFFFF"/>
+  <text x="288" y="316" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" fill="#1a1a1a" text-anchor="start">3</text>
+  <rect x="328" y="298" width="72" height="24" rx="12" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="364.0" y="314.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">Urutkan</text>
+  <text x="420" y="316" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" fill="#1a1a1a" text-anchor="start">Urutkan gambarnya</text>
+  <text x="700" y="316" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" fill="#6b7280" text-anchor="start">—</text>
+  <rect x="780" y="296" width="52" height="28" rx="14" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="806.0" y="314.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">Opsi</text>
+  <rect x="842" y="296" width="52" height="28" rx="14" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="868.0" y="314.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">Edit</text>
+  <rect x="904" y="296" width="59" height="28" rx="14" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="933.5" y="314.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">Hapus</text>
+  <rect x="272" y="332" width="796" height="44" rx="0" fill="#FFFFFF"/>
+  <text x="288" y="360" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" fill="#1a1a1a" text-anchor="start">4</text>
+  <rect x="328" y="342" width="104" height="24" rx="12" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="380.0" y="358.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">Drag &amp; Drop</text>
+  <text x="420" y="360" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" fill="#1a1a1a" text-anchor="start">Drag n Drop</text>
+  <text x="700" y="360" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" fill="#6b7280" text-anchor="start">—</text>
+  <rect x="780" y="340" width="52" height="28" rx="14" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="806.0" y="358.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">Opsi</text>
+  <rect x="842" y="340" width="52" height="28" rx="14" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="868.0" y="358.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">Edit</text>
+  <rect x="904" y="340" width="59" height="28" rx="14" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="933.5" y="358.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">Hapus</text>
+
+    </svg>
+  </g>
+  <g id="07-admin-siswa">
+    <text x="40" y="1370" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#6b7280">07-admin-siswa</text>
+    <svg x="40" y="1376" width="1100" height="640" viewBox="0 0 1100 640">
+
+  <rect x="0" y="0" width="1100" height="640" rx="0" fill="#ebebeb"/>
+  <rect x="0" y="0" width="240" height="640" rx="0" fill="#1a1a1a"/>
+  <text x="16" y="36" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#FFFFFF" text-anchor="start">Gamifikasi</text>
+  <line x1="12" y1="52" x2="228" y2="52" stroke="#6b7280" stroke-width="1"/>
+  <text x="16" y="70" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="500" fill="#9ca3af" text-anchor="start">Dashboard</text>
+  <text x="216" y="70" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" fill="#9ca3af" text-anchor="middle">▾</text>
+  <text x="16" y="108" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="500" fill="#9ca3af" text-anchor="start">Manajemen Pembelajaran</text>
+  <text x="216" y="108" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" fill="#9ca3af" text-anchor="middle">▾</text>
+  <text x="28" y="148" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="500" fill="#9ca3af" text-anchor="start">Manajemen Soal</text>
+  <text x="28" y="180" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="500" fill="#9ca3af" text-anchor="start">Manajemen Tema</text>
+  <rect x="8" y="192" width="224" height="34" rx="8" fill="#000000"/>
+  <text x="16" y="210" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="500" fill="#FFFFFF" text-anchor="start">Profil dan Kemajuan Siswa</text>
+  <text x="216" y="210" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" fill="#9ca3af" text-anchor="middle">▾</text>
+  <rect x="20" y="232" width="208" height="30" rx="6" fill="#333333"/>
+  <text x="28" y="250" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="start">Daftar Siswa</text>
+  <rect x="12" y="592" width="216" height="36" rx="8" fill="transparent" stroke="#FFFFFF" stroke-width="1.5"/>
+  <text x="120.0" y="614" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#FFFFFF" text-anchor="middle">Keluar</text>
+  <text x="272" y="48" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="24" font-weight="700" fill="#1a1a1a" text-anchor="start">Daftar Siswa</text>
+  <rect x="940" y="28" width="140" height="40" rx="8" fill="#000000"/>
+  <text x="1010.0" y="53.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#FFFFFF" text-anchor="middle">+ Tambah Siswa</text>
+  <rect x="272" y="80" width="320" height="38" rx="8" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1.5"/>
+  <text x="286" y="104.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" fill="#6b7280" text-anchor="start">Cari nama atau kelompok...</text>
+  <text x="610" y="106" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="500" fill="#6b7280" text-anchor="start">1 siswa</text>
+  <rect x="272" y="140" width="796" height="44" rx="10" fill="#000000"/>
+  <rect x="272" y="174" width="796" height="10" rx="0" fill="#000000"/>
+  <text x="292" y="168" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="start">No</text>
+  <text x="332" y="168" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="start">Avatar</text>
+  <text x="392" y="168" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="start">Nama</text>
+  <text x="512" y="168" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="start">Kelompok</text>
+  <text x="612" y="168" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="start">Total Poin</text>
+  <text x="702" y="168" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="start">Rank</text>
+  <text x="782" y="168" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="start">Aksi</text>
+  <rect x="272" y="184" width="796" height="48" rx="0" fill="#FFFFFF"/>
+  <text x="288" y="214" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" fill="#1a1a1a" text-anchor="start">1</text>
+  <circle cx="348" cy="208" r="18" fill="#000000"/>
+  <text x="348" y="213" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">T</text>
+  <text x="380" y="214" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#1a1a1a" text-anchor="start">Tesa</text>
+  <text x="500" y="214" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" fill="#1a1a1a" text-anchor="start">TK A</text>
+  <rect x="600" y="196" width="36" height="24" rx="12" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="618.0" y="212.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">0</text>
+  <rect x="680" y="196" width="36" height="24" rx="12" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="698.0" y="212.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">—</text>
+  <rect x="760" y="194" width="66" height="28" rx="14" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="793.0" y="212.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">Detail</text>
+  <rect x="828" y="194" width="52" height="28" rx="14" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="854.0" y="212.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">Edit</text>
+  <rect x="896" y="194" width="59" height="28" rx="14" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="925.5" y="212.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">Hapus</text>
+
+    </svg>
+  </g>
+  <g id="08-student-landing">
+    <text x="1180" y="1570" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#6b7280">08-student-landing</text>
+    <svg x="1180" y="1576" width="390" height="720" viewBox="0 0 390 720">
+
+  <rect width="390" height="720" fill="#FFFFFF"/>
+  <rect x="0.5" y="0.5" width="389" height="719" fill="none" stroke="#1A1A1A" stroke-width="1"/>
+  <text x="24" y="28" font-family="Inter,Arial,sans-serif" font-size="14" font-weight="600" fill="#18181B">Landing Siswa</text>
+  <text x="24" y="46" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">/student</text>
+  <rect x="115.0" y="64" width="160" height="24" rx="4" fill="#F4F4F5" stroke="#A1A1AA" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="195.0" y="80.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">Gamifikasi Belajar</text>
+  <rect x="24" y="104" width="342" height="36" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="1"/>
+  <text x="195.0" y="126.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">Siap Belajar Hari Ini?</text>
+  <rect x="155.0" y="184" width="80" height="80" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="1"/>
+  <text x="195.0" y="228.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">MULAI</text>
+  <rect x="24.0" y="304" width="108.66666666666667" height="64" rx="4" fill="#F4F4F5" stroke="#A1A1AA" stroke-width="1"/>
+  <text x="78.33333333333334" y="340.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">Poin</text>
+  <rect x="140.66666666666669" y="304" width="108.66666666666667" height="64" rx="4" fill="#F4F4F5" stroke="#A1A1AA" stroke-width="1"/>
+  <text x="195.00000000000003" y="340.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">Badge</text>
+  <rect x="257.33333333333337" y="304" width="108.66666666666667" height="64" rx="4" fill="#F4F4F5" stroke="#A1A1AA" stroke-width="1"/>
+  <text x="311.6666666666667" y="340.0" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" fill="#71717A">Rank</text>
+    </svg>
+  </g>
+  <g id="09-student-daftar-siswa">
+    <text x="2320" y="1570" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#6b7280">09-student-daftar-siswa</text>
+    <svg x="2320" y="1576" width="390" height="720" viewBox="0 0 390 720">
+
+  <rect x="0" y="0" width="390" height="720" rx="0" fill="#f5f5f5"/>
+  <rect x="16" y="20" width="90" height="34" rx="10" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1.5"/>
+  <text x="61" y="42" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#1a1a1a" text-anchor="middle">← Kembali</text>
+  <rect x="118" y="24" width="20" height="14" rx="2" fill="#FFFFFF" stroke="#000000" stroke-width="1.5"/>
+  <polygon points="128,18 140,26 116,26" fill="#000000"/>
+  <rect x="124" y="28" width="8" height="10" rx="0" fill="#FFFFFF" stroke="#000000" stroke-width="1"/>
+  <text x="146" y="42" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#1a1a1a" text-anchor="start">Daftar Siswa</text>
+  <rect x="16" y="68" width="290" height="40" rx="8" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1.5"/>
+  <text x="30" y="93.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" fill="#6b7280" text-anchor="start">Cari nama atau kelompok...</text>
+  <text x="320" y="94" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="500" fill="#6b7280" text-anchor="start">2 siswa</text>
+  <rect x="16" y="130" width="358" height="80" rx="16" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1.5"/>
+  <circle cx="44" cy="170" r="14" fill="#000000" stroke="#000000" stroke-width="2"/>
+  <text x="44" y="175" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">1</text>
+  <circle cx="88" cy="166" r="20" fill="#000000"/>
+  <text x="88" y="171" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">A</text>
+  <text x="120" y="162" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" font-weight="700" fill="#1a1a1a" text-anchor="start">Abdul</text>
+  <text x="120" y="182" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#6b7280" text-anchor="start">TK A</text>
+  <rect x="310" y="148" width="52" height="26" rx="13" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="324" y="165" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="10" fill="#1a1a1a" text-anchor="start">★</text>
+  <text x="344" y="165" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="10" font-weight="600" fill="#1a1a1a" text-anchor="middle">0</text>
+  <text x="354" y="198" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" fill="#6b7280" text-anchor="middle">⋯</text>
+  <rect x="16" y="226" width="358" height="80" rx="16" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1.5"/>
+  <circle cx="44" cy="266" r="14" fill="#FFFFFF" stroke="#000000" stroke-width="2"/>
+  <text x="44" y="271" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a1a1a" text-anchor="middle">2</text>
+  <circle cx="88" cy="262" r="20" fill="#000000"/>
+  <text x="88" y="267" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">T</text>
+  <text x="120" y="258" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" font-weight="700" fill="#1a1a1a" text-anchor="start">Tesa</text>
+  <text x="120" y="278" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#6b7280" text-anchor="start">TK B</text>
+  <rect x="310" y="244" width="52" height="26" rx="13" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="324" y="261" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="10" fill="#1a1a1a" text-anchor="start">★</text>
+  <text x="344" y="261" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="10" font-weight="600" fill="#1a1a1a" text-anchor="middle">0</text>
+  <text x="354" y="294" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" fill="#6b7280" text-anchor="middle">⋯</text>
+
+    </svg>
+  </g>
+  <g id="10-student-topics">
+    <text x="40" y="2078" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#6b7280">10-student-topics</text>
+    <svg x="40" y="2084" width="390" height="720" viewBox="0 0 390 720">
+
+  <rect x="0" y="0" width="390" height="720" rx="0" fill="#f5f5f5"/>
+  <rect x="16" y="20" width="80" height="34" rx="10" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1.5"/>
+  <text x="56" y="42" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">← Kembali</text>
+  <rect x="104" y="20" width="270" height="48" rx="12" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1.5"/>
+  <circle cx="128" cy="44" r="16" fill="#000000"/>
+  <text x="128" y="49" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">T</text>
+  <text x="152" y="38" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="700" fill="#1a1a1a" text-anchor="start">Tesa</text>
+  <text x="152" y="54" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="9" fill="#6b7280" text-anchor="start">TK A • ★ 0 • Skor 0 • Rank BEGINNER</text>
+  <rect x="16" y="84" width="12" height="14" rx="2" fill="#FFFFFF" stroke="#000000" stroke-width="1.5"/>
+  <rect x="22" y="80" width="12" height="14" rx="2" fill="#f5f5f5" stroke="#000000" stroke-width="1.5"/>
+  <rect x="28" y="78" width="12" height="14" rx="2" fill="#FFFFFF" stroke="#000000" stroke-width="1.5"/>
+  <text x="44" y="92" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#1a1a1a" text-anchor="start">Pilih Topik</text>
+  <text x="16" y="112" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#6b7280" text-anchor="start">Pilih topik yang ingin dikerjakan</text>
+  <rect x="16" y="128" width="300" height="40" rx="10" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1.5"/>
+  <text x="28" y="154" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" fill="#6b7280" text-anchor="start">Cari topik...</text>
+  <text x="330" y="154" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="500" fill="#1a1a1a" text-anchor="start">1 topik</text>
+  <rect x="16" y="184" width="358" height="64" rx="14" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1.5"/>
+  <rect x="28" y="196" width="48" height="48" rx="10" fill="#000000"/>
+  <text x="52" y="228" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="700" fill="#FFFFFF" text-anchor="middle">K</text>
+  <text x="88" y="224" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#1a1a1a" text-anchor="start">kewarganegaraan</text>
+  <text x="354" y="224" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="20" fill="#1a1a1a" text-anchor="middle">›</text>
+
+    </svg>
+  </g>
+  <g id="11-student-quiz">
+    <text x="1180" y="2358" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#6b7280">11-student-quiz</text>
+    <svg x="1180" y="2364" width="390" height="720" viewBox="0 0 390 720">
+
+  <rect x="0" y="0" width="390" height="720" rx="0" fill="#f5f5f5"/>
+  <rect x="16" y="20" width="80" height="32" rx="10" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1.5"/>
+  <text x="56" y="40" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">← Kembali</text>
+  <rect x="110" y="20" width="150" height="28" rx="14" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="185" y="38" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="10" font-weight="600" fill="#1a1a1a" text-anchor="middle">kewarganegaraan</text>
+  <text x="366" y="38" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="end">Soal 1 / 4</text>
+  <text x="195.0" y="72" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="800" fill="#1a1a1a" text-anchor="middle">Kerjakan Soal</text>
+  <line x1="16" y1="88" x2="374" y2="88" stroke="#a3a3a3" stroke-width="2"/>
+  <rect x="16" y="100" width="358" height="340" rx="20" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="32" y="128" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#1a1a1a" text-anchor="start">SOAL 1</text>
+  <rect x="260" y="112" width="110" height="24" rx="12" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="315.0" y="128.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">PILIHAN GANDA</text>
+  <text x="195.0" y="200" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="700" fill="#1a1a1a" text-anchor="middle">Test</text>
+  <rect x="32" y="240" width="326" height="44" rx="12" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <circle cx="52" cy="262" r="10" fill="none" stroke="#000000" stroke-width="2"/>
+  <text x="72" y="268" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="14" font-weight="500" fill="#1a1a1a" text-anchor="start">Benar</text>
+  <rect x="32" y="292" width="326" height="44" rx="12" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <circle cx="52" cy="314" r="10" fill="none" stroke="#000000" stroke-width="2"/>
+  <text x="72" y="320" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="14" font-weight="500" fill="#1a1a1a" text-anchor="start">Salah</text>
+  <rect x="32" y="344" width="326" height="44" rx="12" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <circle cx="52" cy="366" r="10" fill="none" stroke="#000000" stroke-width="2"/>
+  <text x="72" y="372" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="14" font-weight="500" fill="#1a1a1a" text-anchor="start">Salah</text>
+  <rect x="260" y="460" width="114" height="44" rx="14" fill="#000000"/>
+  <text x="317" y="488" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">Lanjut →</text>
+
+    </svg>
+  </g>
+  <g id="12-student-feedback-benar">
+    <text x="2320" y="2358" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#6b7280">12-student-feedback-benar</text>
+    <svg x="2320" y="2364" width="390" height="720" viewBox="0 0 390 720">
+
+  <rect x="0" y="0" width="390" height="720" rx="0" fill="#f5f5f5"/>
+  <rect x="16" y="20" width="80" height="32" rx="10" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1.5"/>
+  <text x="56" y="40" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">← Kembali</text>
+  <rect x="110" y="20" width="150" height="28" rx="14" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="185" y="38" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="10" font-weight="600" fill="#1a1a1a" text-anchor="middle">kewarganegaraan</text>
+  <text x="366" y="38" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="end">Soal 1 / 4</text>
+  <rect x="16" y="56" width="358" height="8" rx="4" fill="#f5f5f5"/>
+  <rect x="16" y="56" width="89" height="8" rx="4" fill="#000000"/>
+  <rect x="24" y="120" width="342" height="280" rx="20" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1.5"/>
+  <circle cx="195.0" cy="200" r="28" fill="#f5f5f5" stroke="#000000" stroke-width="2"/>
+  <polyline points="185.0,202 193.0,210 207.0,192" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="195.0" y="260" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="800" fill="#1a1a1a" text-anchor="middle">Jawaban Benar!</text>
+  <text x="195.0" y="290" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" font-weight="600" fill="#1a1a1a" text-anchor="middle">+ 100 poin</text>
+  <rect x="220" y="430" width="154" height="44" rx="14" fill="#000000"/>
+  <text x="297" y="458" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF" text-anchor="middle">Soal Berikutnya →</text>
+
+    </svg>
+  </g>
+  <g id="13-student-quiz-matching">
+    <text x="40" y="2866" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#6b7280">13-student-quiz-matching</text>
+    <svg x="40" y="2872" width="390" height="720" viewBox="0 0 390 720">
+
+  <rect x="0" y="0" width="390" height="720" rx="0" fill="#f5f5f5"/>
+  <rect x="16" y="20" width="80" height="32" rx="10" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1.5"/>
+  <text x="56" y="40" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">← Kembali</text>
+  <rect x="110" y="20" width="150" height="28" rx="14" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="185" y="38" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="10" font-weight="600" fill="#1a1a1a" text-anchor="middle">kewarganegaraan</text>
+  <text x="366" y="38" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="end">Soal 2 / 4</text>
+  <text x="195.0" y="72" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="800" fill="#1a1a1a" text-anchor="middle">Kerjakan Soal</text>
+  <rect x="16" y="88" width="358" height="8" rx="4" fill="#f5f5f5"/>
+  <rect x="16" y="88" width="89" height="8" rx="4" fill="#000000"/>
+  <rect x="16" y="108" width="358" height="480" rx="20" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="32" y="136" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#1a1a1a" text-anchor="start">SOAL 2</text>
+  <rect x="270" y="120" width="96" height="24" rx="12" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="318.0" y="136.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">COCOKKAN</text>
+  <text x="195.0" y="180" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#1a1a1a" text-anchor="middle">pasangkan</text>
+  <rect x="32" y="196" width="326" height="32" rx="8" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="195.0" y="216" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="9" font-weight="500" fill="#6b7280" text-anchor="middle">1 Ketuk pertanyaan  →  2 Ketuk jawaban</text>
+  <text x="48" y="248" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="9" font-weight="700" fill="#6b7280" text-anchor="start">PERTANYAAN</text>
+  <text x="219.0" y="248" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="9" font-weight="700" fill="#6b7280" text-anchor="middle">JAWABAN</text>
+  <rect x="32" y="264" width="151.0" height="36" rx="8" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="42" y="287" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="500" fill="#1a1a1a" text-anchor="start">1 Pisang</text>
+  <text x="163.0" y="287" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a1a1a" text-anchor="middle">✓</text>
+  <rect x="40" y="306" width="143.0" height="36" rx="8" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="50" y="329" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="500" fill="#1a1a1a" text-anchor="start">↳ Monyet</text>
+  <text x="163.0" y="329" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a1a1a" text-anchor="middle">✕</text>
+  <rect x="32" y="348" width="151.0" height="36" rx="8" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="42" y="371" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="500" fill="#1a1a1a" text-anchor="start">2 Jagung</text>
+  <text x="163.0" y="371" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a1a1a" text-anchor="middle">✓</text>
+  <rect x="40" y="390" width="143.0" height="36" rx="8" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="50" y="413" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="500" fill="#1a1a1a" text-anchor="start">↳ Ayam</text>
+  <text x="163.0" y="413" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a1a1a" text-anchor="middle">✕</text>
+  <rect x="203.0" y="264" width="151.0" height="36" rx="8" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="213.0" y="287" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="500" fill="#1a1a1a" text-anchor="start">Monyet</text>
+  <text x="334.0" y="287" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a1a1a" text-anchor="middle">✓</text>
+  <rect x="203.0" y="306" width="151.0" height="36" rx="8" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="213.0" y="329" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="500" fill="#1a1a1a" text-anchor="start">Ayam</text>
+  <text x="334.0" y="329" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a1a1a" text-anchor="middle">✓</text>
+  <text x="195.0" y="388" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="14" fill="#6b7280" text-anchor="middle">⛓</text>
+  <rect x="260" y="528" width="114" height="44" rx="14" fill="#000000"/>
+  <text x="317" y="556" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">Lanjut →</text>
+
+    </svg>
+  </g>
+  <g id="14-student-feedback-salah">
+    <text x="1180" y="3146" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#6b7280">14-student-feedback-salah</text>
+    <svg x="1180" y="3152" width="390" height="720" viewBox="0 0 390 720">
+
+  <rect x="0" y="0" width="390" height="720" rx="0" fill="#f5f5f5"/>
+  <rect x="16" y="20" width="80" height="32" rx="10" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1.5"/>
+  <text x="56" y="40" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">← Kembali</text>
+  <rect x="110" y="20" width="150" height="28" rx="14" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="185" y="38" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="10" font-weight="600" fill="#1a1a1a" text-anchor="middle">kewarganegaraan</text>
+  <text x="366" y="38" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="end">Soal 3 / 4</text>
+  <rect x="16" y="56" width="358" height="8" rx="4" fill="#f5f5f5"/>
+  <rect x="16" y="56" width="268" height="8" rx="4" fill="#000000"/>
+  <rect x="24" y="120" width="342" height="280" rx="20" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1.5"/>
+  <circle cx="195.0" cy="200" r="28" fill="#f5f5f5" stroke="#000000" stroke-width="2"/>
+  <line x1="185.0" y1="190" x2="205.0" y2="210" stroke="#000000" stroke-width="3" stroke-linecap="round"/>
+  <line x1="205.0" y1="190" x2="185.0" y2="210" stroke="#000000" stroke-width="3" stroke-linecap="round"/>
+  <text x="195.0" y="260" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="800" fill="#1a1a1a" text-anchor="middle">Jawaban Salah</text>
+  <text x="195.0" y="290" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" fill="#6b7280" text-anchor="middle">Tetap semangat, terus berlatih!</text>
+  <rect x="220" y="430" width="154" height="44" rx="14" fill="#000000"/>
+  <text x="297" y="458" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF" text-anchor="middle">Soal Berikutnya →</text>
+
+    </svg>
+  </g>
+  <g id="15-student-quiz-dragdrop">
+    <text x="2320" y="3146" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#6b7280">15-student-quiz-dragdrop</text>
+    <svg x="2320" y="3152" width="390" height="720" viewBox="0 0 390 720">
+
+  <rect x="0" y="0" width="390" height="720" rx="0" fill="#f5f5f5"/>
+  <rect x="16" y="20" width="358" height="8" rx="4" fill="#f5f5f5"/>
+  <rect x="16" y="20" width="268" height="8" rx="4" fill="#000000"/>
+  <rect x="16" y="44" width="358" height="620" rx="20" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="32" y="72" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#1a1a1a" text-anchor="start">SOAL 4</text>
+  <rect x="250" y="56" width="116" height="24" rx="12" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="308.0" y="72.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">SERET &amp; LEPAS</text>
+  <text x="195.0" y="104" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#1a1a1a" text-anchor="middle">Drag and Drop</text>
+  <rect x="32" y="120" width="326" height="36" rx="10" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="195.0" y="142" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="9" font-weight="500" fill="#6b7280" text-anchor="middle">✋ Seret atau ketuk kartu, lalu taruh ke kotaknya</text>
+  <rect x="32" y="168" width="326" height="120" rx="12" fill="none" stroke="#000000" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <rect x="80" y="184" width="72" height="100" rx="12" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1.5"/>
+  <text x="116" y="202" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="10" fill="#6b7280" text-anchor="middle">⋮⋮</text>
+  <text x="116" y="242" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="28" fill="#1a1a1a" text-anchor="middle">◉</text>
+  <text x="116" y="272" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="9" font-weight="500" fill="#1a1a1a" text-anchor="middle">strawberry</text>
+  <rect x="200" y="184" width="72" height="100" rx="12" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1.5"/>
+  <text x="236" y="202" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="10" fill="#6b7280" text-anchor="middle">⋮⋮</text>
+  <text x="236" y="242" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="28" fill="#1a1a1a" text-anchor="middle">◉</text>
+  <text x="236" y="272" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="9" font-weight="500" fill="#1a1a1a" text-anchor="middle">pisang</text>
+  <text x="109.5" y="314" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="24" fill="#1a1a1a" text-anchor="middle">🧺</text>
+  <text x="109.5" y="340" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="10" font-weight="700" fill="#1a1a1a" text-anchor="middle">Keranjang Kuning</text>
+  <rect x="32.0" y="352" width="147.0" height="80" rx="10" fill="none" stroke="#000000" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="105.5" y="398" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="9" fill="#6b7280" text-anchor="middle">↓ Taruh di sini</text>
+  <text x="272.5" y="314" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="24" fill="#1a1a1a" text-anchor="middle">🧺</text>
+  <text x="272.5" y="340" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="10" font-weight="700" fill="#1a1a1a" text-anchor="middle">Keranjang Merah</text>
+  <rect x="195.0" y="352" width="147.0" height="80" rx="10" fill="none" stroke="#000000" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="268.5" y="398" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="9" fill="#6b7280" text-anchor="middle">↓ Taruh di sini</text>
+  <rect x="260" y="604" width="114" height="44" rx="14" fill="#000000"/>
+  <text x="317" y="632" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">Lanjut →</text>
+
+    </svg>
+  </g>
+  <g id="16-student-quiz-dragdrop-done">
+    <text x="40" y="3654" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#6b7280">16-student-quiz-dragdrop-done</text>
+    <svg x="40" y="3660" width="390" height="720" viewBox="0 0 390 720">
+
+  <rect x="0" y="0" width="390" height="720" rx="0" fill="#f5f5f5"/>
+  <rect x="16" y="20" width="358" height="8" rx="4" fill="#f5f5f5"/>
+  <rect x="16" y="20" width="358" height="8" rx="4" fill="#000000"/>
+  <rect x="16" y="44" width="358" height="620" rx="20" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="32" y="72" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#1a1a1a" text-anchor="start">SOAL 4</text>
+  <rect x="250" y="56" width="116" height="24" rx="12" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="308.0" y="72.0" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">SERET &amp; LEPAS</text>
+  <text x="195.0" y="104" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#1a1a1a" text-anchor="middle">Drag and Drop</text>
+  <rect x="32" y="120" width="326" height="36" rx="10" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="195.0" y="142" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="9" font-weight="500" fill="#6b7280" text-anchor="middle">✋ Seret atau ketuk kartu, lalu taruh ke kotaknya</text>
+  <rect x="32" y="168" width="326" height="36" rx="8" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="195.0" y="190" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="10" font-weight="600" fill="#1a1a1a" text-anchor="middle">Semua kartu sudah ditempatkan!</text>
+  <text x="109.5" y="244" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="24" fill="#1a1a1a" text-anchor="middle">🧺</text>
+  <text x="109.5" y="270" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="10" font-weight="700" fill="#1a1a1a" text-anchor="middle">Keranjang Kuning</text>
+  <rect x="32.0" y="282" width="147.0" height="100" rx="10" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <rect x="44.0" y="294" width="56" height="76" rx="8" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="72.0" y="330" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="20" fill="#1a1a1a" text-anchor="middle">◉</text>
+  <text x="72.0" y="354" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="8" font-weight="500" fill="#1a1a1a" text-anchor="middle">strawberry</text>
+  <text x="163.0" y="306" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="10" font-weight="600" fill="#1a1a1a" text-anchor="middle">✕</text>
+  <text x="272.5" y="244" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="24" fill="#1a1a1a" text-anchor="middle">🧺</text>
+  <text x="272.5" y="270" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="10" font-weight="700" fill="#1a1a1a" text-anchor="middle">Keranjang Merah</text>
+  <rect x="195.0" y="282" width="147.0" height="100" rx="10" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <rect x="207.0" y="294" width="56" height="76" rx="8" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="235.0" y="330" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="20" fill="#1a1a1a" text-anchor="middle">◉</text>
+  <text x="235.0" y="354" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="8" font-weight="500" fill="#1a1a1a" text-anchor="middle">pisang</text>
+  <text x="326.0" y="306" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="10" font-weight="600" fill="#1a1a1a" text-anchor="middle">✕</text>
+  <rect x="260" y="604" width="114" height="44" rx="14" fill="#000000"/>
+  <text x="317" y="632" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">Lanjut →</text>
+
+    </svg>
+  </g>
+  <g id="17-student-result">
+    <text x="1180" y="3934" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" fill="#6b7280">17-student-result</text>
+    <svg x="1180" y="3940" width="390" height="720" viewBox="0 0 390 720">
+
+  <rect x="0" y="0" width="390" height="720" rx="0" fill="#f5f5f5"/>
+  <circle cx="195.0" cy="100" r="52" fill="none" stroke="#d4d4d4" stroke-width="10"/>
+  <path d="M 195.0 48 A 52 52 0 0 1 247.0 100" fill="none" stroke="#000000" stroke-width="10" stroke-linecap="round"/>
+  <text x="195.0" y="96" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="24" font-weight="800" fill="#1a1a1a" text-anchor="middle">50%</text>
+  <text x="195.0" y="118" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="10" font-weight="500" fill="#6b7280" text-anchor="middle">SKOR</text>
+  <text x="159.0" y="152" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" fill="#000000" text-anchor="middle">★</text>
+  <text x="195.0" y="152" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" fill="#6b7280" text-anchor="middle">☆</text>
+  <text x="231.0" y="152" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" fill="#6b7280" text-anchor="middle">☆</text>
+  <text x="195.0" y="188" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="20" font-weight="800" fill="#1a1a1a" text-anchor="middle">Terus Semangat!</text>
+  <rect x="16.0" y="208" width="85.5" height="56" rx="10" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="58.75" y="234" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#1a1a1a" text-anchor="middle">2</text>
+  <text x="58.75" y="254" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="7" font-weight="600" fill="#6b7280" text-anchor="middle">BENAR</text>
+  <rect x="105.5" y="208" width="85.5" height="56" rx="10" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="148.25" y="234" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#1a1a1a" text-anchor="middle">2</text>
+  <text x="148.25" y="254" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="7" font-weight="600" fill="#6b7280" text-anchor="middle">SALAH</text>
+  <rect x="195.0" y="208" width="85.5" height="56" rx="10" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="237.75" y="234" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#1a1a1a" text-anchor="middle">+200</text>
+  <text x="237.75" y="254" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="7" font-weight="600" fill="#6b7280" text-anchor="middle">TOTAL SKOR</text>
+  <rect x="284.5" y="208" width="85.5" height="56" rx="10" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="327.25" y="234" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#1a1a1a" text-anchor="middle">1</text>
+  <text x="327.25" y="254" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="7" font-weight="600" fill="#6b7280" text-anchor="middle">TOTAL BINTANG</text>
+  <rect x="125.0" y="280" width="140" height="28" rx="14" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="195.0" y="298" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">🏅 Rank: Pemula</text>
+  <text x="24" y="328" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="9" font-weight="700" fill="#6b7280" text-anchor="start">RINCIAN JAWABAN</text>
+  <rect x="16" y="344" width="358" height="36" rx="8" fill="#f5f5f5"/>
+  <text x="32" y="367" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="500" fill="#1a1a1a" text-anchor="start">Soal 1</text>
+  <text x="310" y="367" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a1a1a" text-anchor="start">✓</text>
+  <text x="358" y="367" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#1a1a1a" text-anchor="end">+100</text>
+  <rect x="16" y="386" width="358" height="36" rx="8" fill="#f5f5f5"/>
+  <text x="32" y="409" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="500" fill="#1a1a1a" text-anchor="start">Soal 2</text>
+  <text x="310" y="409" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a1a1a" text-anchor="start">✓</text>
+  <text x="358" y="409" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#1a1a1a" text-anchor="end">+100</text>
+  <rect x="16" y="428" width="358" height="36" rx="8" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="32" y="451" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="500" fill="#1a1a1a" text-anchor="start">Soal 3</text>
+  <text x="310" y="451" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a1a1a" text-anchor="start">✕</text>
+  <text x="358" y="451" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#1a1a1a" text-anchor="end">+0</text>
+  <rect x="16" y="470" width="358" height="36" rx="8" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="32" y="493" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="500" fill="#1a1a1a" text-anchor="start">Soal 4</text>
+  <text x="310" y="493" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a1a1a" text-anchor="start">✕</text>
+  <text x="358" y="493" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#1a1a1a" text-anchor="end">+0</text>
+  <rect x="16" y="528" width="175.0" height="44" rx="12" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1.5"/>
+  <text x="103.5" y="556" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#1a1a1a" text-anchor="middle">Pilih Topik Lain</text>
+  <rect x="199.0" y="528" width="175.0" height="44" rx="12" fill="#000000"/>
+  <text x="286.5" y="556" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="middle">Ulangi Kuis</text>
+
+    </svg>
+  </g>
+</svg>

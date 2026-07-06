@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="720" viewBox="0 0 390 720">
+  <rect x="0" y="0" width="390" height="720" rx="0" fill="#f5f5f5"/>
+  <circle cx="195.0" cy="100" r="52" fill="none" stroke="#d4d4d4" stroke-width="10"/>
+  <path d="M 195.0 48 A 52 52 0 0 1 247.0 100" fill="none" stroke="#000000" stroke-width="10" stroke-linecap="round"/>
+  <text x="195.0" y="96" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="24" font-weight="800" fill="#1a1a1a" text-anchor="middle">50%</text>
+  <text x="195.0" y="118" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="10" font-weight="500" fill="#6b7280" text-anchor="middle">SKOR</text>
+  <text x="159.0" y="152" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" fill="#000000" text-anchor="middle">★</text>
+  <text x="195.0" y="152" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" fill="#6b7280" text-anchor="middle">☆</text>
+  <text x="231.0" y="152" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" fill="#6b7280" text-anchor="middle">☆</text>
+  <text x="195.0" y="188" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="20" font-weight="800" fill="#1a1a1a" text-anchor="middle">Terus Semangat!</text>
+  <rect x="16.0" y="208" width="85.5" height="56" rx="10" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="58.75" y="234" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#1a1a1a" text-anchor="middle">2</text>
+  <text x="58.75" y="254" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="7" font-weight="600" fill="#6b7280" text-anchor="middle">BENAR</text>
+  <rect x="105.5" y="208" width="85.5" height="56" rx="10" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="148.25" y="234" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#1a1a1a" text-anchor="middle">2</text>
+  <text x="148.25" y="254" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="7" font-weight="600" fill="#6b7280" text-anchor="middle">SALAH</text>
+  <rect x="195.0" y="208" width="85.5" height="56" rx="10" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="237.75" y="234" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#1a1a1a" text-anchor="middle">+200</text>
+  <text x="237.75" y="254" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="7" font-weight="600" fill="#6b7280" text-anchor="middle">TOTAL SKOR</text>
+  <rect x="284.5" y="208" width="85.5" height="56" rx="10" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="327.25" y="234" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#1a1a1a" text-anchor="middle">1</text>
+  <text x="327.25" y="254" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="7" font-weight="600" fill="#6b7280" text-anchor="middle">TOTAL BINTANG</text>
+  <rect x="125.0" y="280" width="140" height="28" rx="14" fill="#f5f5f5" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="195.0" y="298" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a" text-anchor="middle">🏅 Rank: Pemula</text>
+  <text x="24" y="328" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="9" font-weight="700" fill="#6b7280" text-anchor="start">RINCIAN JAWABAN</text>
+  <rect x="16" y="344" width="358" height="36" rx="8" fill="#f5f5f5"/>
+  <text x="32" y="367" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="500" fill="#1a1a1a" text-anchor="start">Soal 1</text>
+  <text x="310" y="367" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a1a1a" text-anchor="start">✓</text>
+  <text x="358" y="367" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#1a1a1a" text-anchor="end">+100</text>
+  <rect x="16" y="386" width="358" height="36" rx="8" fill="#f5f5f5"/>
+  <text x="32" y="409" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="500" fill="#1a1a1a" text-anchor="start">Soal 2</text>
+  <text x="310" y="409" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a1a1a" text-anchor="start">✓</text>
+  <text x="358" y="409" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#1a1a1a" text-anchor="end">+100</text>
+  <rect x="16" y="428" width="358" height="36" rx="8" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="32" y="451" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="500" fill="#1a1a1a" text-anchor="start">Soal 3</text>
+  <text x="310" y="451" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a1a1a" text-anchor="start">✕</text>
+  <text x="358" y="451" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#1a1a1a" text-anchor="end">+0</text>
+  <rect x="16" y="470" width="358" height="36" rx="8" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1"/>
+  <text x="32" y="493" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="500" fill="#1a1a1a" text-anchor="start">Soal 4</text>
+  <text x="310" y="493" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a1a1a" text-anchor="start">✕</text>
+  <text x="358" y="493" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#1a1a1a" text-anchor="end">+0</text>
+  <rect x="16" y="528" width="175.0" height="44" rx="12" fill="#FFFFFF" stroke="#a3a3a3" stroke-width="1.5"/>
+  <text x="103.5" y="556" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#1a1a1a" text-anchor="middle">Pilih Topik Lain</text>
+  <rect x="199.0" y="528" width="175.0" height="44" rx="12" fill="#000000"/>
+  <text x="286.5" y="556" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="middle">Ulangi Kuis</text>
+</svg>

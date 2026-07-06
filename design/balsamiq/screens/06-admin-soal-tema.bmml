@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<mockup version="1.0" skin="sketch" mockupW="1280" mockupH="900" measuredW="1280" measuredH="900">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::BrowserWindow"
+ x="0" y="0" w="1280" h="900"
+ measuredW="450" measuredH="400" zOrder="1"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Gamifikasi%0Ahttp%3A%2F%2Flocalhost%3A5173</text>
+      </controlProperties>
+    </control>
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::Canvas"
+ x="0" y="48" w="240" h="852"
+ measuredW="240" measuredH="852" zOrder="2"
+ locked="false" isInGroup="-1">
+    </control>
+    <control controlID="2" controlTypeID="com.balsamiq.mockups::Title"
+ x="16" y="64" w="-1" h="-1"
+ measuredW="180" measuredH="40" zOrder="3"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>GAMIFIKASI</text>
+        <size>24</size>
+      </controlProperties>
+    </control>
+    <control controlID="3" controlTypeID="com.balsamiq.mockups::Label"
+ x="20" y="134" w="-1" h="-1"
+ measuredW="200" measuredH="21" zOrder="4"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>DASHBOARD</text>
+      </controlProperties>
+    </control>
+    <control controlID="4" controlTypeID="com.balsamiq.mockups::Label"
+ x="20" y="170" w="-1" h="-1"
+ measuredW="200" measuredH="21" zOrder="5"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>MANAJEMEN%20PEMBELAJARAN%20%20v</text>
+      </controlProperties>
+    </control>
+    <control controlID="5" controlTypeID="com.balsamiq.mockups::Canvas"
+ x="12" y="188" w="216" h="32"
+ measuredW="216" measuredH="32" zOrder="6"
+ locked="false" isInGroup="-1">
+    </control>
+    <control controlID="6" controlTypeID="com.balsamiq.mockups::Label"
+ x="20" y="206" w="-1" h="-1"
+ measuredW="200" measuredH="21" zOrder="7"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>%20%20MANAJEMEN%20SOAL</text>
+        <bold>true</bold>
+      </controlProperties>
+    </control>
+    <control controlID="7" controlTypeID="com.balsamiq.mockups::Label"
+ x="20" y="242" w="-1" h="-1"
+ measuredW="200" measuredH="21" zOrder="8"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>%20%20MANAJEMEN%20TEMA</text>
+      </controlProperties>
+    </control>
+    <control controlID="8" controlTypeID="com.balsamiq.mockups::Label"
+ x="20" y="278" w="-1" h="-1"
+ measuredW="200" measuredH="21" zOrder="9"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>PROFIL%20DAN%20KEMAJUAN%20%20v</text>
+      </controlProperties>
+    </control>
+    <control controlID="9" controlTypeID="com.balsamiq.mockups::Label"
+ x="20" y="314" w="-1" h="-1"
+ measuredW="200" measuredH="21" zOrder="10"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>%20%20DAFTAR%20SISWA</text>
+      </controlProperties>
+    </control>
+    <control controlID="10" controlTypeID="com.balsamiq.mockups::Button"
+ x="20" y="832" w="-1" h="-1"
+ measuredW="200" measuredH="27" zOrder="11"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Keluar</text>
+      </controlProperties>
+    </control>
+    <control controlID="11" controlTypeID="com.balsamiq.mockups::Label"
+ x="260" y="68" w="-1" h="-1"
+ measuredW="700" measuredH="21" zOrder="12"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Manajemen%20Soal%20%3E%20Kewarganegaraan%20%3E%20Kamis%2C%2025%20Juni%202026</text>
+        <size>11</size>
+      </controlProperties>
+    </control>
+    <control controlID="12" controlTypeID="com.balsamiq.mockups::SubTitle"
+ x="260" y="96" w="-1" h="-1"
+ measuredW="320" measuredH="27" zOrder="13"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Soal%20%E2%80%94%20Kamis%2C%2025%20Juni%202026</text>
+      </controlProperties>
+    </control>
+    <control controlID="13" controlTypeID="com.balsamiq.mockups::Label"
+ x="600" y="102" w="-1" h="-1"
+ measuredW="50" measuredH="21" zOrder="14"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>5%20soal</text>
+      </controlProperties>
+    </control>
+    <control controlID="14" controlTypeID="com.balsamiq.mockups::Button"
+ x="660" y="94" w="-1" h="-1"
+ measuredW="140" measuredH="27" zOrder="15"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Aktif%20untuk%20Siswa</text>
+      </controlProperties>
+    </control>
+    <control controlID="15" controlTypeID="com.balsamiq.mockups::Button"
+ x="1040" y="94" w="-1" h="-1"
+ measuredW="180" measuredH="27" zOrder="16"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Aktif%20%E2%80%94%20Kunci%20Editing</text>
+      </controlProperties>
+    </control>
+    <control controlID="16" controlTypeID="com.balsamiq.mockups::Canvas"
+ x="260" y="136" w="520" h="40"
+ measuredW="520" measuredH="40" zOrder="17"
+ locked="false" isInGroup="-1">
+    </control>
+    <control controlID="17" controlTypeID="com.balsamiq.mockups::Label"
+ x="276" y="158" w="-1" h="-1"
+ measuredW="60" measuredH="21" zOrder="18"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>1.%20Tema</text>
+      </controlProperties>
+    </control>
+    <control controlID="18" controlTypeID="com.balsamiq.mockups::Label"
+ x="380" y="158" w="-1" h="-1"
+ measuredW="120" measuredH="21" zOrder="19"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>2.%20Pilih%20Tanggal</text>
+      </controlProperties>
+    </control>
+    <control controlID="19" controlTypeID="com.balsamiq.mockups::Canvas"
+ x="540" y="144" w="140" h="28"
+ measuredW="140" measuredH="28" zOrder="20"
+ locked="false" isInGroup="-1">
+    </control>
+    <control controlID="20" controlTypeID="com.balsamiq.mockups::Label"
+ x="556" y="162" w="-1" h="-1"
+ measuredW="110" measuredH="21" zOrder="21"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>3.%20Kelola%20Soal</text>
+        <bold>true</bold>
+      </controlProperties>
+    </control>
+    <control controlID="21" controlTypeID="com.balsamiq.mockups::Canvas"
+ x="260" y="192" w="980" h="48"
+ measuredW="980" measuredH="48" zOrder="22"
+ locked="false" isInGroup="-1">
+    </control>
+    <control controlID="22" controlTypeID="com.balsamiq.mockups::Label"
+ x="272" y="220" w="-1" h="-1"
+ measuredW="956" measuredH="21" zOrder="23"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Soal%20sudah%20diaktifkan.%20Edit%2Fhapus%2Ftambah%20dinonaktifkan.%20Nonaktifkan%20dulu%20untuk%20ubah.</text>
+      </controlProperties>
+    </control>
+    <control controlID="23" controlTypeID="com.balsamiq.mockups::SearchBox"
+ x="260" y="264" w="360" h="-1"
+ measuredW="360" measuredH="30" zOrder="24"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Cari%20instruksi%20soal...</text>
+      </controlProperties>
+    </control>
+    <control controlID="24" controlTypeID="com.balsamiq.mockups::Button"
+ x="640" y="258" w="-1" h="-1"
+ measuredW="70" measuredH="27" zOrder="25"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Semua</text>
+      </controlProperties>
+    </control>
+    <control controlID="25" controlTypeID="com.balsamiq.mockups::Canvas"
+ x="728" y="258" w="80" h="30"
+ measuredW="80" measuredH="30" zOrder="26"
+ locked="false" isInGroup="-1">
+    </control>
+    <control controlID="26" controlTypeID="com.balsamiq.mockups::Label"
+ x="734" y="276" w="-1" h="-1"
+ measuredW="68" measuredH="21" zOrder="27"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Quiz</text>
+      </controlProperties>
+    </control>
+    <control controlID="27" controlTypeID="com.balsamiq.mockups::Canvas"
+ x="816" y="258" w="80" h="30"
+ measuredW="80" measuredH="30" zOrder="28"
+ locked="false" isInGroup="-1">
+    </control>
+    <control controlID="28" controlTypeID="com.balsamiq.mockups::Label"
+ x="822" y="276" w="-1" h="-1"
+ measuredW="68" measuredH="21" zOrder="29"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Pasangkan</text>
+      </controlProperties>
+    </control>
+    <control controlID="29" controlTypeID="com.balsamiq.mockups::Canvas"
+ x="904" y="258" w="80" h="30"
+ measuredW="80" measuredH="30" zOrder="30"
+ locked="false" isInGroup="-1">
+    </control>
+    <control controlID="30" controlTypeID="com.balsamiq.mockups::Label"
+ x="910" y="276" w="-1" h="-1"
+ measuredW="68" measuredH="21" zOrder="31"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Urutkan</text>
+      </controlProperties>
+    </control>
+    <control controlID="31" controlTypeID="com.balsamiq.mockups::Canvas"
+ x="992" y="258" w="80" h="30"
+ measuredW="80" measuredH="30" zOrder="32"
+ locked="false" isInGroup="-1">
+    </control>
+    <control controlID="32" controlTypeID="com.balsamiq.mockups::Label"
+ x="998" y="276" w="-1" h="-1"
+ measuredW="68" measuredH="21" zOrder="33"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Drag%20%26%20Drop</text>
+      </controlProperties>
+    </control>
+    <control controlID="33" controlTypeID="com.balsamiq.mockups::Canvas"
+ x="1080" y="258" w="80" h="30"
+ measuredW="80" measuredH="30" zOrder="34"
+ locked="false" isInGroup="-1">
+    </control>
+    <control controlID="34" controlTypeID="com.balsamiq.mockups::Label"
+ x="1086" y="276" w="-1" h="-1"
+ measuredW="68" measuredH="21" zOrder="35"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Puzzle</text>
+      </controlProperties>
+    </control>
+    <control controlID="35" controlTypeID="com.balsamiq.mockups::DataGrid"
+ x="260" y="310" w="980" h="360"
+ measuredW="980" measuredH="360" zOrder="36"
+ locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>No%09Tipe%09Instruksi%09Waktu%09Poin%09Aksi%0A1%09Quiz%09Kerjakan%20biblia%095%20mnt%0910%09Lihat%20Edit%20Hapus%0A2%09Puzzle%09Kerjakan%0920%20mnt%09100%09Lihat%20Edit%20Hapus%0A3%09Urutkan%09urutkan%092%20mnt%0910%09Lihat%20Edit%20Hapus%0A4%09Drag%20%26%20Drop%09Drag%20Soal%20nya%0920%20mnt%09100%09Lihat%20Edit%20Hapus%0A5%09Pasangkan%09Pasangkan%20Ke%20Makanan%0920%20mnt%09100%09Lihat%20Edit%20Hapus</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>
