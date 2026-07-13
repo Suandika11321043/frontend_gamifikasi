@@ -377,11 +377,27 @@ function SoalQuestionsPage() {
     }
 
     const selectMediaOpsiFile = (file) => {
+        if (!file) {
+            resetMediaOpsi()
+            return
+        }
+        const kind = detectFileMediaType(file)
+        if (kind === 'audio') {
+            const audioErr = validateAudioFile(file)
+            if (audioErr) { setOptionError(audioErr); return }
+        } else if (kind === 'image') {
+            const imageErr = validateImageFile(file)
+            if (imageErr) { setOptionError(imageErr); return }
+        } else {
+            setOptionError('File harus berupa gambar atau audio (MP3, WAV, OGG, dll.).')
+            return
+        }
+        setOptionError('')
         setMediaOpsiPreview((prev) => {
             revokePreviewUrl(prev)
-            return file ? previewUrlFromFile(file) : null
+            return previewUrlFromFile(file)
         })
-        setMediaOpsiPreviewKind(file ? detectFileMediaType(file) : null)
+        setMediaOpsiPreviewKind(kind)
         setMediaOpsiFile(file)
     }
 
@@ -1378,6 +1394,7 @@ function SoalQuestionsPage() {
                                             <p className="match-step-title">Item yang Perlu Diurutkan</p>
                                             <p className="match-step-desc">
                                                 Isi <strong>nomor urutan benar</strong> per item (1 = posisi pertama, 2 = kedua, dst).
+                                                Setiap item dapat dilengkapi <strong>gambar atau audio (MP3)</strong>.
                                                 Daftar item tidak diurutkan otomatis — siswa melihat urutan acak saat mengerjakan.
                                             </p>
                                         </div>
@@ -1426,9 +1443,9 @@ function SoalQuestionsPage() {
                                                                                 placeholder="1"
                                                                             />
                                                                         </div>
-                                                                        <label className="file-upload-btn file-upload-btn--sm">
-                                                                            📎 Media
-                                                                            <input type="file" accept="image/*,audio/*" style={{ display: 'none' }}
+                                                                        <label className="file-upload-btn file-upload-btn--sm" title="Lampirkan gambar atau audio (MP3)">
+                                                                            📎 Gambar / Audio
+                                                                            <input type="file" accept="image/*,audio/*,.mp3,.wav,.ogg,.aac,.m4a" style={{ display: 'none' }}
                                                                                 onChange={(e) => selectMediaOpsiFile(e.target.files[0] || null)} />
                                                                         </label>
                                                                     </div>
@@ -1494,9 +1511,9 @@ function SoalQuestionsPage() {
                                                     placeholder="Ketik teks item..."
                                                     className="match-add-input"
                                                 />
-                                                <label className="file-upload-btn file-upload-btn--sm" title="Lampirkan gambar / audio">
+                                                <label className="file-upload-btn file-upload-btn--sm" title="Lampirkan gambar atau audio (MP3)">
                                                     📎
-                                                    <input type="file" accept="image/*,audio/*" style={{ display: 'none' }}
+                                                    <input type="file" accept="image/*,audio/*,.mp3,.wav,.ogg,.aac,.m4a" style={{ display: 'none' }}
                                                         onChange={(e) => selectMediaOpsiFile(e.target.files[0] || null)} />
                                                 </label>
                                                 <button

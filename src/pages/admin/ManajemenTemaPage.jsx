@@ -5,7 +5,7 @@ import Modal from '../../components/common/Modal'
 import '../../styles/common.css'
 import '../../pages/admin/DashboardPage.css'
 import './ManajemenTemaPage.css'
-import { apiFetch } from '../../utils/apiFetch'
+import { apiFetch, getErrorMessage } from '../../utils/apiFetch'
 import { validateImageFile } from '../../utils/validateFile'
 
 const emptyForm = { nameTopic: '', description: '', active: true }
