@@ -273,6 +273,21 @@ tbody td:nth-child(2)>* {
     border-radius: 0;
 }
 
+.rank-icon--silver {
+    filter: grayscale(0.35) brightness(1.15) saturate(0.4);
+}
+
+.rank-icon--bronze {
+    filter: sepia(0.85) saturate(1.4) hue-rotate(-20deg) brightness(0.95);
+}
+
+.dash-stars-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    white-space: nowrap;
+}
+
 .rank-badge--medal.rank-1,
 .rank-badge--medal.rank-2,
 .rank-badge--medal.rank-3 {

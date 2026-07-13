@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { apiFetch } from '../../utils/apiFetch'
+import { IconParty } from '../common/AppIcons'
 import './PuzzleQuestion.css'
 
 function toNumId(v) {
@@ -170,7 +171,7 @@ export default function PuzzleHistoryReview({
                             {placedCount === 0
                                 ? `Keping tersedia (${trayPieces.length})`
                                 : trayPieces.length === 0
-                                    ? '🎉 Semua keping sudah dipasang!'
+                                    ? <><IconParty size={16} /> Semua keping sudah dipasang!</>
                                     : `Keping belum dipasang (${trayPieces.length})`}
                         </p>
                         <div className="pz-tray-pieces">

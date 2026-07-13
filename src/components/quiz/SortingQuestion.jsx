@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { SortOptionCard } from './SortOptionCard'
 import { shuffleArray } from '../../utils/shuffleArray'
+import { IconHand } from '../common/AppIcons'
 import './SortOptionCard.css'
 
 const ROW_MAX = 5
@@ -82,8 +83,8 @@ export default function SortingQuestion({ question, answer, onAnswer }) {
             <div className="sorting-toolbar">
                 <p className="sorting-hint">
                     {isHorizontal
-                        ? '✋ Seret kartu atau tekan ◀ ▶ untuk mengurutkan'
-                        : '✋ Seret kartu atau tekan ▲ ▼ untuk mengurutkan'}
+                        ? <><IconHand size={16} /> Seret kartu atau tekan ◀ ▶ untuk mengurutkan</>
+                        : <><IconHand size={16} /> Seret kartu atau tekan ▲ ▼ untuk mengurutkan</>}
                 </p>
                 <div className="sorting-layout-toggle" role="group" aria-label="Tata letak urutan">
                     <button

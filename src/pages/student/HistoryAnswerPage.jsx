@@ -8,6 +8,9 @@ import MatchQuestion from '../../components/quiz/MatchQuestion'
 import SortingReview from '../../components/quiz/SortingReview'
 import PuzzleHistoryReview from '../../components/quiz/PuzzleHistoryReview'
 import { formatPuzzleResultBadge } from '../../utils/puzzleResult'
+import {
+    IconBooks, IconTrophy, IconParty, IconThumbsUp, IconMuscle, IconStar, IconPlay,
+} from '../../components/common/AppIcons'
 import './QuizStudentPage.css'
 
 function toNumId(v) {
@@ -139,13 +142,19 @@ function HistorySummary({ questions, topicId, studentId, learningDate, onBack, o
                     <span className="result-circle__label">Skor</span>
             </div>
 
-                <h2 className="result-title">
-                    {pct >= 80 ? '🎉 Luar Biasa!' : pct >= 60 ? '👍 Bagus!' : pct >= 40 ? '💪 Terus Semangat!' : '📚 Ayo Coba Lagi!'}
+                <h2 className="result-title result-title--with-icon">
+                    {pct >= 80
+                        ? <><IconParty size={28} /> Luar Biasa!</>
+                        : pct >= 60
+                            ? <><IconThumbsUp size={28} /> Bagus!</>
+                            : pct >= 40
+                                ? <><IconMuscle size={28} /> Terus Semangat!</>
+                                : <><IconBooks size={28} /> Ayo Coba Lagi!</>}
                 </h2>
 
                 <div className="history-summary-meta">
                     <span className="quiz-topic-badge">
-                        <span aria-hidden="true">📚</span>
+                        <span aria-hidden="true"><IconBooks size={16} /></span>
                         {topicName}
                     </span>
                     {dateLabel && <span className="history-summary-date">{dateLabel}</span>}
@@ -440,7 +449,7 @@ export default function HistoryAnswerPage() {
                         <span className="quiz-topic-badge">
                             {topicIcon
                                 ? <img src={topicIcon} alt={topicName} className="quiz-topic-badge__icon" />
-                                : <span aria-hidden="true">📚</span>}
+                                : <span aria-hidden="true"><IconBooks size={16} /></span>}
                             {topicName}
                         </span>
                         <span className="quiz-progress">
@@ -453,7 +462,7 @@ export default function HistoryAnswerPage() {
                 <div className="history-inline-stats">
                     <span>✓ {summary.correctCount} benar</span>
                     <span>✗ {summary.wrongCount} salah</span>
-                    <span>🏆 +{summary.totalScore} poin</span>
+                    <span className="history-inline-points"><IconTrophy size={14} /> +{summary.totalScore} poin</span>
                 </div>
 
                 <div className="quiz-progress-bar">
@@ -501,7 +510,7 @@ export default function HistoryAnswerPage() {
                         aria-label={isLast ? 'Selesai' : 'Soal berikutnya'}
                     >
                         <span className="ha-nav-btn__text">{isLast ? 'Selesai!' : 'Berikutnya'}</span>
-                        <span className="ha-nav-btn__icon" aria-hidden="true">{isLast ? '★' : '▶'}</span>
+                        <span className="ha-nav-btn__icon" aria-hidden="true">{isLast ? <IconStar size={16} /> : <IconPlay size={16} />}</span>
                     </button>
                 </nav>
             </div>

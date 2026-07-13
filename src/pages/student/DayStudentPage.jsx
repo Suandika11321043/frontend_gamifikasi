@@ -1,18 +1,19 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { apiFetch } from '../../utils/apiFetch'
+import { DayIcon, IconCalendar, IconPlay, IconSleep, IconGamepad } from '../../components/common/AppIcons'
 import './DayStudentPage.css'
 
 const DAY_ORDER = { SENIN: 1, SELASA: 2, RABU: 3, KAMIS: 4, JUMAT: 5, SABTU: 6, MINGGU: 7 }
 
 const DAY_THEMES = {
-    SENIN: { emoji: '☀️', label: 'Senin', bg: 'linear-gradient(135deg,#fbbf24,#f97316)', color: '#f59e0b', shadow: '#fcd34d', tagline: 'Semangat awal minggu!' },
-    SELASA: { emoji: '🔥', label: 'Selasa', bg: 'linear-gradient(135deg,#f97316,#ef4444)', color: '#ef4444', shadow: '#f87171', tagline: 'Terus bakar semangatmu!' },
-    RABU: { emoji: '🌿', label: 'Rabu', bg: 'linear-gradient(135deg,#34d399,#10b981)', color: '#10b981', shadow: '#6ee7b7', tagline: 'Tumbuh dan belajar!' },
-    KAMIS: { emoji: '💧', label: 'Kamis', bg: 'linear-gradient(135deg,#60a5fa,#3b82f6)', color: '#3b82f6', shadow: '#93c5fd', tagline: 'Mengalir seperti air!' },
-    JUMAT: { emoji: '⭐', label: "Jum'at", bg: 'linear-gradient(135deg,#818cf8,#6366f1)', color: '#6366f1', shadow: '#a5b4fc', tagline: 'Hari penuh bintang!' },
-    SABTU: { emoji: '🌈', label: 'Sabtu', bg: 'linear-gradient(135deg,#f472b6,#ec4899)', color: '#ec4899', shadow: '#f9a8d4', tagline: 'Warna-warni cerita!' },
-    MINGGU: { emoji: '🎉', label: 'Minggu', bg: 'linear-gradient(135deg,#a78bfa,#8b5cf6)', color: '#8b5cf6', shadow: '#c4b5fd', tagline: 'Hari istimewa untukmu!' },
+    SENIN: { icon: 'sun', label: 'Senin', bg: 'linear-gradient(135deg,#fbbf24,#f97316)', color: '#f59e0b', shadow: '#fcd34d', tagline: 'Semangat awal minggu!' },
+    SELASA: { icon: 'fire', label: 'Selasa', bg: 'linear-gradient(135deg,#f97316,#ef4444)', color: '#ef4444', shadow: '#f87171', tagline: 'Terus bakar semangatmu!' },
+    RABU: { icon: 'leaf', label: 'Rabu', bg: 'linear-gradient(135deg,#34d399,#10b981)', color: '#10b981', shadow: '#6ee7b7', tagline: 'Tumbuh dan belajar!' },
+    KAMIS: { icon: 'droplet', label: 'Kamis', bg: 'linear-gradient(135deg,#60a5fa,#3b82f6)', color: '#3b82f6', shadow: '#93c5fd', tagline: 'Mengalir seperti air!' },
+    JUMAT: { icon: 'star', label: "Jum'at", bg: 'linear-gradient(135deg,#818cf8,#6366f1)', color: '#6366f1', shadow: '#a5b4fc', tagline: 'Hari penuh bintang!' },
+    SABTU: { icon: 'rainbow', label: 'Sabtu', bg: 'linear-gradient(135deg,#f472b6,#ec4899)', color: '#ec4899', shadow: '#f9a8d4', tagline: 'Warna-warni cerita!' },
+    MINGGU: { icon: 'party', label: 'Minggu', bg: 'linear-gradient(135deg,#a78bfa,#8b5cf6)', color: '#8b5cf6', shadow: '#c4b5fd', tagline: 'Hari istimewa untukmu!' },
 }
 
 export default function DayStudentPage() {
@@ -71,9 +72,9 @@ export default function DayStudentPage() {
 
                 {/* Hero */}
                 <div className="dsp-hero">
-                    <div className="dsp-hero-emoji">📅</div>
+                    <div className="dsp-hero-emoji"><IconCalendar size={48} /></div>
                     <h1 className="dsp-title">Pilih Tantanganmu!</h1>
-                    <p className="dsp-subtitle">Klik hari yang ingin kamu kerjakan sekarang 🎮</p>
+                    <p className="dsp-subtitle">Klik hari yang ingin kamu kerjakan sekarang <IconGamepad size={16} className="dsp-inline-icon" /></p>
                 </div>
 
                 {error && <p className="dsp-error">{error}</p>}
@@ -85,14 +86,14 @@ export default function DayStudentPage() {
                     </div>
                 ) : dayList.length === 0 ? (
                     <div className="dsp-empty">
-                        <span className="dsp-empty-icon">😴</span>
+                        <span className="dsp-empty-icon"><IconSleep size={40} /></span>
                         <p>Belum ada hari untuk minggu ini.</p>
                     </div>
                 ) : (
                     <div className="dsp-grid">
                         {dayList.map((day) => {
                             const theme = DAY_THEMES[day.dayOfWeek] ?? {
-                                emoji: '📖', label: day.dayOfWeek, bg: 'linear-gradient(135deg,#64748b,#475569)',
+                                icon: 'book', label: day.dayOfWeek, bg: 'linear-gradient(135deg,#64748b,#475569)',
                                 color: '#64748b', shadow: '#94a3b8', tagline: 'Ayo belajar!',
                             }
                             return (
@@ -103,13 +104,13 @@ export default function DayStudentPage() {
                                     onClick={() => navigate(`/student/siswa/${studentId}/topics/${topicId}/weeks/${weekId}/days/${day.id}/quiz`)}
                                 >
                                     <div className="dsp-card-banner" style={{ background: theme.bg }}>
-                                        <span className="dsp-day-emoji">{theme.emoji}</span>
+                                        <span className="dsp-day-emoji"><DayIcon name={theme.icon} size={40} /></span>
                                     </div>
                                     <div className="dsp-card-body">
                                         <p className="dsp-day-name">{theme.label}</p>
                                         <p className="dsp-day-tagline">{theme.tagline}</p>
                                         <div className="dsp-play-btn">
-                                            <span>▶ Mulai</span>
+                                            <span className="dsp-play-btn-inner"><IconPlay size={12} /> Mulai</span>
                                         </div>
                                     </div>
                                 </button>

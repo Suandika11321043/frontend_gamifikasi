@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import OptionMedia, { getOptionMediaType } from './OptionMedia'
+import { IconHand, IconPoint } from '../common/AppIcons'
 
 function normalizeMatchAnswer(answer) {
     const raw = answer || {}
@@ -143,8 +144,8 @@ export default function MatchQuestion({ question, answer, onAnswer, readOnly = f
                 {readOnly
                     ? '↳ Pasangan jawabanmu'
                     : dragging != null
-                        ? '👉 Lepaskan di jawaban yang cocok'
-                        : '✋ Tahan & seret dari pertanyaan ke jawaban'}
+                        ? <><IconPoint size={16} /> Lepaskan di jawaban yang cocok</>
+                        : <><IconHand size={16} /> Tahan &amp; seret dari pertanyaan ke jawaban</>}
             </p>
 
             <svg className="match-line-svg" aria-hidden="true">

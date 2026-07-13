@@ -108,10 +108,18 @@
 }
 
 .result-stars-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
     font-size: 2.4rem;
     font-weight: 800;
     color: #f59e0b;
     line-height: 1;
+}
+
+.result-stars-count .app-icon {
+    width: 1.1em;
+    height: 1.1em;
 }
 
 .result-stars-label {
@@ -841,6 +849,29 @@
     color: #be185d;
 }
 
+.result-title--with-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+}
+
+.question-score-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    background: #fef3c7;
+    color: #92400e;
+    border: 2px solid #fbbf24;
+    letter-spacing: 0.03em;
+    margin-left: auto;
+}
+
 .result-stats {
     display: flex;
     gap: 1rem;
@@ -897,18 +928,6 @@
     margin-bottom: 0.65rem;
     position: relative;
     z-index: 1;
-}
-
-.question-score-badge {
-    font-size: 0.72rem;
-    font-weight: 700;
-    padding: 0.25rem 0.65rem;
-    border-radius: 999px;
-    background: #fef3c7;
-    color: #92400e;
-    border: 2px solid #fbbf24;
-    letter-spacing: 0.03em;
-    margin-left: auto;
 }
 
 .question-card--answered {

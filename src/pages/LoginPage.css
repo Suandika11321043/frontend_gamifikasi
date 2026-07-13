@@ -194,6 +194,12 @@ body,
     font-weight: 500;
 }
 
+.login-inline-icon,
+.login-label-icon {
+    vertical-align: -0.2em;
+    margin-right: 0.2rem;
+}
+
 /* ===========================
    Form
 =========================== */
@@ -211,6 +217,9 @@ body,
 }
 
 .form-group label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
     font-size: 0.9rem;
     font-weight: 700;
     color: #be185d;

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import OptionMedia, { getOptionMediaType } from './OptionMedia'
+import { IconHand, IconPoint, IconParty } from '../common/AppIcons'
 
 /** Scroll ke atas/bawah otomatis saat drag mendekati tepi layar. */
 function useDragAutoScroll(isDragging) {
@@ -108,7 +109,7 @@ export default function DragAndDropQuestion({ question, answer, onAnswer }) {
     return (
         <div className="dnd2-container">
             <div className={`dnd-instruction${selectedChipId ? ' dnd-instruction--picking' : ''}`}>
-                <span className="dnd-instruction__icon">{selectedChipId ? '👉' : '✋'}</span>
+                <span className="dnd-instruction__icon">{selectedChipId ? <IconPoint size={20} /> : <IconHand size={20} />}</span>
                 <span className="dnd-instruction__text">
                     {selectedChipId
                         ? <><strong>Ketuk kartu</strong> tujuan di atas!</>
@@ -203,7 +204,7 @@ export default function DragAndDropQuestion({ question, answer, onAnswer }) {
                         )
                     })}
                 {items.filter((i) => !usedItemIds.includes(i.optionId)).length === 0 && (
-                    <p className="dnd-all-placed">🎉 Semua jawaban sudah ditempatkan!</p>
+                    <p className="dnd-all-placed"><IconParty size={18} /> Semua jawaban sudah ditempatkan!</p>
                 )}
             </div>
         </div>

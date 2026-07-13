@@ -3,14 +3,15 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { apiFetch } from '../../utils/apiFetch'
 import TopicIcon from '../../components/common/TopicIcon'
 import StarsDisplay from '../../components/common/StarsDisplay'
+import { DayIcon, IconMap, IconCheck, IconRefresh, IconCalendar } from '../../components/common/AppIcons'
 import './WeekStudentPage.css'
 
 const JSDAY_META = {
-    1: { label: 'Senin', emoji: '☀️', color: '#f59e0b', bg: 'linear-gradient(135deg,#fbbf24,#f97316)' },
-    2: { label: 'Selasa', emoji: '🔥', color: '#ef4444', bg: 'linear-gradient(135deg,#f97316,#ef4444)' },
-    3: { label: 'Rabu', emoji: '🌿', color: '#10b981', bg: 'linear-gradient(135deg,#34d399,#10b981)' },
-    4: { label: 'Kamis', emoji: '💧', color: '#3b82f6', bg: 'linear-gradient(135deg,#60a5fa,#3b82f6)' },
-    5: { label: "Jum'at", emoji: '⭐', color: '#6366f1', bg: 'linear-gradient(135deg,#818cf8,#6366f1)' },
+    1: { label: 'Senin', icon: 'sun', color: '#f59e0b', bg: 'linear-gradient(135deg,#fbbf24,#f97316)' },
+    2: { label: 'Selasa', icon: 'fire', color: '#ef4444', bg: 'linear-gradient(135deg,#f97316,#ef4444)' },
+    3: { label: 'Rabu', icon: 'leaf', color: '#10b981', bg: 'linear-gradient(135deg,#34d399,#10b981)' },
+    4: { label: 'Kamis', icon: 'droplet', color: '#3b82f6', bg: 'linear-gradient(135deg,#60a5fa,#3b82f6)' },
+    5: { label: "Jum'at", icon: 'star', color: '#6366f1', bg: 'linear-gradient(135deg,#818cf8,#6366f1)' },
 }
 
 const MONTH_NAMES = [
@@ -133,7 +134,7 @@ export default function WeekStudentPage() {
 
                 {/* Hero */}
                 <div className="wsp-hero">
-                    <div className="wsp-hero-emoji">🗺️</div>
+                    <div className="wsp-hero-emoji"><IconMap size={48} /></div>
                     <h1 className="wsp-title">Peta Belajar</h1>
                 </div>
 
@@ -204,7 +205,13 @@ export default function WeekStudentPage() {
                                             )}
                                         >
                                             <span className="wsp-map-node-lv">Level {idx + 1}</span>
-                                            <span className="wsp-map-node-emoji">{isDone ? '✅' : isInProgress ? '🔄' : (meta?.emoji ?? '📅')}</span>
+                                            <span className="wsp-map-node-emoji">
+                                                {isDone
+                                                    ? <IconCheck size={28} />
+                                                    : isInProgress
+                                                        ? <IconRefresh size={28} />
+                                                        : <DayIcon name={meta?.icon || 'calendar'} size={28} />}
+                                            </span>
                                             <StarsDisplay
                                                 count={stars}
                                                 className="wsp-map-node-stars"

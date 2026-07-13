@@ -183,6 +183,11 @@
 }
 
 .dsp-subtitle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    flex-wrap: wrap;
     font-size: 0.95rem;
     color: #6b7280;
     font-weight: 500;
@@ -339,7 +344,11 @@
     gap: 0.3rem;
 }
 
-.dsp-play-btn span {
+.dsp-play-btn span,
+.dsp-play-btn-inner {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
     font-size: 0.8rem;
     font-weight: 700;
     color: var(--dcard-color, #8b5cf6);
@@ -350,7 +359,8 @@
     transition: background 0.2s, color 0.2s;
 }
 
-.dsp-card:hover .dsp-play-btn span {
+.dsp-card:hover .dsp-play-btn span,
+.dsp-card:hover .dsp-play-btn-inner {
     background: var(--dcard-color, #8b5cf6);
     color: #fff;
 }

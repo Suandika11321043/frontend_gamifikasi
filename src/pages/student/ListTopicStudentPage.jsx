@@ -5,6 +5,7 @@ import { apiFetch, BASE_URL } from '../../utils/apiFetch'
 
 import TopicIcon from '../../components/common/TopicIcon'
 import StarsDisplay from '../../components/common/StarsDisplay'
+import { IconBooks, IconLock, IconTrophy, IconPlay, IconSparkles } from '../../components/common/AppIcons'
 
 function ListTopicStudentPage() {
     const { studentId } = useParams()
@@ -94,7 +95,7 @@ function ListTopicStudentPage() {
                     )}
                 </header>
 
-                <h2 className="lt-title">📚 Pilih Tema</h2>
+                <h2 className="lt-title"><IconBooks size={28} className="lt-title-icon" /> Pilih Tema</h2>
                 <p className="lt-subtitle">Pilih tema yang ingin dikerjakan</p>
 
                 {/* Search */}
@@ -143,7 +144,7 @@ function ListTopicStudentPage() {
                                 >
                                     <div className="lt-card-banner">
                                         <TopicIcon icon={topic.icon} name={topic.nameTopic} className="lt-topic-icon" placeholderClassName="lt-topic-placeholder" />
-                                        {isInactive && <div className="lt-card-lock">🔒</div>}
+                                        {isInactive && <div className="lt-card-lock" aria-hidden="true"><IconLock size={28} /></div>}
                                     </div>
                                     <div className="lt-card-content">
                                         <p className="lt-topic-name">{topic.nameTopic}</p>
@@ -160,11 +161,15 @@ function ListTopicStudentPage() {
                                                         emptyFallback="—"
                                                     />
                                                     {topicScore > 0 && (
-                                                        <span className="lt-topic-score-pill">🏆 {topicScore} poin</span>
+                                                        <span className="lt-topic-score-pill">
+                                                            <IconTrophy size={14} /> {topicScore} poin
+                                                        </span>
                                                     )}
                                                 </div>
                                                 <span className={`lt-card-cta ${hasProgress ? 'lt-cta--continue' : 'lt-cta--start'}`}>
-                                                    {hasProgress ? 'Lanjutkan ▶' : 'Mulai ✨'}
+                                                    {hasProgress
+                                                        ? <>Lanjutkan <IconPlay size={12} /></>
+                                                        : <>Mulai <IconSparkles size={13} /></>}
                                                 </span>
                                             </>
                                         )}

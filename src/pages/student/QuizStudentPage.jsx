@@ -11,6 +11,9 @@ import TypeBadge from '../../components/quiz/TypeBadge'
 import QuizFeedbackPopup from '../../components/quiz/QuizFeedbackPopup'
 import { formatPuzzleResultBadge } from '../../utils/puzzleResult'
 import {
+    IconStar, IconBooks, IconTrophy, IconParty, IconThumbsUp, IconMuscle, IconPlay,
+} from '../../components/common/AppIcons'
+import {
     SAVE_INTERVAL_MS,
     getTimerStorageKey,
     computeRemainingFromServer,
@@ -584,12 +587,18 @@ function QuizStudentPage() {
 
                     {/* Bintang sesi = jumlah soal benar */}
                     <div className="result-stars">
-                        <span className="result-stars-count">⭐ {stars}</span>
+                        <span className="result-stars-count"><IconStar size={22} /> {stars}</span>
                         <span className="result-stars-label">bintang hari ini · {correct} soal benar</span>
                     </div>
 
-                    <h2 className="result-title">
-                        {pct >= 80 ? '🎉 Luar Biasa!' : pct >= 60 ? '👍 Bagus!' : pct >= 40 ? '💪 Terus Semangat!' : '📚 Ayo Coba Lagi!'}
+                    <h2 className="result-title result-title--with-icon">
+                        {pct >= 80
+                            ? <><IconParty size={28} /> Luar Biasa!</>
+                            : pct >= 60
+                                ? <><IconThumbsUp size={28} /> Bagus!</>
+                                : pct >= 40
+                                    ? <><IconMuscle size={28} /> Terus Semangat!</>
+                                    : <><IconBooks size={28} /> Ayo Coba Lagi!</>}
                     </h2>
 
                     {/* Stats row */}
@@ -608,7 +617,7 @@ function QuizStudentPage() {
                         </div>
                         {finalTotalStars > 0 && (
                             <div className="result-stat">
-                                <span className="result-stat__val result-stat__val--stars">⭐ {finalTotalStars}</span>
+                                <span className="result-stat__val result-stat__val--stars"><IconStar size={18} /> {finalTotalStars}</span>
                                 <span className="result-stat__lbl">Total Bintang</span>
                             </div>
                         )}
@@ -674,7 +683,7 @@ function QuizStudentPage() {
                         <span className="quiz-topic-badge">
                             {topicIcon
                                 ? <img src={topicIcon} alt={topicName} className="quiz-topic-badge__icon" />
-                                : <span aria-hidden="true">📚</span>
+                                : <span aria-hidden="true"><IconBooks size={16} /></span>
                             }
                             {topicName}
                         </span>
@@ -719,7 +728,7 @@ function QuizStudentPage() {
                             <TypeBadge type={currentQuestion.questionType} />
                             {(currentQuestion.scorePoint || scorePoints[currentQuestion.questionId]) && (
                                 <span className="question-score-badge">
-                                    🏆 {currentQuestion.scorePoint ?? scorePoints[currentQuestion.questionId]} poin
+                                    <IconTrophy size={14} /> {currentQuestion.scorePoint ?? scorePoints[currentQuestion.questionId]} poin
                                 </span>
                             )}
                         </div>
@@ -803,7 +812,7 @@ function QuizStudentPage() {
                                         : 'Selanjutnya'}
                             </span>
                             <span className="ha-nav-btn__icon" aria-hidden="true">
-                                {phase === 'submitting' ? '…' : isLastQuestion ? '★' : '▶'}
+                                {phase === 'submitting' ? '…' : isLastQuestion ? <IconStar size={16} /> : <IconPlay size={16} />}
                             </span>
                         </button>
                     </nav>

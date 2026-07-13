@@ -1,8 +1,9 @@
 import { createPortal } from 'react-dom'
 import { X } from 'lucide-react'
+import {
+    IconTrophy, IconMuscle, IconSparkles, IconStar, IconPuzzle, IconParty, IconArrowRight,
+} from '../common/AppIcons'
 import './PuzzleFeedback.css'
-
-const MASCOTS = { win: '🏆', try: '💪' }
 
 function FeedbackBody({ earned, isCorrect, puzzleCorrectPieces, puzzleTotalPieces }) {
     const isPartial = puzzleTotalPieces > 0
@@ -13,10 +14,16 @@ function FeedbackBody({ earned, isCorrect, puzzleCorrectPieces, puzzleTotalPiece
     return (
         <>
             <div className="pz-feedback__sparkles" aria-hidden="true">
-                <span>✨</span><span>⭐</span><span>✨</span>
+                <IconSparkles size={20} />
+                <IconStar size={22} />
+                <IconSparkles size={20} />
             </div>
             <div className="pz-feedback__mascot" aria-hidden="true">
-                {isCorrect ? MASCOTS.win : isPartial ? '🧩' : MASCOTS.try}
+                {isCorrect
+                    ? <IconTrophy size={56} />
+                    : isPartial
+                        ? <IconPuzzle size={56} />
+                        : <IconMuscle size={56} />}
             </div>
             <h3 className="pz-feedback__title">
                 {isCorrect ? 'Berhasil!' : isPartial ? 'Hampir Sempurna!' : 'Sudah Dikirim!'}
@@ -33,10 +40,10 @@ function FeedbackBody({ earned, isCorrect, puzzleCorrectPieces, puzzleTotalPiece
             </div>
             <p className="pz-feedback__msg">
                 {isCorrect
-                    ? 'Kamu hebat banget! 🎉'
+                    ? <>Kamu hebat banget! <IconParty size={16} className="pz-feedback__inline-icon" /></>
                     : isPartial
-                        ? 'Skor dihitung dari keping yang benar. Coba lengkapi semua keping untuk poin penuh! 💪'
-                        : 'Tetap semangat ya! Kamu sudah berusaha 💪'}
+                        ? <>Skor dihitung dari keping yang benar. Coba lengkapi semua keping untuk poin penuh! <IconMuscle size={16} className="pz-feedback__inline-icon" /></>
+                        : <>Tetap semangat ya! Kamu sudah berusaha <IconMuscle size={16} className="pz-feedback__inline-icon" /></>}
             </p>
         </>
     )
@@ -76,7 +83,9 @@ export default function QuizFeedbackPopup({
                     onClick={onNext}
                     disabled={disabled}
                 >
-                    {isLast ? 'Lihat Hasil 🏆' : 'Selanjutnya →'}
+                    {isLast
+                        ? <>Lihat Hasil <IconTrophy size={16} /></>
+                        : <>Selanjutnya <IconArrowRight size={16} /></>}
                 </button>
             )}
         </div>
@@ -91,8 +100,8 @@ export default function QuizFeedbackPopup({
     }
 
     return createPortal(
-        <div className="pz-popup-overlay" role="presentation">
-            <div className="pz-popup" role="dialog" aria-modal="true" aria-label="Hasil jawaban">
+        <div className="pz-popup-overlay" role="dialog" aria-modal="true" aria-label="Hasil jawaban">
+            <div className="pz-popup-card">
                 <button
                     type="button"
                     className="pz-popup__close"
@@ -100,7 +109,7 @@ export default function QuizFeedbackPopup({
                     disabled={disabled}
                     aria-label="Tutup"
                 >
-                    <X size={22} strokeWidth={2.25} aria-hidden="true" />
+                    <X size={18} />
                 </button>
                 {inner}
             </div>

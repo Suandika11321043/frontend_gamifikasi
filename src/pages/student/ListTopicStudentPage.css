@@ -149,17 +149,46 @@
 }
 
 .lt-student-meta-stars .stars-display-icon {
-    font-size: 0.75rem;
+    width: 0.85rem;
+    height: 0.85rem;
 }
 
 /* ===========================
    Page title
 =========================== */
 .lt-title {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
     font-size: clamp(1.5rem, 3.5vw, 2.2rem);
     font-weight: 900;
     margin: 0 0 0.3rem;
     color: #065f46;
+}
+
+.lt-title-icon {
+    flex-shrink: 0;
+}
+
+.lt-topic-score-pill,
+.lt-card-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.app-icon,
+.stars-display-icon.app-icon {
+    display: inline-block;
+    vertical-align: -0.15em;
+    flex-shrink: 0;
+}
+
+.lt-student-meta-stars.stars-display-text,
+.lt-topic-stars.stars-display-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
 }
 
 .lt-subtitle {
@@ -398,7 +427,8 @@
 }
 
 .lt-topic-stars .stars-display-icon {
-    font-size: 1rem;
+    width: 1rem;
+    height: 1rem;
 }
 
 .lt-topic-score-pill {

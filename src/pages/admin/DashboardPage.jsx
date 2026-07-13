@@ -2,13 +2,14 @@ import { useState, useEffect, useCallback } from 'react'
 import { Users, Star, BookOpen, HelpCircle } from 'lucide-react'
 import AdminLayout from '../../components/layout/AdminLayout'
 import AvatarImg from '../../components/common/AvatarImg'
+import { IconStar, IconTrophy } from '../../components/common/AppIcons'
 import { apiFetch } from '../../utils/apiFetch'
 import './DashboardPage.css'
 
 function formatPositionBadge(position) {
-    if (position === 1) return '🥇'
-    if (position === 2) return '🥈'
-    if (position === 3) return '🥉'
+    if (position === 1) return <IconTrophy size={18} title="Juara 1" />
+    if (position === 2) return <IconTrophy size={18} title="Juara 2" className="rank-icon--silver" />
+    if (position === 3) return <IconTrophy size={18} title="Juara 3" className="rank-icon--bronze" />
     return position
 }
 
@@ -126,7 +127,7 @@ function DashboardPage() {
                                         <td className="text-left">{s.name}</td>
                                         <td>{s.group || '—'}</td>
                                         <td><strong>{s.totalEarnedScore ?? 0}</strong></td>
-                                        <td>{s.totalStars ?? 0} ⭐</td>
+                                        <td className="dash-stars-cell">{s.totalStars ?? 0} <IconStar size={14} /></td>
                                     </tr>
                                     )
                                 })
@@ -233,7 +234,7 @@ function DashboardPage() {
                                             <td className="text-left">{s.studentName}</td>
                                             <td>{s.studentGroup || '—'}</td>
                                             <td><strong>{s.totalEarnedScore ?? 0}</strong></td>
-                                            <td>{s.starCount ?? 0} ⭐</td>
+                                            <td className="dash-stars-cell">{s.starCount ?? 0} <IconStar size={14} /></td>
                                         </tr>
                                         )
                                     })

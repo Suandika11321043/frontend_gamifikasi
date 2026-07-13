@@ -767,13 +767,15 @@
 
 .wsp-day-star-icon,
 .stars-display-icon {
-    font-size: 10px;
+    width: 12px;
+    height: 12px;
     line-height: 1;
 }
 
 .wsp-map-label-stars .wsp-day-star-icon,
 .wsp-map-label-stars .stars-display-icon {
-    font-size: 12px;
+    width: 14px;
+    height: 14px;
 }
 
 /* ── Info label (beside node) ── */

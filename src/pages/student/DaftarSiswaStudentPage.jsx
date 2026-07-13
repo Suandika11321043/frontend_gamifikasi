@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AvatarImg from '../../components/common/AvatarImg'
 import StarsDisplay from '../../components/common/StarsDisplay'
+import { IconSchool, IconTrophy } from '../../components/common/AppIcons'
 import './DaftarSiswaStudentPage.css'
 import { apiFetch, BASE_URL, getErrorMessage, unwrapList } from '../../utils/apiFetch'
 
@@ -39,7 +40,7 @@ function DaftarSiswaStudentPage() {
                 <button className="ds-back-btn" onClick={() => navigate('/student')} aria-label="Kembali">
                     ← Kembali
                 </button>
-                <h1 className="ds-title">🏫 Daftar Siswa</h1>
+                <h1 className="ds-title"><IconSchool size={28} /> Daftar Siswa</h1>
             </header>
 
             {/* Search */}
@@ -81,7 +82,7 @@ function DaftarSiswaStudentPage() {
                                 </div>
                             </div>
                             <div className="siswa-card__stats">
-                                <span className="siswa-card__points">🏆 {siswa.totalEarnedScore ?? 0}</span>
+                                <span className="siswa-card__points"><IconTrophy size={14} /> {siswa.totalEarnedScore ?? 0}</span>
                                 <StarsDisplay
                                     count={siswa.totalStars}
                                     className="siswa-card__stars"

@@ -12,6 +12,7 @@ import { duplicateQuestionToDate } from '../../utils/duplicateQuestion'
 import { appendQuestionUpdateFields, isWeekendDate, validateAudioFile, validateImageFile } from '../../utils/validateFile'
 import { QUESTION_TYPES } from '../../utils/questionTypes'
 import TypeBadge from '../../components/quiz/TypeBadge'
+import { IconTrophy } from '../../components/common/AppIcons'
 
 const MONTHS = ['', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
     'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
@@ -719,7 +720,7 @@ function SoalQuestionsPage() {
                                 </td>
                                 <td>
                                     {q.scorePoint
-                                        ? <span className="timer-badge" style={{ background: '#fef3c7', color: '#92400e', borderColor: '#fbbf24' }}>🏆 {q.scorePoint} poin</span>
+                                        ? <span className="timer-badge" style={{ background: '#fef3c7', color: '#92400e', borderColor: '#fbbf24' }}><IconTrophy size={12} /> {q.scorePoint} poin</span>
                                         : <span className="no-media">&mdash;</span>}
                                 </td>
                                 <td>
@@ -854,7 +855,7 @@ function SoalQuestionsPage() {
                             <small className="form-hint">Kosongkan jika tidak ada batas waktu</small>
                         </div>
                         <div className="form-group">
-                            <label>🏆 Poin Soal <span className="field-required">*</span></label>
+                            <label className="soal-label-with-icon"><IconTrophy size={14} /> Poin Soal <span className="field-required">*</span></label>
                             <div className="timer-input-row">
                                 <input
                                     name="scorePoint"

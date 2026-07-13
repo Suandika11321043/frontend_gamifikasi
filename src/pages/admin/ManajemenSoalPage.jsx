@@ -10,6 +10,7 @@ import { apiFetch } from '../../utils/apiFetch'
 
 import TopicIcon from '../../components/common/TopicIcon'
 import Modal from '../../components/common/Modal'
+import { IconLock } from '../../components/common/AppIcons'
 
 function SkeletonCard() {
     return (
@@ -146,7 +147,7 @@ function ManajemenSoalPage() {
                         >
                             <div className="tema-card-icon-wrap">
                                 <TopicIcon icon={tema.icon} name={tema.nameTopic} size="lg" />
-                                {isInactive && <div className="soal-tema-lock" aria-hidden="true">🔒</div>}
+                                {isInactive && <div className="soal-tema-lock" aria-hidden="true"><IconLock size={22} /></div>}
                             </div>
                             <div className="tema-card-body">
                                 <h3 className="tema-card-name">{tema.nameTopic}</h3>
@@ -167,7 +168,7 @@ function ManajemenSoalPage() {
                                         handleTopicClick(tema)
                                     }}
                                 >
-                                    {isInactive ? '🔒 Terkunci' : <>Kelola Soal <ChevronRight size={14} /></>}
+                                    {isInactive ? <><IconLock size={14} /> Terkunci</> : <>Kelola Soal <ChevronRight size={14} /></>}
                                 </button>
                             </div>
                         </div>

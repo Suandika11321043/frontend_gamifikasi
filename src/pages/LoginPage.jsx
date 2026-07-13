@@ -3,6 +3,10 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { login } from '../services/authService'
 import { getErrorMessage } from '../utils/apiFetch'
+import {
+    IconStar, IconSparkles, IconBalloon, IconRainbow, IconCloud,
+    IconLion, IconBooks, IconLock, IconUser,
+} from '../components/common/AppIcons'
 import './LoginPage.css'
 
 function LoginPage() {
@@ -43,26 +47,28 @@ function LoginPage() {
 
     return (
         <div className="login-wrapper">
-            {/* Floating decorations */}
-            <span className="login-deco login-deco--star1">⭐</span>
-            <span className="login-deco login-deco--star2">🌟</span>
-            <span className="login-deco login-deco--balloon">🎈</span>
-            <span className="login-deco login-deco--rainbow">🌈</span>
-            <span className="login-deco login-deco--cloud">☁️</span>
+            <span className="login-deco login-deco--star1"><IconStar size={28} /></span>
+            <span className="login-deco login-deco--star2"><IconSparkles size={26} /></span>
+            <span className="login-deco login-deco--balloon"><IconBalloon size={28} /></span>
+            <span className="login-deco login-deco--rainbow"><IconRainbow size={28} /></span>
+            <span className="login-deco login-deco--cloud"><IconCloud size={32} /></span>
 
             <div className="login-card">
-                <div className="login-mascot">🦁</div>
+                <div className="login-mascot"><IconLion size={56} /></div>
                 <h1 className="login-title">Halo, Guru!</h1>
-                <p className="login-subtitle">Masuk untuk mengelola siswa, membuat soal, dan mengatur pembelajaran! 📚</p>
+                <p className="login-subtitle">
+                    Masuk untuk mengelola siswa, membuat soal, dan mengatur pembelajaran!{' '}
+                    <IconBooks size={16} className="login-inline-icon" />
+                </p>
 
                 <form className="login-form" onSubmit={handleSubmit} noValidate>
                     {wasExpired && !error && (
-                        <p className="login-error">⏰ Sesi kamu telah berakhir. Silakan login kembali.</p>
+                        <p className="login-error">Sesi kamu telah berakhir. Silakan login kembali.</p>
                     )}
-                    {error && <p className="login-error">⚠️ {error}</p>}
+                    {error && <p className="login-error">{error}</p>}
 
                     <div className="form-group">
-                        <label htmlFor="username">👤 Username</label>
+                        <label htmlFor="username"><IconUser size={14} className="login-label-icon" /> Username</label>
                         <input
                             id="username"
                             type="text"
@@ -75,7 +81,7 @@ function LoginPage() {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="password">🔒 Password</label>
+                        <label htmlFor="password"><IconLock size={14} className="login-label-icon" /> Password</label>
                         <input
                             id="password"
                             type="password"
@@ -88,7 +94,7 @@ function LoginPage() {
                     </div>
 
                     <button type="submit" className="login-btn" disabled={loading}>
-                        {loading ? '⏳ Sebentar ya...' : '🚀 Ayo Masuk!'}
+                        {loading ? 'Memproses...' : 'Masuk'}
                     </button>
                 </form>
             </div>

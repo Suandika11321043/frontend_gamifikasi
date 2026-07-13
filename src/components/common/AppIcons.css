@@ -1,0 +1,18 @@
+.app-icon {
+    display: inline-block;
+    vertical-align: -0.2em;
+    flex-shrink: 0;
+}
+
+.stars-display-icons {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1px;
+}
+
+.stars-display-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}

@@ -1,4 +1,8 @@
 import { useNavigate } from 'react-router-dom'
+import {
+    IconStar, IconSparkles, IconBalloon, IconButterfly, IconCandy,
+    IconRainbow, IconFox, IconFlag, IconBooks, IconTarget, IconCrown,
+} from '../../components/common/AppIcons'
 import './StudentLandingPage.css'
 
 function StudentLandingPage() {
@@ -19,19 +23,19 @@ function StudentLandingPage() {
 
             <div className="landing-rainbow" aria-hidden="true" />
 
-            <em className="landing-float landing-float--1">⭐</em>
-            <em className="landing-float landing-float--2">🎈</em>
-            <em className="landing-float landing-float--3">🦋</em>
-            <em className="landing-float landing-float--4">🍭</em>
-            <em className="landing-float landing-float--5">🌈</em>
-            <em className="landing-float landing-float--6">✨</em>
+            <em className="landing-float landing-float--1"><IconStar size={28} /></em>
+            <em className="landing-float landing-float--2"><IconBalloon size={28} /></em>
+            <em className="landing-float landing-float--3"><IconButterfly size={28} /></em>
+            <em className="landing-float landing-float--4"><IconCandy size={28} /></em>
+            <em className="landing-float landing-float--5"><IconRainbow size={28} /></em>
+            <em className="landing-float landing-float--6"><IconSparkles size={28} /></em>
 
             <div className="landing-content">
                 <div className="landing-hero-card">
                     <div className="landing-mascot" aria-hidden="true">
-                        <span className="mascot-face">🦊</span>
-                        <span className="mascot-sparkle mascot-sparkle--1">✨</span>
-                        <span className="mascot-sparkle mascot-sparkle--2">💫</span>
+                        <span className="mascot-face"><IconFox size={56} /></span>
+                        <span className="mascot-sparkle mascot-sparkle--1"><IconSparkles size={18} /></span>
+                        <span className="mascot-sparkle mascot-sparkle--2"><IconStar size={16} /></span>
                     </div>
 
                     <span className="landing-badge">Petualangan Belajar</span>
@@ -52,13 +56,13 @@ function StudentLandingPage() {
                 </div>
 
                 <div className="landing-path" aria-hidden="true">
-                    <span className="path-step path-step--done">🏁</span>
+                    <span className="path-step path-step--done"><IconFlag size={22} /></span>
                     <span className="path-line" />
-                    <span className="path-step">📚</span>
+                    <span className="path-step"><IconBooks size={22} /></span>
                     <span className="path-line" />
-                    <span className="path-step">🎯</span>
+                    <span className="path-step"><IconTarget size={22} /></span>
                     <span className="path-line" />
-                    <span className="path-step path-step--goal">👑</span>
+                    <span className="path-step path-step--goal"><IconCrown size={22} /></span>
                 </div>
             </div>
         </div>

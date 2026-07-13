@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { apiFetch } from '../../utils/apiFetch'
+import { IconPoint, IconPuzzle, IconParty } from '../common/AppIcons'
 import './PuzzleQuestion.css'
 
 export default function PuzzleQuestion({ question, answer, onAnswer }) {
@@ -223,8 +224,8 @@ export default function PuzzleQuestion({ question, answer, onAnswer }) {
         <div className="pz-wrap">
             <p className="pz-hint">
                 {activePieceId
-                    ? '👉 Seret atau ketuk kotak untuk menempatkan keping'
-                    : '🧩 Seret keping ke kotak, atau ketuk keping lalu ketuk kotak!'}
+                    ? <><IconPoint size={16} /> Seret atau ketuk kotak untuk menempatkan keping</>
+                    : <><IconPuzzle size={16} /> Seret keping ke kotak, atau ketuk keping lalu ketuk kotak!</>}
             </p>
 
             <div className={`pz-workspace${referenceImage ? '' : ' pz-workspace--no-ref'}`}>
@@ -314,7 +315,9 @@ export default function PuzzleQuestion({ question, answer, onAnswer }) {
                         onClick={() => { if (activePieceId != null && activeFromSlot !== null && !lockedSlots.has(activeFromSlot)) returnToTray() }}
                     >
                         <p className="pz-tray-label">
-                            {allPlaced ? '🎉 Semua keping sudah dipasang!' : `Keping tersedia (${trayPieces.length})`}
+                            {allPlaced
+                                ? <><IconParty size={16} /> Semua keping sudah dipasang!</>
+                                : `Keping tersedia (${trayPieces.length})`}
                         </p>
                         <div className="pz-tray-pieces">
                             {trayPieces.map((piece) => (

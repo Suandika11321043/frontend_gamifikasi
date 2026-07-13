@@ -79,6 +79,9 @@
 }
 
 .ds-title {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
     font-size: clamp(1.4rem, 3vw, 2rem);
     font-weight: 900;
     margin: 0;
@@ -240,6 +243,9 @@
 }
 
 .siswa-card__points {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
     font-size: 0.82rem;
     font-weight: 800;
     color: #92400e;
@@ -264,7 +270,8 @@
 }
 
 .siswa-card__stars .stars-display-icon {
-    font-size: 0.82rem;
+    width: 0.9rem;
+    height: 0.9rem;
 }
 
 /* ===========================
