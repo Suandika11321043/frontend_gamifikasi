@@ -321,6 +321,14 @@
     max-width: 100%;
 }
 
+.sorting-list--horizontal .soc-card--has-audio .option-media--audio {
+    width: 100%;
+}
+
+.sorting-list--horizontal .soc-card--has-audio .option-media__player {
+    height: 44px;
+}
+
 .sorting-rows {
     display: flex;
     flex-direction: column;
@@ -439,11 +447,20 @@
         min-width: calc(50% - 0.375rem);
     }
 
+    .sorting-list--horizontal .soc-card--has-audio {
+        flex: 1 1 100%;
+        min-width: 100%;
+    }
+
     .soc-card .option-media__img {
         max-height: 110px;
     }
 
     .sorting-list--horizontal .soc-card .option-media__img {
         max-height: 90px;
+    }
+
+    .soc-card--has-audio .option-media__player {
+        height: 48px;
     }
 }

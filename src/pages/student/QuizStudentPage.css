@@ -923,11 +923,17 @@
 }
 
 .question-card__img {
-    max-width: 100%;
-    border-radius: 16px;
-    margin-bottom: 1.1rem;
+    display: block;
+    width: auto;
+    max-width: min(280px, 100%);
+    max-height: 200px;
+    height: auto;
+    object-fit: contain;
+    border-radius: 14px;
+    margin: 0 auto 1rem;
     border: 3px solid #e5e7eb;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    background: #fff;
 }
 
 /* ===========================
@@ -2001,32 +2007,34 @@
     max-width: 520px;
 }
 
-/* Kartu pertanyaan — di tengah */
+/* Kartu pertanyaan / drop zone — semua sejajar 1 baris (sampai 5) */
 .dnd2-targets {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: stretch;
     align-items: stretch;
-    gap: 0.75rem;
+    gap: 0.55rem;
     width: 100%;
 }
 
 .dnd2-target-card {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
     justify-content: flex-start;
-    gap: 0.5rem;
+    gap: 0.35rem;
     background: #f9fafb;
     border: 2.5px solid #e5e7eb;
-    border-radius: 18px;
-    padding: 0.85rem 0.7rem 0.75rem;
+    border-radius: 16px;
+    padding: 0.5rem 0.35rem 0.45rem;
     cursor: default;
     transition: border-color 0.2s, background 0.2s, box-shadow 0.2s, transform 0.2s;
-    min-height: 120px;
-    flex: 0 1 180px;
-    width: 180px;
-    max-width: min(220px, 100%);
+    min-height: 170px;
+    flex: 1 1 0;
+    width: 0;
+    min-width: 0;
+    max-width: none;
     box-sizing: border-box;
 }
 
@@ -2040,37 +2048,74 @@
     border-color: #7c3aed;
     background: #ede9fe;
     box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.18);
-    transform: scale(1.03);
+    transform: scale(1.02);
     animation: none;
 }
 
 .dnd2-target-img {
     width: 100%;
-    max-height: 110px;
+    max-height: 140px;
     object-fit: contain;
-    border-radius: 10px;
+    border-radius: 12px;
     flex-shrink: 0;
 }
 
 .dnd2-target-label {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 800;
     color: #1f2937;
     text-align: center;
     margin: 0;
-    line-height: 1.35;
+    line-height: 1.25;
     width: 100%;
     word-break: break-word;
 }
 
-/* Placed chips inside target card */
+/* Area drop — full lebar kartu, padding tipis supaya zona lebih lebar */
 .dnd2-placed-chips {
     display: flex;
     flex-wrap: wrap;
     gap: 0.35rem;
     width: 100%;
+    align-self: stretch;
     justify-content: center;
+    align-items: center;
+    align-content: flex-start;
     margin-top: 0.2rem;
+    min-height: 88px;
+    flex: 1 1 auto;
+    padding: 0.4rem 0.3rem;
+    background: rgba(255, 255, 255, 0.7);
+    border: 2.5px dashed #d1d5db;
+    border-radius: 12px;
+    box-sizing: border-box;
+}
+
+.dnd2-placed-chips--empty {
+    min-height: 88px;
+}
+
+.dnd2-drop-hint {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #9ca3af;
+    text-align: center;
+    pointer-events: none;
+}
+
+.dnd2-target-card--droppable .dnd2-placed-chips {
+    border-color: #c4b5fd;
+    background: rgba(250, 245, 255, 0.85);
+}
+
+.dnd2-target-card--hover .dnd2-placed-chips {
+    border-color: #7c3aed;
+    background: rgba(237, 233, 254, 0.9);
+}
+
+.dnd2-target-card--droppable .dnd2-drop-hint,
+.dnd2-target-card--hover .dnd2-drop-hint {
+    color: #7c3aed;
 }
 
 .dnd2-placed-chip {
@@ -2088,16 +2133,31 @@
 }
 
 .dnd2-placed-chip--has-img {
-    border-radius: 14px;
-    padding: 0.3rem 0.5rem 0.3rem 0.3rem;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+    padding: 0.25rem 0.3rem;
+    gap: 0.15rem;
+    max-width: 88px;
 }
 
 .dnd2-placed-chip__img {
-    width: 28px;
-    height: 28px;
-    object-fit: cover;
+    width: 52px;
+    height: 52px;
+    object-fit: contain;
     border-radius: 8px;
     flex-shrink: 0;
+    background: #fff;
+}
+
+.dnd2-placed-chip--has-img .dnd2-placed-chip__label {
+    white-space: normal;
+    max-width: 80px;
+    font-size: 0.62rem;
+    line-height: 1.15;
+    text-align: center;
+    overflow: visible;
+    text-overflow: unset;
 }
 
 .dnd2-placed-chip__label {
@@ -2135,9 +2195,9 @@
 .dnd2-chips {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.6rem;
+    gap: 0.75rem;
     justify-content: center;
-    min-height: 60px;
+    min-height: 120px;
     width: 100%;
 }
 
@@ -2184,7 +2244,8 @@
 }
 
 .dnd2-chip--has-img {
-    min-width: 80px;
+    min-width: 120px;
+    max-width: 160px;
 }
 
 .dnd2-chip--has-audio {
@@ -2199,21 +2260,26 @@
 }
 
 .dnd2-chip__img {
-    width: 56px;
-    height: 56px;
-    object-fit: cover;
-    border-radius: 10px;
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    border-radius: 12px;
     flex-shrink: 0;
     pointer-events: none;
+    background: #fff;
 }
 
 .dnd2-chip__label {
-    font-size: 0.78rem;
+    font-size: 0.82rem;
     font-weight: 700;
-    line-height: 1.2;
-    max-width: 80px;
+    line-height: 1.25;
+    max-width: 140px;
     word-break: break-word;
     text-align: center;
+}
+
+.dnd2-chip--has-img .dnd2-chip__label {
+    max-width: 100%;
 }
 
 /* ===========================

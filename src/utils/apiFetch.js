@@ -37,6 +37,21 @@ function extractErrorMessage(data, status) {
     return `Error ${status}`
 }
 
+/** Ambil pesan error yang aman ditampilkan ke UI. */
+export function getErrorMessage(err, fallback = 'Terjadi kesalahan. Silakan coba lagi.') {
+    if (typeof err === 'string' && err.trim()) return err
+    if (err?.message && typeof err.message === 'string' && err.message.trim()) return err.message
+    return fallback
+}
+
+/** Normalisasi respons list API (array langsung atau { data: [...] }). */
+export function unwrapList(data) {
+    if (Array.isArray(data)) return data
+    if (Array.isArray(data?.data)) return data.data
+    if (Array.isArray(data?.content)) return data.content
+    return []
+}
+
 // ── Shared fetch wrapper ──────────────────────────────────────────
 export async function apiFetch(path, options = {}) {
     const token = localStorage.getItem('token')

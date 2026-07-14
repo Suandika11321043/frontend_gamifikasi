@@ -18,6 +18,7 @@ export default function OptionMedia({
     alt = 'Media',
     className = '',
     onLoad,
+    compact = false,
 }) {
     if (!url) return null
 
@@ -27,9 +28,22 @@ export default function OptionMedia({
 
     if (type === 'audio') {
         return (
-            <div className={rootClass} onClick={stop} onPointerDown={stop}>
+            <div
+                className={`${rootClass}${compact ? ' option-media--audio-compact' : ' option-media--audio-prominent'}`}
+                onClick={stop}
+                onPointerDown={stop}
+                onMouseDown={stop}
+                draggable={false}
+            >
                 <span className="option-media__badge" aria-hidden="true">🎵</span>
-                <audio controls preload="metadata" src={url} className="option-media__player" />
+                <audio
+                    controls
+                    controlsList="nodownload noplaybackrate"
+                    preload="metadata"
+                    src={url}
+                    className="option-media__player"
+                    draggable={false}
+                />
             </div>
         )
     }

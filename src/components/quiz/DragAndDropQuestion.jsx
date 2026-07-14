@@ -1,5 +1,53 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import OptionMedia, { getOptionMediaType } from './OptionMedia'
+
+/** Scroll ke atas/bawah otomatis saat drag mendekati tepi layar. */
+function useDragAutoScroll(isDragging) {
+    useEffect(() => {
+        if (!isDragging) return
+
+        const EDGE = 90
+        const MAX_SPEED = 22
+        let lastY = null
+        let rafId = 0
+
+        const onDragOver = (e) => {
+            lastY = e.clientY
+            // Agar dragover terus terpicu di area kosong & drop tetap valid
+            e.preventDefault()
+        }
+
+        const scrollParents = (dy) => {
+            window.scrollBy(0, dy)
+            document.documentElement.scrollTop += dy
+            document.body.scrollTop += dy
+            const wrapper = document.querySelector('.quiz-wrapper')
+            if (wrapper) wrapper.scrollTop += dy
+        }
+
+        const tick = () => {
+            if (lastY != null) {
+                const vh = window.innerHeight
+                let dy = 0
+                if (lastY < EDGE) {
+                    dy = -MAX_SPEED * (1 - lastY / EDGE)
+                } else if (lastY > vh - EDGE) {
+                    dy = MAX_SPEED * (1 - (vh - lastY) / EDGE)
+                }
+                if (dy !== 0) scrollParents(dy)
+            }
+            rafId = requestAnimationFrame(tick)
+        }
+
+        document.addEventListener('dragover', onDragOver, { passive: false })
+        rafId = requestAnimationFrame(tick)
+
+        return () => {
+            document.removeEventListener('dragover', onDragOver)
+            cancelAnimationFrame(rafId)
+        }
+    }, [isDragging])
+}
 
 export default function DragAndDropQuestion({ question, answer, onAnswer }) {
     const items = question.options.filter((o) => o.tipeItem === 'JAWABAN')
@@ -8,6 +56,8 @@ export default function DragAndDropQuestion({ question, answer, onAnswer }) {
     const [draggedId, setDraggedId] = useState(null)
     const [selectedChipId, setSelectedChipId] = useState(null)
     const [hoveredTarget, setHoveredTarget] = useState(null)
+
+    useDragAutoScroll(!!draggedId)
 
     if (question.options.length === 0) {
         return <p className="quiz-empty-type">Belum ada pilihan untuk soal ini.</p>
@@ -87,9 +137,11 @@ export default function DragAndDropQuestion({ question, answer, onAnswer }) {
                                 <OptionMedia url={target.mediaOpsi} alt={target.teksOpsi} />
                             )}
                             <p className="dnd2-target-label">{target.teksOpsi}</p>
-                            {droppedIds.length > 0 && (
-                                <div className="dnd2-placed-chips">
-                                    {droppedIds.map((dId) => {
+                            <div className={`dnd2-placed-chips${droppedIds.length === 0 ? ' dnd2-placed-chips--empty' : ''}`}>
+                                {droppedIds.length === 0 ? (
+                                    <span className="dnd2-drop-hint">Lepaskan di sini</span>
+                                ) : (
+                                    droppedIds.map((dId) => {
                                         const dItem = items.find((i) => i.optionId === dId)
                                         if (!dItem) return null
                                         const dMediaType = dItem.mediaOpsi ? getOptionMediaType(dItem.mediaOpsi) : null
@@ -110,9 +162,9 @@ export default function DragAndDropQuestion({ question, answer, onAnswer }) {
                                                 >✕</button>
                                             </div>
                                         )
-                                    })}
-                                </div>
-                            )}
+                                    })
+                                )}
+                            </div>
                         </div>
                     )
                 })}

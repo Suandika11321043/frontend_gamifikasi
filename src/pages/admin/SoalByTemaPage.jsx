@@ -88,6 +88,7 @@ export default function SoalByTemaPage() {
     const [topic, setTopic] = useState(null)
 
     const now = new Date()
+    const isTodayWeekend = now.getDay() === 0 || now.getDay() === 6
     const [calYear, setCalYear] = useState(now.getFullYear())
     const [calMonth, setCalMonth] = useState(now.getMonth() + 1)
 
@@ -459,6 +460,8 @@ export default function SoalByTemaPage() {
                         className="btn-primary groups-add-btn"
                         onClick={() => navigate(`/admin/soal/${topicId}/date/${toDateStr(now.getFullYear(), now.getMonth() + 1, now.getDate())}`)}
                         style={{ marginTop: 12 }}
+                        disabled={isTodayWeekend}
+                        title={isTodayWeekend ? 'Sabtu/Minggu bukan hari belajar' : 'Kelola soal hari ini'}
                     >
                         <Plus size={14} /> Soal Hari Ini
                     </button>

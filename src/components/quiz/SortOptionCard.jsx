@@ -59,7 +59,13 @@ export function SortOptionCard({
                 '--soc-badge': color.badge,
             }}
             draggable={draggable}
-            onDragStart={onDragStart}
+            onDragStart={(e) => {
+                if (e.target.closest('.option-media--audio, audio, .option-media__player')) {
+                    e.preventDefault()
+                    return
+                }
+                onDragStart?.(e)
+            }}
             onDragOver={onDragOver}
             onDragEnd={onDragEnd}
         >
