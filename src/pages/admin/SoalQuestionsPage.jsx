@@ -625,7 +625,7 @@ function SoalQuestionsPage() {
                     <h1>Soal — {displayDate}</h1>
                     <span className="soal-count-badge">{questionList.length} soal</span>
                     {isAvailable && (
-                        <span className="soal-locked-badge"><Lock size={12} /> Aktif untuk Siswa</span>
+                        <span className="soal-locked-badge"><Lock size={12} /> Aktif untuk Murid</span>
                     )}
                     <button className="btn-icon btn-icon-edit reschedule-header-btn" onClick={openReschedule} title="Ubah tanggal" disabled={isAvailable}>
                         <Calendar size={15} />
@@ -642,7 +642,7 @@ function SoalQuestionsPage() {
                         className={`btn-avail-toggle${isAvailable ? ' btn-avail-toggle--on' : ' btn-avail-toggle--off'}`}
                         onClick={handleToggleAvailability}
                         disabled={togglingAvail}
-                        title={isAvailable ? 'Klik untuk menonaktifkan (siswa tidak bisa mengerjakan)' : 'Klik untuk mengaktifkan soal untuk siswa'}
+                        title={isAvailable ? 'Klik untuk menonaktifkan (murid tidak bisa mengerjakan)' : 'Klik untuk mengaktifkan soal untuk murid'}
                     >
                         {togglingAvail
                             ? 'Menyimpan...'
@@ -670,7 +670,7 @@ function SoalQuestionsPage() {
             {isAvailable && (
                 <div className="soal-locked-banner">
                     <Lock size={16} />
-                    <span>Soal ini sudah <strong>diaktifkan untuk siswa</strong>. Edit, hapus, dan tambah soal dinonaktifkan. Nonaktifkan terlebih dahulu untuk melakukan perubahan.</span>
+                    <span>Soal ini sudah <strong>diaktifkan untuk murid</strong>. Edit, hapus, dan tambah soal dinonaktifkan. Nonaktifkan terlebih dahulu untuk melakukan perubahan.</span>
                 </div>
             )}
 
@@ -776,7 +776,7 @@ function SoalQuestionsPage() {
                             name="contentInstruction"
                             value={form.contentInstruction}
                             onChange={handleQChange}
-                            placeholder="Tuliskan instruksi atau pertanyaan untuk siswa..."
+                            placeholder="Tuliskan instruksi atau pertanyaan untuk murid..."
                             rows={3}
                             className="form-textarea"
                         />
@@ -1395,7 +1395,7 @@ function SoalQuestionsPage() {
                                             <p className="match-step-desc">
                                                 Isi <strong>nomor urutan benar</strong> per item (1 = posisi pertama, 2 = kedua, dst).
                                                 Setiap item dapat dilengkapi <strong>gambar atau audio (MP3)</strong>.
-                                                Daftar item tidak diurutkan otomatis — siswa melihat urutan acak saat mengerjakan.
+                                                Daftar item tidak diurutkan otomatis — murid melihat urutan acak saat mengerjakan.
                                             </p>
                                         </div>
                                         {!loadingOptions && optionsList.length > 0 && (

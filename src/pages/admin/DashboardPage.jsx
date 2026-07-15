@@ -51,7 +51,7 @@ function DashboardPage() {
     useEffect(() => { fetchDashboard() }, [fetchDashboard])
 
     const statCards = [
-        { label: 'Total Siswa', value: stats.totalStudents, icon: Users, color: '#3b82f6', bg: '#eff6ff' },
+        { label: 'Total Murid', value: stats.totalStudents, icon: Users, color: '#3b82f6', bg: '#eff6ff' },
         { label: 'Total Soal', value: stats.totalSoal, icon: HelpCircle, color: '#10b981', bg: '#f0fdf4' },
         { label: 'Total Tema', value: stats.totalTopics, icon: BookOpen, color: '#8b5cf6', bg: '#f5f3ff' },
         { label: 'Total Poin Tertinggi', value: leaderboard[0]?.totalEarnedScore ?? 0, icon: Star, color: '#f59e0b', bg: '#fffbeb' },
@@ -68,8 +68,8 @@ function DashboardPage() {
     return (
         <AdminLayout activePath="/dashboard">
             <header className="dashboard-header">
-                <h1>Dashboard Admin</h1>
-                <span className="admin-badge">Admin</span>
+                <h1>Dashboard Guru</h1>
+                <span className="admin-badge">Guru</span>
             </header>
 
             {error && <div className="dashboard-error">{error}</div>}
@@ -92,14 +92,14 @@ function DashboardPage() {
             </section>
 
             <section className="dashboard-section">
-                <h2>Peringkat Siswa — Total Poin</h2>
+                <h2>Peringkat Murid — Total Poin</h2>
                 <div className="table-wrapper">
                     <table>
                         <thead>
                             <tr>
                                 <th style={{ width: '50px' }}>No</th>
                                 <th style={{ width: '70px' }}>Avatar</th>
-                                <th>Nama Siswa</th>
+                                <th>Nama Murid</th>
                                 <th>Kelompok</th>
                                 <th>Total Poin</th>
                                 <th>Bintang</th>
@@ -112,7 +112,7 @@ function DashboardPage() {
                                 </tr>
                             ) : leaderboard.length === 0 ? (
                                 <tr>
-                                    <td colSpan={6} className="empty-row">Belum ada data siswa.</td>
+                                    <td colSpan={6} className="empty-row">Belum ada data murid.</td>
                                 </tr>
                             ) : (
                                 leaderboard.map((s, idx) => {
@@ -138,7 +138,7 @@ function DashboardPage() {
 
             <section className="dashboard-section">
                 <div className="section-header-row">
-                    <h2>Peringkat Siswa — Poin per Tema</h2>
+                    <h2>Peringkat Murid — Poin per Tema</h2>
                     <select
                         className="topic-filter-select"
                         value={selectedTopicId}
@@ -204,7 +204,7 @@ function DashboardPage() {
                                 <tr>
                                     <th style={{ width: '50px' }}>No</th>
                                     <th style={{ width: '70px' }}>Avatar</th>
-                                    <th>Nama Siswa</th>
+                                    <th>Nama Murid</th>
                                     <th>Kelompok</th>
                                     <th>Poin Tema</th>
                                     <th>Bintang</th>

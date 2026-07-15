@@ -53,7 +53,7 @@ function LoginPage() {
             <div className="login-card">
                 <div className="login-mascot">🦁</div>
                 <h1 className="login-title">Halo, Guru!</h1>
-                <p className="login-subtitle">Masuk untuk mengelola siswa, membuat soal, dan mengatur pembelajaran! 📚</p>
+                <p className="login-subtitle">Masuk untuk mengelola murid, membuat soal, dan mengatur pembelajaran! 📚</p>
 
                 <form className="login-form" onSubmit={handleSubmit} noValidate>
                     {wasExpired && !error && (

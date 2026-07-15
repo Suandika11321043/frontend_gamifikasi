@@ -28,10 +28,10 @@ const navGroups = [
         ],
     },
     {
-        label: 'Profil dan Kemajuan Siswa',
+        label: 'Profil dan Kemajuan Murid',
         icon: <Users size={18} />,
         children: [
-            { label: 'Manajemen Daftar Siswa', path: '/admin/siswa', icon: <Users size={16} /> },
+            { label: 'Manajemen Daftar Murid', path: '/admin/siswa', icon: <Users size={16} /> },
         ],
     },
 ]

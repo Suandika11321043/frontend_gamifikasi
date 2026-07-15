@@ -417,7 +417,7 @@ export default function SoalByTemaPage() {
                                         <button
                                             className={`group-item-toggle-btn${isAvailable ? ' group-item-toggle-btn--on' : ' group-item-toggle-btn--off'}`}
                                             onClick={(e) => handleToggleAvailability(date, isAvailable, e)}
-                                            title={isAvailable ? 'Nonaktifkan untuk siswa' : 'Aktifkan untuk siswa'}
+                                            title={isAvailable ? 'Nonaktifkan untuk murid' : 'Aktifkan untuk murid'}
                                             disabled={togglingDate === date}
                                         >
                                             {togglingDate === date
