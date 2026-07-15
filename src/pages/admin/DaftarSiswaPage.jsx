@@ -37,7 +37,7 @@ function DaftarSiswaPage() {
             const data = await apiFetch('/students')
             setSiswaList(unwrapList(data))
         } catch (err) {
-            setFetchError(getErrorMessage(err, 'Gagal memuat daftar siswa. Silakan coba lagi.'))
+            setFetchError(getErrorMessage(err, 'Gagal memuat daftar murid. Silakan coba lagi.'))
         } finally {
             setLoading(false)
         }
@@ -133,7 +133,7 @@ function DaftarSiswaPage() {
             setShowModal(false)
             fetchSiswa()
         } catch (err) {
-            setError(getErrorMessage(err, 'Gagal menyimpan data siswa. Silakan coba lagi.'))
+            setError(getErrorMessage(err, 'Gagal menyimpan data murid. Silakan coba lagi.'))
         } finally {
             setSaving(false)
         }
@@ -165,8 +165,8 @@ function DaftarSiswaPage() {
     }
 
     const isEditing = editId !== null
-    const modalTitle = isEditing ? 'Edit Data Siswa' : 'Tambah Siswa Baru'
-    let saveLabel = 'Tambah Siswa'
+    const modalTitle = isEditing ? 'Edit Data Murid' : 'Tambah Murid Baru'
+    let saveLabel = 'Tambah Murid'
     if (saving) { saveLabel = 'Menyimpan...' }
     else if (isEditing) { saveLabel = 'Simpan Perubahan' }
     const hintLabel = avatarPreview ? 'mengubah' : 'menambahkan'
@@ -175,12 +175,12 @@ function DaftarSiswaPage() {
         <AdminLayout activePath="/admin/siswa">
             <header className="dashboard-header">
                 <div>
-                    <h1>Daftar Siswa</h1>
-                    <p className="page-subtitle">{siswaList.length} siswa terdaftar</p>
+                    <h1>Daftar Murid</h1>
+                    <p className="page-subtitle">{siswaList.length} murid terdaftar</p>
                 </div>
                 <button className="btn-primary" onClick={openAdd}>
                     <UserPlus size={16} />
-                    Tambah Siswa
+                    Tambah Murid
                 </button>
             </header>
 
@@ -193,7 +193,7 @@ function DaftarSiswaPage() {
                         placeholder="Cari nama atau kelompok..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        aria-label="Cari siswa"
+                        aria-label="Cari murid"
                     />
                     {search && (
                         <button className="search-clear" onClick={() => setSearch('')} title="Hapus pencarian">
@@ -201,7 +201,7 @@ function DaftarSiswaPage() {
                         </button>
                     )}
                 </div>
-                <span className="count-badge">{filtered.length} dari {siswaList.length} siswa</span>
+                <span className="count-badge">{filtered.length} dari {siswaList.length} murid</span>
             </div>
 
             {fetchError && <p className="modal-error">{fetchError}</p>}
@@ -223,7 +223,7 @@ function DaftarSiswaPage() {
                         {loading ? (
                             <tr><td colSpan={6} className="empty-row">Memuat data...</td></tr>
                         ) : filtered.length === 0 ? (
-                            <tr><td colSpan={6} className="empty-row">Tidak ada siswa ditemukan.</td></tr>
+                            <tr><td colSpan={6} className="empty-row">Tidak ada murid ditemukan.</td></tr>
                         ) : (
                             filtered.map((siswa, idx) => (
                                 <tr key={siswa.id}>
@@ -238,13 +238,13 @@ function DaftarSiswaPage() {
                                     </td>
                                     <td>
                                         <div className="action-cell">
-                                            <button className="btn-icon btn-icon-detail" onClick={() => setDetailSiswa(siswa)} title="Detail siswa">
+                                            <button className="btn-icon btn-icon-detail" onClick={() => setDetailSiswa(siswa)} title="Detail murid">
                                                 <Eye size={15} />
                                             </button>
-                                            <button className="btn-icon btn-icon-edit" onClick={() => openEdit(siswa)} title="Edit siswa">
+                                            <button className="btn-icon btn-icon-edit" onClick={() => openEdit(siswa)} title="Edit murid">
                                                 <Pencil size={15} />
                                             </button>
-                                            <button className="btn-icon btn-icon-delete" onClick={() => setDeleteId(siswa.id)} title="Hapus siswa">
+                                            <button className="btn-icon btn-icon-delete" onClick={() => setDeleteId(siswa.id)} title="Hapus murid">
                                                 <Trash2 size={15} />
                                             </button>
                                         </div>
@@ -298,13 +298,13 @@ function DaftarSiswaPage() {
                         <div className="form-group">
                             <label>
                                 <User size={13} className="field-icon" />
-                                Nama Siswa
+                                Nama Murid
                             </label>
                             <input
                                 name="name"
                                 value={form.name}
                                 onChange={handleChange}
-                                placeholder="Masukkan nama lengkap siswa"
+                                placeholder="Masukkan nama lengkap murid"
                                 autoFocus
                             />
                         </div>
@@ -336,7 +336,7 @@ function DaftarSiswaPage() {
             {/* Modal Detail Siswa */}
             {detailSiswa && (
                 <Modal
-                    title="Detail Siswa"
+                    title="Detail Murid"
                     className="modal-detail"
                     onClose={() => setDetailSiswa(null)}
                 >
@@ -364,11 +364,11 @@ function DaftarSiswaPage() {
             {/* Modal Konfirmasi Hapus */}
             {deleteId !== null && (
                 <Modal
-                    title="Hapus Siswa?"
+                    title="Hapus Murid?"
                     className="modal-confirm"
                     onClose={() => { setDeleteId(null); setDeleteError('') }}
                 >
-                    <p>Data siswa ini akan dihapus secara permanen.</p>
+                    <p>Data murid ini akan dihapus secara permanen.</p>
                     {deleteError && <p className="modal-error">{deleteError}</p>}
                     <div className="modal-actions">
                         <button className="btn-secondary" onClick={() => { setDeleteId(null); setDeleteError('') }}>

@@ -19,7 +19,7 @@ function DaftarSiswaStudentPage() {
             const data = await apiFetch('/students')
             setSiswaList(unwrapList(data))
         } catch (err) {
-            setFetchError(getErrorMessage(err, 'Gagal memuat daftar siswa. Silakan coba lagi.'))
+            setFetchError(getErrorMessage(err, 'Gagal memuat daftar murid. Silakan coba lagi.'))
         } finally {
             setLoading(false)
         }
@@ -39,7 +39,7 @@ function DaftarSiswaStudentPage() {
                 <button className="ds-back-btn" onClick={() => navigate('/student')} aria-label="Kembali">
                     ← Kembali
                 </button>
-                <h1 className="ds-title">🏫 Daftar Siswa</h1>
+                <h1 className="ds-title">🏫 Daftar Murid</h1>
             </header>
 
             {/* Search */}
@@ -51,7 +51,7 @@ function DaftarSiswaStudentPage() {
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                 />
-                <span className="ds-count">{filtered.length} siswa</span>
+                <span className="ds-count">{filtered.length} murid</span>
             </div>
 
             {/* Error */}
@@ -62,7 +62,7 @@ function DaftarSiswaStudentPage() {
                 {loading ? (
                     <p className="ds-empty">Memuat data...</p>
                 ) : filtered.length === 0 ? (
-                    <p className="ds-empty">Tidak ada siswa ditemukan.</p>
+                    <p className="ds-empty">Tidak ada murid ditemukan.</p>
                 ) : (
                     filtered.map((siswa) => (
                         <div
