@@ -1,28 +1,36 @@
 import { useState, useEffect } from 'react'
+import GeneratedAvatar from './GeneratedAvatar'
+import { isGeneratedAvatar } from '../../utils/avatarPresets'
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 /**
- * Displays a student avatar image, or a coloured initial-letter circle as fallback.
+ * Displays a student avatar image, generated avatar, or coloured initial fallback.
  * Props:
- *   avatar  – filename (served via /uploads/) or absolute URL or falsy
- *   name    – student name for the fallback initial
- *   size    – 'sm' | 'md' | 'lg'  (default 'sm')
+ *   avatar  – generated key | filename | absolute URL | falsy
+ *   name    – student name (nameplate / fallback initial)
+ *   size    – 'sm' | 'md' | 'lg' | 'xl'  (default 'sm')
  */
-function AvatarImg({ avatar, name, size = 'sm' }) {
+function AvatarImg({ avatar, name, size = 'sm', showNameplate = true }) {
     const [blobUrl, setBlobUrl] = useState(null)
     const [failed, setFailed] = useState(false)
 
-    const isAbsolute = avatar && (
+    const generated = isGeneratedAvatar(avatar)
+    const isAbsolute = !generated && avatar && (
         avatar.startsWith('http://') ||
         avatar.startsWith('https://') ||
         avatar.startsWith('blob:')
     )
-    const localSrc = avatar && !isAbsolute ? `${BASE_URL}/uploads/${avatar}` : null
+    const localSrc = !generated && avatar && !isAbsolute ? `${BASE_URL}/uploads/${avatar}` : null
 
     useEffect(() => {
-        if (!localSrc) return
+        if (!localSrc) {
+            setBlobUrl(null)
+            setFailed(false)
+            return
+        }
         let objectUrl = null
+        let cancelled = false
         const token = localStorage.getItem('token')
         fetch(localSrc, {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
@@ -32,20 +40,48 @@ function AvatarImg({ avatar, name, size = 'sm' }) {
                 return res.blob()
             })
             .then((blob) => {
+                if (cancelled) return
                 objectUrl = URL.createObjectURL(blob)
                 setBlobUrl(objectUrl)
+                setFailed(false)
             })
-            .catch(() => setFailed(true))
+            .catch(() => {
+                if (!cancelled) setFailed(true)
+            })
 
         return () => {
+            cancelled = true
             if (objectUrl) URL.revokeObjectURL(objectUrl)
         }
     }, [localSrc])
 
-    const sizeClass = `avatar--${size}`
+    // Reset failed when avatar URL changes
+    useEffect(() => {
+        setFailed(false)
+    }, [avatar])
 
-    if (isAbsolute) {
-        return <img src={avatar} alt={name} className={`avatar-img ${sizeClass}`} />
+    if (generated) {
+        return (
+            <GeneratedAvatar
+                avatarKey={avatar}
+                name={name}
+                size={size}
+                showNameplate={showNameplate}
+            />
+        )
+    }
+
+    const sizeClass = `avatar--${size === 'xl' ? 'lg' : size}`
+
+    if (isAbsolute && !failed) {
+        return (
+            <img
+                src={avatar}
+                alt={name}
+                className={`avatar-img ${sizeClass}`}
+                onError={() => setFailed(true)}
+            />
+        )
     }
 
     if (localSrc && blobUrl && !failed) {

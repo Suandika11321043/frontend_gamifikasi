@@ -198,11 +198,40 @@ tbody td:last-child {
 
 /* Avatar cell — center block element */
 tbody td:nth-child(2) {
-    padding: 8px 16px;
+    padding: 8px 12px;
+    width: 110px;
 }
 
 tbody td:nth-child(2)>* {
     margin: 0 auto;
+    display: block;
+}
+
+/* Generated avatar di dalam tabel */
+tbody td:nth-child(2) .gen-avatar {
+    width: 72px;
+    max-height: none;
+}
+
+tbody td:nth-child(2) .gen-avatar__img {
+    width: 72px;
+    height: auto;
+    object-fit: contain;
+    object-position: center top;
+}
+
+tbody td:nth-child(2) .gen-avatar__plate {
+    bottom: 8%;
+    width: 88%;
+    padding: 2px 3px;
+    border-width: 1.5px;
+}
+
+tbody td:nth-child(2) .gen-avatar__plate-text {
+    font-size: inherit;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
 }
 
 .empty-row {

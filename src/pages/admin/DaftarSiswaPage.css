@@ -64,73 +64,78 @@
     }
 }
 
-/* ── Add / Edit modal — avatar upload ───────────────────────── */
-.siswa-avatar-upload {
+/* ── Add / Edit modal — avatar picker ───────────────────────── */
+.siswa-avatar-picker {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    padding: 4px 0 8px;
-    border-bottom: 1px solid #f1f5f9;
-    margin-bottom: 4px;
+    gap: 10px;
+    padding: 12px 0 4px;
+    border-top: 1px solid #f1f5f9;
+    margin-top: 4px;
 }
 
-.avatar-upload-trigger {
-    position: relative;
-    cursor: pointer;
-    border-radius: 50%;
-    display: inline-flex;
-    flex-shrink: 0;
-    background: none;
-    border: none;
-    padding: 0;
-}
-
-.avatar-upload-trigger:hover .avatar-upload-overlay {
-    opacity: 1;
-}
-
-.avatar-upload-overlay {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: rgba(15, 52, 96, 0.52);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    opacity: 0;
-    transition: opacity 0.2s;
-}
-
-.avatar-upload-empty {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: #f1f5f9;
-    border: 2px dashed #cbd5e1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: #94a3b8;
-    gap: 5px;
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s, border-color 0.2s;
-}
-
-.avatar-upload-trigger:hover .avatar-upload-empty {
-    background: #e2e8f0;
-    border-color: #94a3b8;
+.avatar-picker-label {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 700;
+    color: #334155;
 }
 
 .avatar-upload-hint {
     font-size: 12px;
     color: #9ca3af;
-    margin: 0;
-    text-align: center;
+    margin: -4px 0 0;
+    text-align: left;
+}
+
+.avatar-options-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.avatar-options-grid--gender {
+    grid-template-columns: 1fr 1fr;
+    max-width: 280px;
+    margin: 0 auto;
+}
+
+.avatar-option-btn {
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    justify-content: center;
+}
+
+.avatar-option-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #475569;
+}
+
+.avatar-option-btn.is-selected .avatar-option-label {
+    color: #0f3460;
+}
+
+.avatar-option-btn:hover .gen-avatar {
+    transform: translateY(-2px);
+    transition: transform 0.15s ease;
+}
+
+@media (max-width: 480px) {
+    .avatar-options-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .avatar-options-grid--gender {
+        max-width: 100%;
+    }
 }
 
 /* ── Add / Edit modal — fields ──────────────────────────────── */
