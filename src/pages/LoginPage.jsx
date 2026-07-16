@@ -43,30 +43,56 @@ function LoginPage() {
 
     return (
         <div className="login-wrapper">
-            {/* Floating decorations */}
-            <span className="login-deco login-deco--star1">⭐</span>
-            <span className="login-deco login-deco--star2">🌟</span>
-            <span className="login-deco login-deco--balloon">🎈</span>
-            <span className="login-deco login-deco--rainbow">🌈</span>
-            <span className="login-deco login-deco--cloud">☁️</span>
+            <div className="login-sky" aria-hidden="true" />
+            <div className="login-sun" aria-hidden="true" />
+            <div className="login-grass" aria-hidden="true" />
+            <div className="login-hill login-hill--left" aria-hidden="true" />
+            <div className="login-hill login-hill--right" aria-hidden="true" />
 
-            <div className="login-card">
-                <div className="login-mascot">🦁</div>
-                <h1 className="login-title">Halo, Guru!</h1>
-                <p className="login-subtitle">Masuk untuk mengelola murid, membuat soal, dan mengatur pembelajaran! 📚</p>
+            <div className="login-cloud login-cloud--1" aria-hidden="true" />
+            <div className="login-cloud login-cloud--2" aria-hidden="true" />
+            <div className="login-cloud login-cloud--3" aria-hidden="true" />
+
+            <div className="login-bloom login-bloom--1" aria-hidden="true" />
+            <div className="login-bloom login-bloom--2" aria-hidden="true" />
+
+            <main className="login-card">
+                <header className="login-brand">
+                    <img
+                        className="login-brand-logo"
+                        src="/logos/tk-mawar.svg"
+                        alt=""
+                        width={80}
+                        height={80}
+                        draggable={false}
+                    />
+                    <h1 className="login-brand-name">TK Mawar</h1>
+                    <p className="login-brand-place">Sitoluama · Laguboti</p>
+                </header>
+
+                <p className="login-greeting">Halo, Bapak/Ibu Guru!</p>
+                <p className="login-subtitle">
+                    Masuk untuk mengelola murid, soal, dan kegiatan belajar
+                </p>
 
                 <form className="login-form" onSubmit={handleSubmit} noValidate>
                     {wasExpired && !error && (
-                        <p className="login-error">⏰ Sesi kamu telah berakhir. Silakan login kembali.</p>
+                        <p className="login-error" role="alert">
+                            Sesi Anda telah berakhir. Silakan masuk kembali.
+                        </p>
                     )}
-                    {error && <p className="login-error">⚠️ {error}</p>}
+                    {error && (
+                        <p className="login-error" role="alert">
+                            {error}
+                        </p>
+                    )}
 
                     <div className="form-group">
-                        <label htmlFor="username">👤 Username</label>
+                        <label htmlFor="username">Username</label>
                         <input
                             id="username"
                             type="text"
-                            placeholder="Tulis username kamu..."
+                            placeholder="Tulis username Anda"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             autoComplete="username"
@@ -75,11 +101,11 @@ function LoginPage() {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="password">🔒 Password</label>
+                        <label htmlFor="password">Password</label>
                         <input
                             id="password"
                             type="password"
-                            placeholder="Tulis password kamu..."
+                            placeholder="Tulis password Anda"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             autoComplete="current-password"
@@ -88,10 +114,10 @@ function LoginPage() {
                     </div>
 
                     <button type="submit" className="login-btn" disabled={loading}>
-                        {loading ? '⏳ Sebentar ya...' : '🚀 Ayo Masuk!'}
+                        {loading ? 'Sebentar ya...' : 'Masuk'}
                     </button>
                 </form>
-            </div>
+            </main>
         </div>
     )
 }

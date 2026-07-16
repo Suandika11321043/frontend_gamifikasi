@@ -10,57 +10,54 @@ function StudentLandingPage() {
 
     return (
         <div className="landing-wrapper">
-            <div className="landing-sky" />
-            <div className="landing-grass" />
+            <div className="landing-sky" aria-hidden="true" />
+            <div className="landing-sun" aria-hidden="true" />
+            <div className="landing-grass" aria-hidden="true" />
+            <div className="landing-hill landing-hill--left" aria-hidden="true" />
+            <div className="landing-hill landing-hill--right" aria-hidden="true" />
 
-            <div className="landing-cloud landing-cloud--1" />
-            <div className="landing-cloud landing-cloud--2" />
-            <div className="landing-cloud landing-cloud--3" />
+            <div className="landing-cloud landing-cloud--1" aria-hidden="true" />
+            <div className="landing-cloud landing-cloud--2" aria-hidden="true" />
+            <div className="landing-cloud landing-cloud--3" aria-hidden="true" />
 
-            <div className="landing-rainbow" aria-hidden="true" />
+            <div className="landing-bloom landing-bloom--1" aria-hidden="true" />
+            <div className="landing-bloom landing-bloom--2" aria-hidden="true" />
+            <div className="landing-bloom landing-bloom--3" aria-hidden="true" />
 
-            <em className="landing-float landing-float--1">⭐</em>
-            <em className="landing-float landing-float--2">🎈</em>
-            <em className="landing-float landing-float--3">🦋</em>
-            <em className="landing-float landing-float--4">🍭</em>
-            <em className="landing-float landing-float--5">🌈</em>
-            <em className="landing-float landing-float--6">✨</em>
+            <main className="landing-content">
+                <header className="landing-brand">
+                    <img
+                        className="landing-brand-logo"
+                        src="/logos/tk-mawar.svg"
+                        alt=""
+                        width={96}
+                        height={96}
+                        draggable={false}
+                    />
+                    <h1 className="landing-brand-name">TK Mawar</h1>
+                    <p className="landing-brand-place">Sitoluama · Laguboti</p>
+                </header>
 
-            <div className="landing-content">
-                <div className="landing-hero-card">
-                    <div className="landing-mascot" aria-hidden="true">
-                        <span className="mascot-face">🦊</span>
-                        <span className="mascot-sparkle mascot-sparkle--1">✨</span>
-                        <span className="mascot-sparkle mascot-sparkle--2">💫</span>
-                    </div>
+                <p className="landing-hello">Halo, sahabat kecil!</p>
+                <p className="landing-invite">Yuk bermain sambil belajar bersama</p>
 
-                    <span className="landing-badge">Petualangan Belajar</span>
-                    <h1 className="landing-title">
-                        Ayo Bermain
-                        <span className="landing-title-accent">&amp; Belajar!</span>
-                    </h1>
-                    <button className="play-btn" onClick={handlePlay} aria-label="Mulai bermain">
-                        <span className="play-btn__glow" />
-                        <span className="play-btn__ripple" />
-                        <span className="play-btn__icon">
-                            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                                <path d="M8 5v14l11-7z" />
-                            </svg>
-                        </span>
-                        <span className="play-btn__label">MULAI</span>
-                    </button>
-                </div>
+                <button
+                    type="button"
+                    className="play-btn"
+                    onClick={handlePlay}
+                    aria-label="Mulai bermain"
+                >
+                    <span className="play-btn__ring" aria-hidden="true" />
+                    <span className="play-btn__icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M8 5v14l11-7z" />
+                        </svg>
+                    </span>
+                    <span className="play-btn__label">AYO MAIN</span>
+                </button>
 
-                <div className="landing-path" aria-hidden="true">
-                    <span className="path-step path-step--done">🏁</span>
-                    <span className="path-line" />
-                    <span className="path-step">📚</span>
-                    <span className="path-line" />
-                    <span className="path-step">🎯</span>
-                    <span className="path-line" />
-                    <span className="path-step path-step--goal">👑</span>
-                </div>
-            </div>
+                <p className="landing-hint">Ketuk tombol hijau di atas, ya</p>
+            </main>
         </div>
     )
 }

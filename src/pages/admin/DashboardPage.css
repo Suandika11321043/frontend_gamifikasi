@@ -7,6 +7,8 @@
 .dashboard-wrapper {
     display: flex;
     flex: 1;
+    width: 100%;
+    min-height: 100dvh;
     background: #1a1a2e;
     font-family: 'Segoe UI', sans-serif;
     align-items: stretch;
@@ -374,9 +376,47 @@ tbody td:nth-child(2) .gen-avatar__plate-text {
 }
 
 .mini-score {
-    font-weight: 600;
-    color: #0f3460;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-weight: 700;
+    color: #92400e;
     flex-shrink: 0;
+}
+
+.mini-score svg {
+    color: #d97706;
+}
+
+.poin-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    color: #92400e;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    border: 1.5px solid #fbbf24;
+    line-height: 1.2;
+}
+
+.poin-badge .poin-icon,
+.poin-badge svg {
+    flex-shrink: 0;
+    color: #d97706;
+}
+
+.mini-score .poin-icon,
+.mini-score svg {
+    color: #d97706;
+}
+
+.poin-badge__unit {
+    font-size: 11px;
+    font-weight: 700;
+    opacity: 0.85;
 }
 
 .empty-hint {

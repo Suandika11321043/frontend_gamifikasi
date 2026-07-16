@@ -7,6 +7,7 @@ import MatchReview from '../../components/quiz/MatchReview'
 import MatchQuestion from '../../components/quiz/MatchQuestion'
 import SortingReview from '../../components/quiz/SortingReview'
 import PuzzleHistoryReview from '../../components/quiz/PuzzleHistoryReview'
+import PoinIcon from '../../components/common/PoinIcon'
 import { formatPuzzleResultBadge } from '../../utils/puzzleResult'
 import './QuizStudentPage.css'
 
@@ -161,9 +162,12 @@ function HistorySummary({ questions, topicId, studentId, learningDate, onBack, o
                         <span className="result-stat__lbl">Salah</span>
                                 </div>
                     <div className="result-stat">
-                        <span className="result-stat__val result-stat__val--points">+{totalScore}</span>
+                        <span className="result-stat__val result-stat__val--points">
+                            <PoinIcon size={28} />
+                            +{totalScore}
+                        </span>
                         <span className="result-stat__lbl">Total Poin</span>
-                                </div>
+                    </div>
                             </div>
 
                 <p className="history-summary-caption">
@@ -453,7 +457,9 @@ export default function HistoryAnswerPage() {
                 <div className="history-inline-stats">
                     <span>✓ {summary.correctCount} benar</span>
                     <span>✗ {summary.wrongCount} salah</span>
-                    <span>🏆 +{summary.totalScore} poin</span>
+                    <span className="history-summary-points">
+                        <PoinIcon size={20} /> +{summary.totalScore} poin
+                    </span>
                 </div>
 
                 <div className="quiz-progress-bar">

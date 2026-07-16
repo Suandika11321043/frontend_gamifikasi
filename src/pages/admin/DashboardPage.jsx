@@ -2,7 +2,9 @@ import { useState, useEffect, useCallback } from 'react'
 import { Users, Star, BookOpen, HelpCircle } from 'lucide-react'
 import AdminLayout from '../../components/layout/AdminLayout'
 import AvatarImg from '../../components/common/AvatarImg'
+import PoinIcon from '../../components/common/PoinIcon'
 import { apiFetch } from '../../utils/apiFetch'
+import '../../styles/common.css'
 import './DashboardPage.css'
 
 function formatPositionBadge(position) {
@@ -54,7 +56,7 @@ function DashboardPage() {
         { label: 'Total Murid', value: stats.totalStudents, icon: Users, color: '#3b82f6', bg: '#eff6ff' },
         { label: 'Total Soal', value: stats.totalSoal, icon: HelpCircle, color: '#10b981', bg: '#f0fdf4' },
         { label: 'Total Tema', value: stats.totalTopics, icon: BookOpen, color: '#8b5cf6', bg: '#f5f3ff' },
-        { label: 'Total Poin Tertinggi', value: leaderboard[0]?.totalEarnedScore ?? 0, icon: Star, color: '#f59e0b', bg: '#fffbeb' },
+        { label: 'Total Poin Tertinggi', value: leaderboard[0]?.totalEarnedScore ?? 0, icon: 'poin', color: '#d97706', bg: '#fffbeb' },
     ]
 
     const activeTopicGroup = selectedTopicId === 'all'
@@ -80,7 +82,11 @@ function DashboardPage() {
                     return (
                         <div className="stat-card" key={stat.label}>
                             <div className="stat-icon-wrap" style={{ background: stat.bg }}>
-                                <Icon size={22} color={stat.color} />
+                                {Icon === 'poin' ? (
+                                    <PoinIcon size={32} />
+                                ) : (
+                                    <Icon size={22} color={stat.color} />
+                                )}
                             </div>
                             <div>
                                 <p className="stat-value">{loading ? '—' : stat.value}</p>
@@ -125,7 +131,13 @@ function DashboardPage() {
                                         </td>
                                         <td className="text-left">{s.name}</td>
                                         <td>{s.group || '—'}</td>
-                                        <td><strong>{s.totalEarnedScore ?? 0}</strong></td>
+                                        <td>
+                                            <span className="poin-badge">
+                                                <PoinIcon size={22} />
+                                                {s.totalEarnedScore ?? 0}
+                                                <span className="poin-badge__unit">poin</span>
+                                            </span>
+                                        </td>
                                         <td>{s.totalStars ?? 0} ⭐</td>
                                     </tr>
                                     )
@@ -177,7 +189,10 @@ function DashboardPage() {
                                                             {formatPositionBadge(position)}
                                                         </span>
                                                         <span className="mini-name">{s.studentName}</span>
-                                                        <span className="mini-score">{s.totalEarnedScore ?? 0} poin</span>
+                                                        <span className="mini-score">
+                                                            <PoinIcon size={20} />
+                                                            {s.totalEarnedScore ?? 0} poin
+                                                        </span>
                                                     </li>
                                                     )
                                                 })}
@@ -232,7 +247,13 @@ function DashboardPage() {
                                             </td>
                                             <td className="text-left">{s.studentName}</td>
                                             <td>{s.studentGroup || '—'}</td>
-                                            <td><strong>{s.totalEarnedScore ?? 0}</strong></td>
+                                            <td>
+                                            <span className="poin-badge">
+                                                <PoinIcon size={22} />
+                                                {s.totalEarnedScore ?? 0}
+                                                <span className="poin-badge__unit">poin</span>
+                                            </span>
+                                        </td>
                                             <td>{s.starCount ?? 0} ⭐</td>
                                         </tr>
                                         )

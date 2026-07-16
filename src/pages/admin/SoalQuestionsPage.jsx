@@ -12,6 +12,7 @@ import { duplicateQuestionToDate } from '../../utils/duplicateQuestion'
 import { appendQuestionUpdateFields, isWeekendDate, validateAudioFile, validateImageFile } from '../../utils/validateFile'
 import { QUESTION_TYPES } from '../../utils/questionTypes'
 import TypeBadge from '../../components/quiz/TypeBadge'
+import PoinIcon from '../../components/common/PoinIcon'
 
 const MONTHS = ['', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
     'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
@@ -719,7 +720,7 @@ function SoalQuestionsPage() {
                                 </td>
                                 <td>
                                     {q.scorePoint
-                                        ? <span className="timer-badge" style={{ background: '#fef3c7', color: '#92400e', borderColor: '#fbbf24' }}>🏆 {q.scorePoint} poin</span>
+                                        ? <span className="timer-badge" style={{ background: '#fef3c7', color: '#92400e', borderColor: '#fbbf24', display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}><PoinIcon size={18} /> {q.scorePoint} poin</span>
                                         : <span className="no-media">&mdash;</span>}
                                 </td>
                                 <td>
