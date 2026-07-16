@@ -4,6 +4,7 @@ import AdminLayout from '../../components/layout/AdminLayout'
 import AvatarImg from '../../components/common/AvatarImg'
 import GeneratedAvatar from '../../components/common/GeneratedAvatar'
 import Modal from '../../components/common/Modal'
+import PoinIcon from '../../components/common/PoinIcon'
 import '../../styles/common.css'
 import '../../pages/admin/DashboardPage.css'
 import './DaftarSiswaPage.css'
@@ -195,15 +196,14 @@ function DaftarSiswaPage() {
                             <th>Avatar</th>
                             <th>Nama</th>
                             <th>Kelompok</th>
-                            <th>Total Poin</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         {loading ? (
-                            <tr><td colSpan={6} className="empty-row">Memuat data...</td></tr>
+                            <tr><td colSpan={5} className="empty-row">Memuat data...</td></tr>
                         ) : filtered.length === 0 ? (
-                            <tr><td colSpan={6} className="empty-row">Tidak ada murid ditemukan.</td></tr>
+                            <tr><td colSpan={5} className="empty-row">Tidak ada murid ditemukan.</td></tr>
                         ) : (
                             filtered.map((siswa, idx) => (
                                 <tr key={siswa.id}>
@@ -213,9 +213,6 @@ function DaftarSiswaPage() {
                                     </td>
                                     <td>{siswa.name}</td>
                                     <td>{siswa.group}</td>
-                                    <td>
-                                        <span className="poin-badge">{siswa.totalEarnedScore ?? 0}</span>
-                                    </td>
                                     <td>
                                         <div className="action-cell">
                                             <button className="btn-icon btn-icon-detail" onClick={() => setDetailSiswa(siswa)} title="Detail murid">
@@ -329,7 +326,11 @@ function DaftarSiswaPage() {
                         <span className="detail-value">{detailSiswa.group}</span>
                         <span className="detail-label">Total Poin</span>
                         <span className="detail-value">
-                            <span className="poin-badge">{detailSiswa.totalEarnedScore ?? 0}</span>
+                            <span className="poin-badge">
+                                <PoinIcon size={22} />
+                                {detailSiswa.totalEarnedScore ?? 0}
+                                <span className="poin-badge__unit">poin</span>
+                            </span>
                         </span>
                     </div>
                     <div className="modal-actions">

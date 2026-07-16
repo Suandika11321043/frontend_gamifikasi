@@ -18,6 +18,7 @@ import WeekStudentPage from './pages/student/WeekStudentPage'
 import DayStudentPage from './pages/student/DayStudentPage'
 import QuizStudentPage from './pages/student/QuizStudentPage'
 import HistoryAnswerPage from './pages/student/HistoryAnswerPage'
+import MusicToggle from './components/common/MusicToggle'
 import './styles/App.css'
 
 function AdminRoute({ children }) {
@@ -51,6 +52,7 @@ function AppRoutes() {
     <>
       <ClearTokenOnStudentRoute />
       <LoadingOverlay />
+      <MusicToggle />
       <Routes>
         <Route path="/" element={<Navigate to="/student" replace />} />
         <Route path="/login" element={<LoginPage />} />

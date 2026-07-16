@@ -6,6 +6,7 @@ import { apiFetch } from '../../utils/apiFetch'
 import TopicIcon from '../../components/common/TopicIcon'
 import StarsDisplay from '../../components/common/StarsDisplay'
 import AvatarImg from '../../components/common/AvatarImg'
+import PoinIcon from '../../components/common/PoinIcon'
 
 function ListTopicStudentPage() {
     const { studentId } = useParams()
@@ -94,7 +95,8 @@ function ListTopicStudentPage() {
                                         </span>
                                     )}
                                     <span className="lt-student-chip lt-student-chip--score">
-                                        Skor {siswa.totalEarnedScore ?? 0}
+                                        <PoinIcon size={22} />
+                                        {siswa.totalEarnedScore ?? 0} poin
                                     </span>
                                 </div>
                             </div>
@@ -168,7 +170,10 @@ function ListTopicStudentPage() {
                                                         emptyFallback="—"
                                                     />
                                                     {topicScore > 0 && (
-                                                        <span className="lt-topic-score-pill">🏆 {topicScore} poin</span>
+                                                        <span className="lt-topic-score-pill">
+                                                            <PoinIcon size={18} />
+                                                            {topicScore} poin
+                                                        </span>
                                                     )}
                                                 </div>
                                                 <span className={`lt-card-cta ${hasProgress ? 'lt-cta--continue' : 'lt-cta--start'}`}>

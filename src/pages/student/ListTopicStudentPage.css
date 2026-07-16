@@ -169,6 +169,11 @@
     border-color: #fde68a;
 }
 
+.lt-student-chip--score svg {
+    color: #d97706;
+    flex-shrink: 0;
+}
+
 .lt-student-chip--star {
     color: #b45309;
     background: #fff7ed;
@@ -433,6 +438,9 @@
 }
 
 .lt-topic-score-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.28rem;
     font-size: 0.73rem;
     font-weight: 700;
     color: #065f46;

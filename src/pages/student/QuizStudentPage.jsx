@@ -8,6 +8,7 @@ import SortingQuestion from '../../components/quiz/SortingQuestion'
 import DragAndDropQuestion from '../../components/quiz/DragAndDropQuestion'
 import PuzzleQuestion from '../../components/quiz/PuzzleQuestion'
 import TypeBadge from '../../components/quiz/TypeBadge'
+import PoinIcon from '../../components/common/PoinIcon'
 import QuizFeedbackPopup from '../../components/quiz/QuizFeedbackPopup'
 import { formatPuzzleResultBadge } from '../../utils/puzzleResult'
 import {
@@ -603,7 +604,10 @@ function QuizStudentPage() {
                             <span className="result-stat__lbl">Salah</span>
                         </div>
                         <div className="result-stat">
-                            <span className="result-stat__val result-stat__val--points">+{result?.totalEarnedScore ?? totalScore}</span>
+                            <span className="result-stat__val result-stat__val--points">
+                                <PoinIcon size={28} />
+                                +{result?.totalEarnedScore ?? totalScore}
+                            </span>
                             <span className="result-stat__lbl">Total Skor</span>
                         </div>
                         {finalTotalStars > 0 && (
@@ -719,7 +723,7 @@ function QuizStudentPage() {
                             <TypeBadge type={currentQuestion.questionType} />
                             {(currentQuestion.scorePoint || scorePoints[currentQuestion.questionId]) && (
                                 <span className="question-score-badge">
-                                    🏆 {currentQuestion.scorePoint ?? scorePoints[currentQuestion.questionId]} poin
+                                    <PoinIcon size={20} /> {currentQuestion.scorePoint ?? scorePoints[currentQuestion.questionId]} poin
                                 </span>
                             )}
                         </div>

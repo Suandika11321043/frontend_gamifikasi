@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AvatarImg from '../../components/common/AvatarImg'
 import StarsDisplay from '../../components/common/StarsDisplay'
+import PoinIcon from '../../components/common/PoinIcon'
 import './DaftarSiswaStudentPage.css'
 import { apiFetch, getErrorMessage, unwrapList } from '../../utils/apiFetch'
 
@@ -137,7 +138,7 @@ function DaftarSiswaStudentPage() {
                                 </div>
                                 <div className="siswa-card__stats">
                                     <span className="siswa-card__points">
-                                        <span aria-hidden="true">🏆</span>
+                                        <PoinIcon size={24} />
                                         {siswa.totalEarnedScore ?? 0} poin
                                     </span>
                                     <StarsDisplay

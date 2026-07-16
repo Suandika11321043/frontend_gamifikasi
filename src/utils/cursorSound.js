@@ -52,7 +52,7 @@ const INTERACTIVE_SELECTOR =
 
 /** Student-page wrapper selector — sounds only play here */
 const STUDENT_WRAPPER_SELECTOR =
-    '.landing-wrapper, .ds-wrapper, .lt-wrapper, .quiz-wrapper'
+    '.landing-wrapper, .ds-wrapper, .lt-wrapper, .wsp-wrapper, .dsp-wrapper, .quiz-wrapper'
 
 function getInteractiveAncestor(el) {
     return el && el.closest ? el.closest(INTERACTIVE_SELECTOR) : null
