@@ -117,16 +117,28 @@
 }
 
 .avatar-option-btn {
-    border: none;
-    background: transparent;
-    padding: 0;
+    border: 2.5px solid transparent;
+    background: #f8fafc;
+    padding: 10px 8px 12px;
     cursor: pointer;
-    border-radius: 16px;
+    border-radius: 18px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     justify-content: center;
+    transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.avatar-option-btn:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.avatar-option-btn.is-selected {
+    background: #eff6ff;
+    border-color: #0f3460;
+    box-shadow: 0 0 0 3px rgba(15, 52, 96, 0.15);
 }
 
 .avatar-option-label {
@@ -137,11 +149,20 @@
 
 .avatar-option-btn.is-selected .avatar-option-label {
     color: #0f3460;
+    font-weight: 800;
+}
+
+.avatar-option-btn.is-selected .avatar-option-label::after {
+    content: ' ✓';
 }
 
 .avatar-option-btn:hover .gen-avatar {
     transform: translateY(-2px);
     transition: transform 0.15s ease;
+}
+
+.avatar-option-btn.is-selected:hover .gen-avatar {
+    transform: scale(1.03) translateY(-2px);
 }
 
 @media (max-width: 480px) {
