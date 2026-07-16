@@ -1,9 +1,23 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AvatarImg from '../../components/common/AvatarImg'
 import StarsDisplay from '../../components/common/StarsDisplay'
 import './DaftarSiswaStudentPage.css'
-import { apiFetch, BASE_URL, getErrorMessage, unwrapList } from '../../utils/apiFetch'
+import { apiFetch, getErrorMessage, unwrapList } from '../../utils/apiFetch'
+
+const GROUP_TONES = ['sky', 'coral', 'mint', 'sun', 'violet', 'ocean']
+
+function toneForGroup(group) {
+    const key = (group ?? '').trim().toLowerCase()
+    if (!key) return 'sky'
+    if (key.includes('tk a') || key === 'a') return 'sky'
+    if (key.includes('tk b') || key === 'b') return 'coral'
+    if (key.includes('tk c') || key === 'c') return 'mint'
+    if (key.includes('tk d') || key === 'd') return 'sun'
+    let hash = 0
+    for (let i = 0; i < key.length; i += 1) hash = (hash + key.charCodeAt(i) * (i + 1)) % GROUP_TONES.length
+    return GROUP_TONES[hash]
+}
 
 function DaftarSiswaStudentPage() {
     const navigate = useNavigate()
@@ -11,6 +25,7 @@ function DaftarSiswaStudentPage() {
     const [loading, setLoading] = useState(true)
     const [fetchError, setFetchError] = useState('')
     const [search, setSearch] = useState('')
+    const [groupFilter, setGroupFilter] = useState('all')
 
     const fetchSiswa = useCallback(async () => {
         setLoading(true)
@@ -27,22 +42,36 @@ function DaftarSiswaStudentPage() {
 
     useEffect(() => { fetchSiswa() }, [fetchSiswa])
 
-    const filtered = siswaList.filter((s) =>
-        (s.name ?? '').toLowerCase().includes(search.toLowerCase()) ||
-        (s.group ?? '').toLowerCase().includes(search.toLowerCase())
-    )
+    const groups = useMemo(() => {
+        const set = new Set()
+        siswaList.forEach((s) => {
+            const g = (s.group ?? '').trim()
+            if (g) set.add(g)
+        })
+        return Array.from(set).sort((a, b) => a.localeCompare(b, 'id'))
+    }, [siswaList])
+
+    const filtered = siswaList.filter((s) => {
+        const q = search.toLowerCase()
+        const matchSearch =
+            (s.name ?? '').toLowerCase().includes(q) ||
+            (s.group ?? '').toLowerCase().includes(q)
+        const matchGroup = groupFilter === 'all' || (s.group ?? '').trim() === groupFilter
+        return matchSearch && matchGroup
+    })
 
     return (
         <div className="ds-wrapper">
-            {/* Header */}
             <header className="ds-header">
                 <button className="ds-back-btn" onClick={() => navigate('/student')} aria-label="Kembali">
                     ← Kembali
                 </button>
-                <h1 className="ds-title">🏫 Daftar Murid</h1>
+                <div className="ds-header-text">
+                    <h1 className="ds-title">Daftar Murid</h1>
+                    <p className="ds-subtitle">Pilih profil untuk mulai belajar</p>
+                </div>
             </header>
 
-            {/* Search */}
             <div className="ds-toolbar">
                 <input
                     className="ds-search"
@@ -54,42 +83,73 @@ function DaftarSiswaStudentPage() {
                 <span className="ds-count">{filtered.length} murid</span>
             </div>
 
-            {/* Error */}
+            {groups.length > 0 && (
+                <div className="ds-filters" role="group" aria-label="Filter kelompok TK">
+                    <button
+                        type="button"
+                        className={`ds-filter-chip${groupFilter === 'all' ? ' is-active' : ''}`}
+                        onClick={() => setGroupFilter('all')}
+                    >
+                        Semua
+                    </button>
+                    {groups.map((group) => {
+                        const tone = toneForGroup(group)
+                        return (
+                            <button
+                                key={group}
+                                type="button"
+                                className={`ds-filter-chip ds-filter-chip--${tone}${groupFilter === group ? ' is-active' : ''}`}
+                                onClick={() => setGroupFilter(group)}
+                            >
+                                {group}
+                            </button>
+                        )
+                    })}
+                </div>
+            )}
+
             {fetchError && <p className="ds-error">{fetchError}</p>}
 
-            {/* List */}
             <div className="ds-grid">
                 {loading ? (
                     <p className="ds-empty">Memuat data...</p>
                 ) : filtered.length === 0 ? (
                     <p className="ds-empty">Tidak ada murid ditemukan.</p>
                 ) : (
-                    filtered.map((siswa) => (
-                        <div
-                            className="siswa-card"
-                            key={siswa.id}
-                            onClick={() => navigate(`/student/siswa/${siswa.id}/topics`)}
-                            role="button"
-                            tabIndex={0}
-                            onKeyDown={(e) => e.key === 'Enter' && navigate(`/student/siswa/${siswa.id}/topics`)}
-                        >
-                            <AvatarImg avatar={siswa.avatar} name={siswa.name} size="md" />
-                            <div className="siswa-card__info">
-                                <p className="siswa-card__name">{siswa.name}</p>
-                                <div className="siswa-card__meta">
+                    filtered.map((siswa) => {
+                        const tone = toneForGroup(siswa.group)
+                        return (
+                            <div
+                                className={`siswa-card siswa-card--${tone}`}
+                                key={siswa.id}
+                                onClick={() => navigate(`/student/siswa/${siswa.id}/topics`)}
+                                role="button"
+                                tabIndex={0}
+                                onKeyDown={(e) => e.key === 'Enter' && navigate(`/student/siswa/${siswa.id}/topics`)}
+                            >
+                                <div className="siswa-card__banner" aria-hidden="true" />
+                                <div className="siswa-card__avatar-wrap">
+                                    <AvatarImg avatar={siswa.avatar} name={siswa.name} size="xl" />
+                                </div>
+                                <div className="siswa-card__info">
+                                    <p className="siswa-card__name">{siswa.name}</p>
                                     <span className="siswa-card__group">{siswa.group}</span>
                                 </div>
+                                <div className="siswa-card__stats">
+                                    <span className="siswa-card__points">
+                                        <span aria-hidden="true">🏆</span>
+                                        {siswa.totalEarnedScore ?? 0} poin
+                                    </span>
+                                    <StarsDisplay
+                                        count={siswa.totalStars}
+                                        className="siswa-card__stars"
+                                        emptyFallback="—"
+                                    />
+                                </div>
+                                <span className="siswa-card__cta">Pilih ▶</span>
                             </div>
-                            <div className="siswa-card__stats">
-                                <span className="siswa-card__points">🏆 {siswa.totalEarnedScore ?? 0}</span>
-                                <StarsDisplay
-                                    count={siswa.totalStars}
-                                    className="siswa-card__stars"
-                                    emptyFallback="—"
-                                />
-                            </div>
-                        </div>
-                    ))
+                        )
+                    })
                 )}
             </div>
         </div>

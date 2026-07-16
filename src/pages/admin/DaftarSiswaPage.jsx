@@ -1,15 +1,22 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
-import { Search, X, Eye, Pencil, Trash2, UserPlus, Camera, User, Users } from 'lucide-react'
+import { useState, useEffect, useCallback } from 'react'
+import { Search, X, Eye, Pencil, Trash2, UserPlus, User, Users } from 'lucide-react'
 import AdminLayout from '../../components/layout/AdminLayout'
 import AvatarImg from '../../components/common/AvatarImg'
+import GeneratedAvatar from '../../components/common/GeneratedAvatar'
 import Modal from '../../components/common/Modal'
 import '../../styles/common.css'
 import '../../pages/admin/DashboardPage.css'
 import './DaftarSiswaPage.css'
 import { apiFetch, getErrorMessage, unwrapList } from '../../utils/apiFetch'
-import { validateImageFile } from '../../utils/validateFile'
+import {
+    BOY_AVATAR,
+    GIRL_AVATAR,
+    getAvatarByGender,
+    normalizeAvatarKey,
+    parseAvatarKey,
+} from '../../utils/avatarPresets'
 
-const emptyForm = { name: '', group: '' }
+const emptyForm = { name: '', group: '', gender: 'boy', avatarKey: BOY_AVATAR.id }
 
 function DaftarSiswaPage() {
     const [siswaList, setSiswaList] = useState([])
@@ -17,9 +24,6 @@ function DaftarSiswaPage() {
     const [fetchError, setFetchError] = useState('')
     const [search, setSearch] = useState('')
     const [form, setForm] = useState(emptyForm)
-    const [avatarFile, setAvatarFile] = useState(null)
-    const [avatarPreview, setAvatarPreview] = useState(null)
-    const avatarInputRef = useRef(null)
     const [editId, setEditId] = useState(null)
     const [showModal, setShowModal] = useState(false)
     const [detailSiswa, setDetailSiswa] = useState(null)
@@ -50,33 +54,23 @@ function DaftarSiswaPage() {
         (s.group ?? '').toLowerCase().includes(search.toLowerCase())
     )
 
-    const revokeAvatarPreview = useCallback((preview) => {
-        if (preview?.startsWith('blob:')) {
-            URL.revokeObjectURL(preview)
-        }
-    }, [])
-
     const openAdd = () => {
         setForm(emptyForm)
-        setAvatarFile(null)
-        setAvatarPreview((prev) => {
-            revokeAvatarPreview(prev)
-            return null
-        })
         setEditId(null)
         setError('')
         setShowModal(true)
     }
 
     const openEdit = (siswa) => {
+        const parsed = parseAvatarKey(siswa.avatar)
+        const gender = parsed?.gender ?? 'boy'
+        const avatarKey = normalizeAvatarKey(siswa.avatar) ?? getAvatarByGender(gender).id
+
         setForm({
             name: siswa.name ?? '',
             group: siswa.group ?? '',
-        })
-        setAvatarFile(null)
-        setAvatarPreview((prev) => {
-            revokeAvatarPreview(prev)
-            return siswa.avatar ?? null
+            gender,
+            avatarKey,
         })
         setEditId(siswa.id)
         setError('')
@@ -88,21 +82,12 @@ function DaftarSiswaPage() {
         setForm((prev) => ({ ...prev, [name]: value }))
     }
 
-    const handleAvatarChange = (e) => {
-        const file = e.target.files[0]
-        if (!file) return
-        const fileErr = validateImageFile(file)
-        if (fileErr) {
-            setError(fileErr)
-            e.target.value = ''
-            return
-        }
-        setError('')
-        setAvatarFile(file)
-        setAvatarPreview((prev) => {
-            revokeAvatarPreview(prev)
-            return URL.createObjectURL(file)
-        })
+    const handleGenderChange = (gender) => {
+        setForm((prev) => ({
+            ...prev,
+            gender,
+            avatarKey: getAvatarByGender(gender).id,
+        }))
     }
 
     const handleSave = async () => {
@@ -112,24 +97,23 @@ function DaftarSiswaPage() {
             setError('Nama dan kelompok wajib diisi.')
             return
         }
+        if (!form.avatarKey) {
+            setError('Pilih avatar murid terlebih dahulu.')
+            return
+        }
         setSaving(true)
         setError('')
         try {
             const fd = new FormData()
             fd.append('name', name)
             fd.append('group', group)
-            if (avatarFile) fd.append('avatar', avatarFile)
+            fd.append('avatarKey', form.avatarKey)
 
             if (editId) {
                 await apiFetch(`/students/${editId}`, { method: 'PUT', body: fd })
             } else {
                 await apiFetch('/students', { method: 'POST', body: fd })
             }
-            setAvatarPreview((prev) => {
-                revokeAvatarPreview(prev)
-                return null
-            })
-            setAvatarFile(null)
             setShowModal(false)
             fetchSiswa()
         } catch (err) {
@@ -157,11 +141,6 @@ function DaftarSiswaPage() {
     const closeModal = () => {
         setShowModal(false)
         setError('')
-        setAvatarFile(null)
-        setAvatarPreview((prev) => {
-            revokeAvatarPreview(prev)
-            return null
-        })
     }
 
     const isEditing = editId !== null
@@ -169,7 +148,8 @@ function DaftarSiswaPage() {
     let saveLabel = 'Tambah Murid'
     if (saving) { saveLabel = 'Menyimpan...' }
     else if (isEditing) { saveLabel = 'Simpan Perubahan' }
-    const hintLabel = avatarPreview ? 'mengubah' : 'menambahkan'
+
+    const avatarOptions = [BOY_AVATAR, GIRL_AVATAR]
 
     return (
         <AdminLayout activePath="/admin/siswa">
@@ -229,7 +209,7 @@ function DaftarSiswaPage() {
                                 <tr key={siswa.id}>
                                     <td>{idx + 1}</td>
                                     <td>
-                                        <AvatarImg avatar={siswa.avatar} name={siswa.name} />
+                                        <AvatarImg avatar={siswa.avatar} name={siswa.name} size="md" />
                                     </td>
                                     <td>{siswa.name}</td>
                                     <td>{siswa.group}</td>
@@ -256,7 +236,6 @@ function DaftarSiswaPage() {
                 </table>
             </div>
 
-            {/* Modal Tambah / Edit */}
             {showModal && (
                 <Modal
                     title={modalTitle}
@@ -264,36 +243,6 @@ function DaftarSiswaPage() {
                 >
                     {error && <p className="modal-error">{error}</p>}
 
-                    {/* Avatar upload */}
-                    <div className="siswa-avatar-upload">
-                        <button
-                            type="button"
-                            className="avatar-upload-trigger"
-                            onClick={() => avatarInputRef.current?.click()}
-                            title="Klik untuk ubah foto"
-                        >
-                            {avatarPreview
-                                ? <AvatarImg avatar={avatarPreview} name={form.name || '?'} size="lg" />
-                                : <div className="avatar-upload-empty">
-                                    <Camera size={22} />
-                                    <span>Upload Foto</span>
-                                </div>
-                            }
-                            <div className="avatar-upload-overlay">
-                                <Camera size={16} />
-                            </div>
-                        </button>
-                        <p className="avatar-upload-hint">Klik untuk {hintLabel} foto profil</p>
-                        <input
-                            ref={avatarInputRef}
-                            type="file"
-                            accept="image/*"
-                            onChange={handleAvatarChange}
-                            style={{ display: 'none' }}
-                        />
-                    </div>
-
-                    {/* Fields */}
                     <div className="siswa-form-fields">
                         <div className="form-group">
                             <label>
@@ -322,6 +271,37 @@ function DaftarSiswaPage() {
                         </div>
                     </div>
 
+                    <div className="siswa-avatar-picker">
+                        <p className="avatar-picker-label">Pilih Avatar (Jenis Kelamin)</p>
+                        <p className="avatar-upload-hint">Nama murid akan muncul di papan nama avatar</p>
+
+                        <div className="avatar-options-grid avatar-options-grid--gender">
+                            {avatarOptions.map((opt) => {
+                                const gender = opt.id === GIRL_AVATAR.id ? 'girl' : 'boy'
+                                const selected = form.gender === gender
+                                return (
+                                    <button
+                                        key={opt.id}
+                                        type="button"
+                                        className={`avatar-option-btn${selected ? ' is-selected' : ''}`}
+                                        onClick={() => handleGenderChange(gender)}
+                                        title={opt.label}
+                                        aria-label={`Pilih avatar ${opt.label}`}
+                                        aria-pressed={selected}
+                                    >
+                                        <GeneratedAvatar
+                                            avatarKey={opt.id}
+                                            name={form.name}
+                                            size="lg"
+                                            selected={selected}
+                                        />
+                                        <span className="avatar-option-label">{opt.label}</span>
+                                    </button>
+                                )
+                            })}
+                        </div>
+                    </div>
+
                     <div className="modal-actions">
                         <button className="btn-secondary" onClick={closeModal} disabled={saving}>
                             Batal
@@ -333,7 +313,6 @@ function DaftarSiswaPage() {
                 </Modal>
             )}
 
-            {/* Modal Detail Siswa */}
             {detailSiswa && (
                 <Modal
                     title="Detail Murid"
@@ -341,7 +320,7 @@ function DaftarSiswaPage() {
                     onClose={() => setDetailSiswa(null)}
                 >
                     <div className="detail-avatar-wrap">
-                        <AvatarImg avatar={detailSiswa.avatar} name={detailSiswa.name} size="lg" />
+                        <AvatarImg avatar={detailSiswa.avatar} name={detailSiswa.name} size="xl" />
                     </div>
                     <div className="detail-grid">
                         <span className="detail-label">Nama</span>
@@ -361,7 +340,6 @@ function DaftarSiswaPage() {
                 </Modal>
             )}
 
-            {/* Modal Konfirmasi Hapus */}
             {deleteId !== null && (
                 <Modal
                     title="Hapus Murid?"

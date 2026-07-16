@@ -1,0 +1,106 @@
+.gen-avatar {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    border-radius: 18px;
+    border: 2px solid #e2e8f0;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.1);
+    flex-shrink: 0;
+    user-select: none;
+    background: #fff;
+    line-height: 0;
+}
+
+.gen-avatar--bare {
+    border-radius: 16px;
+}
+
+.gen-avatar--bare .gen-avatar__img {
+    border-radius: inherit;
+}
+
+.gen-avatar__img {
+    display: block;
+    width: 100%;
+    height: auto;
+    pointer-events: none;
+}
+
+/* Papan nama di dada / baju — nama lengkap, bisa wrap */
+.gen-avatar__plate {
+    position: absolute;
+    left: 50%;
+    bottom: 10%;
+    transform: translateX(-50%);
+    width: 78%;
+    max-width: 92%;
+    min-height: 1.2em;
+    padding: 3px 5px;
+    text-align: center;
+    background: #fffef8;
+    border: 2px solid;
+    border-radius: 6px;
+    box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.9) inset,
+        0 2px 4px rgba(15, 23, 42, 0.18);
+    line-height: 1.15;
+    box-sizing: border-box;
+}
+
+.gen-avatar__plate-text {
+    display: block;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    word-break: break-word;
+    hyphens: auto;
+    line-height: 1.15;
+}
+
+/* sizes */
+.gen-avatar--sm {
+    width: 56px;
+    border-radius: 12px;
+}
+.gen-avatar--sm .gen-avatar__plate {
+    bottom: 8%;
+    width: 86%;
+    padding: 1px 2px;
+    border-width: 1.5px;
+    border-radius: 4px;
+}
+
+.gen-avatar--md {
+    width: 88px;
+    border-radius: 14px;
+}
+.gen-avatar--md .gen-avatar__plate {
+    bottom: 9%;
+    width: 82%;
+    padding: 2px 4px;
+}
+
+.gen-avatar--lg {
+    width: 132px;
+    border-radius: 18px;
+}
+.gen-avatar--lg .gen-avatar__plate {
+    bottom: 10%;
+    width: 80%;
+    padding: 3px 6px;
+    border-radius: 7px;
+}
+
+.gen-avatar--xl {
+    width: 180px;
+    border-radius: 22px;
+}
+.gen-avatar--xl .gen-avatar__plate {
+    bottom: 11%;
+    width: 76%;
+    padding: 5px 8px;
+    border-width: 2.5px;
+    border-radius: 8px;
+}

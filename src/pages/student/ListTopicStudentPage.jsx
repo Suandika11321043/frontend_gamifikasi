@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import './ListTopicStudentPage.css'
-import { apiFetch, BASE_URL } from '../../utils/apiFetch'
+import { apiFetch } from '../../utils/apiFetch'
 
 import TopicIcon from '../../components/common/TopicIcon'
 import StarsDisplay from '../../components/common/StarsDisplay'
+import AvatarImg from '../../components/common/AvatarImg'
 
 function ListTopicStudentPage() {
     const { studentId } = useParams()
@@ -71,24 +72,31 @@ function ListTopicStudentPage() {
                     {siswa && (
                         <div className="lt-student-info">
                             <div className="lt-student-avatar">
-                                {siswa.avatar
-                                    ? <img src={siswa.avatar.startsWith('http') ? siswa.avatar : `${BASE_URL}/uploads/${siswa.avatar}`} alt={siswa.name} />
-                                    : <span>{(siswa.name ?? '?').charAt(0).toUpperCase()}</span>
-                                }
+                                <AvatarImg
+                                    avatar={siswa.avatar}
+                                    name={siswa.name}
+                                    size="lg"
+                                    showNameplate={false}
+                                />
                             </div>
-                            <div>
+                            <div className="lt-student-text">
                                 <p className="lt-student-name">{siswa.name}</p>
-                                <p className="lt-student-meta">
-                                    <span>{siswa.group}</span>
-                                    <span className="lt-student-meta-sep">·</span>
-                                    <StarsDisplay
-                                        count={siswa.totalStars}
-                                        className="lt-student-meta-stars"
-                                        emptyFallback="—"
-                                    />
-                                    <span className="lt-student-meta-sep">·</span>
-                                    <span>Skor {siswa.totalEarnedScore ?? 0}</span>
-                                </p>
+                                <div className="lt-student-meta">
+                                    {siswa.group && (
+                                        <span className="lt-student-chip">{siswa.group}</span>
+                                    )}
+                                    {(siswa.totalStars ?? 0) > 0 && (
+                                        <span className="lt-student-chip lt-student-chip--star">
+                                            <StarsDisplay
+                                                count={siswa.totalStars}
+                                                className="lt-student-meta-stars"
+                                            />
+                                        </span>
+                                    )}
+                                    <span className="lt-student-chip lt-student-chip--score">
+                                        Skor {siswa.totalEarnedScore ?? 0}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     )}
