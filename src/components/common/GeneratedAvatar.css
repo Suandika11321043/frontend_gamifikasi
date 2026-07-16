@@ -104,3 +104,13 @@
     border-width: 2.5px;
     border-radius: 8px;
 }
+
+/* Selected state (avatar picker) */
+.gen-avatar--selected {
+    border-color: #0f3460;
+    border-width: 3px;
+    box-shadow:
+        0 0 0 4px rgba(15, 52, 96, 0.2),
+        0 8px 20px rgba(15, 52, 96, 0.22);
+    transform: scale(1.03);
+}
