@@ -87,26 +87,26 @@ function ListTopicStudentPage() {
                             <div>
                                 <p className="lt-student-name">{siswa.name}</p>
                                 <p className="lt-student-meta">
-                                    {siswa.group} · ⭐ {siswa.totalStars ?? 0} · Skor {siswa.totalEarnedScore ?? 0} · Rank {siswa.rankName ?? 'BEGINNER'}
+                                    {siswa.group} · ⭐ {siswa.totalStars ?? 0} · Skor {siswa.totalEarnedScore ?? 0}
                                 </p>
                             </div>
                         </div>
                     )}
                 </header>
 
-                <h2 className="lt-title">📚 Pilih Topik</h2>
-                <p className="lt-subtitle">Pilih topik yang ingin dikerjakan</p>
+                <h2 className="lt-title">📚 Pilih Tema</h2>
+                <p className="lt-subtitle">Pilih tema yang ingin dikerjakan</p>
 
                 {/* Search */}
                 <div className="lt-toolbar">
                     <input
                         className="lt-search"
                         type="text"
-                        placeholder="Cari topik..."
+                        placeholder="Cari tema..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
-                    <span className="lt-count">{filtered.length} topik</span>
+                    <span className="lt-count">{filtered.length} tema</span>
                 </div>
 
                 {/* Error */}
@@ -114,9 +114,9 @@ function ListTopicStudentPage() {
 
                 {/* Topics Grid */}
                 {loading ? (
-                    <p className="lt-empty">Memuat topik...</p>
+                    <p className="lt-empty">Memuat tema...</p>
                 ) : filtered.length === 0 ? (
-                    <p className="lt-empty">Tidak ada topik ditemukan.</p>
+                    <p className="lt-empty">Tidak ada tema ditemukan.</p>
                 ) : (
                     <div className="lt-grid">
                         {filtered.map((topic) => (

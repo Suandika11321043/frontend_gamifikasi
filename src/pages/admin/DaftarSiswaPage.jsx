@@ -8,14 +8,7 @@ import './DaftarSiswaPage.css'
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL
 
-const emptyForm = { name: '', group: '', totalPoints: '', level: '' }
-
-const RANK_LABELS = {
-    BEGINNER: 'Pemula',
-    INTERMEDIATE: 'Menengah',
-    ADVANCED: 'Mahir',
-    EXPERT: 'Ahli',
-}
+const emptyForm = { name: '', group: '', totalPoints: '' }
 
 async function apiFetch(path, options = {}) {
     const token = localStorage.getItem('token')
@@ -78,7 +71,6 @@ function DaftarSiswaPage() {
             name: siswa.name ?? '',
             group: siswa.group ?? '',
             totalPoints: siswa.totalPoints ?? '',
-            level: siswa.level ?? '',
         })
         setAvatarFile(null)
         setAvatarPreview(siswa.avatar ? `${BASE_URL}/uploads/${siswa.avatar}` : null)
@@ -100,8 +92,8 @@ function DaftarSiswaPage() {
     }
 
     const handleSave = async () => {
-        if (!form.name.trim() || !form.group.trim() || !form.level.toString().trim()) {
-            setError('Nama, kelompok, dan level wajib diisi.')
+        if (!form.name.trim() || !form.group.trim()) {
+            setError('Nama dan kelompok wajib diisi.')
             return
         }
         setSaving(true)
@@ -111,7 +103,6 @@ function DaftarSiswaPage() {
             fd.append('name', form.name)
             fd.append('group', form.group)
             fd.append('totalPoints', form.totalPoints)
-            fd.append('level', form.level)
             if (avatarFile) fd.append('avatar', avatarFile)
 
             if (editId !== null) {
@@ -145,8 +136,8 @@ function DaftarSiswaPage() {
 
             <main className="dashboard-main">
                 <header className="dashboard-header">
-                    <h1>Daftar Siswa</h1>
-                    <button className="btn-primary" onClick={openAdd}>+ Tambah Siswa</button>
+                    <h1>Daftar Murid</h1>
+                    <button className="btn-primary" onClick={openAdd}>+ Tambah Murid</button>
                 </header>
 
                 <div className="siswa-toolbar">
@@ -157,7 +148,7 @@ function DaftarSiswaPage() {
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
-                    <span className="siswa-count">{filtered.length} siswa</span>
+                    <span className="siswa-count">{filtered.length} murid</span>
                 </div>
 
                 {fetchError && <p className="modal-error">{fetchError}</p>}
@@ -171,15 +162,14 @@ function DaftarSiswaPage() {
                                 <th>Nama</th>
                                 <th>Kelompok</th>
                                 <th>Total Poin</th>
-                                <th>Rank</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             {loading ? (
-                                <tr><td colSpan={7} className="empty-row">Memuat data...</td></tr>
+                                <tr><td colSpan={6} className="empty-row">Memuat data...</td></tr>
                             ) : filtered.length === 0 ? (
-                                <tr><td colSpan={7} className="empty-row">Tidak ada siswa ditemukan.</td></tr>
+                                <tr><td colSpan={6} className="empty-row">Tidak ada murid ditemukan.</td></tr>
                             ) : (
                                 filtered.map((siswa, idx) => (
                                     <tr key={siswa.id}>
@@ -191,9 +181,6 @@ function DaftarSiswaPage() {
                                         <td>{siswa.group}</td>
                                         <td>
                                             <span className="poin-badge">{siswa.totalEarnedScore ?? 0}</span>
-                                        </td>
-                                        <td>
-                                            <span className="level-badge-num">{RANK_LABELS[siswa.rankName] ?? siswa.rankName ?? '-'}</span>
                                         </td>
                                         <td className="action-cell">
                                             <button className="btn-detail" onClick={() => setDetailSiswa(siswa)}>
@@ -217,7 +204,7 @@ function DaftarSiswaPage() {
             {/* Modal Tambah / Edit */}
             {showModal && (
                 <Modal
-                    title={editId !== null ? 'Edit Siswa' : 'Tambah Siswa'}
+                    title={editId !== null ? 'Edit Murid' : 'Tambah Murid'}
                     onClose={() => setShowModal(false)}
                 >
                     {error && <p className="modal-error">{error}</p>}
@@ -251,16 +238,6 @@ function DaftarSiswaPage() {
                         />
                     </div>
                     <div className="form-group">
-                        <label>Level</label>
-                        <input
-                            name="level"
-                            type="number"
-                            value={form.level}
-                            onChange={handleChange}
-                            placeholder="contoh: 1"
-                        />
-                    </div>
-                    <div className="form-group">
                         <label>Avatar</label>
                         {avatarPreview && (
                             <AvatarImg
@@ -288,10 +265,10 @@ function DaftarSiswaPage() {
                 </Modal>
             )}
 
-            {/* Modal Detail Siswa */}
+            {/* Modal Detail Murid */}
             {detailSiswa && (
                 <Modal
-                    title="Detail Siswa"
+                    title="Detail Murid"
                     className="modal-detail"
                     onClose={() => setDetailSiswa(null)}
                 >
@@ -307,10 +284,6 @@ function DaftarSiswaPage() {
                         <span className="detail-value">
                             <span className="poin-badge">{detailSiswa.totalEarnedScore ?? 0}</span>
                         </span>
-                        <span className="detail-label">Rank</span>
-                        <span className="detail-value">
-                            <span className="level-badge-num">{RANK_LABELS[detailSiswa.rankName] ?? detailSiswa.rankName ?? '-'}</span>
-                        </span>
                     </div>
                     <div className="modal-actions">
                         <button className="btn-primary" onClick={() => setDetailSiswa(null)}>
@@ -323,11 +296,11 @@ function DaftarSiswaPage() {
             {/* Modal Konfirmasi Hapus */}
             {deleteId !== null && (
                 <Modal
-                    title="Hapus Siswa?"
+                    title="Hapus Murid?"
                     className="modal-confirm"
                     onClose={() => setDeleteId(null)}
                 >
-                    <p>Data siswa ini akan dihapus secara permanen.</p>
+                    <p>Data murid ini akan dihapus secara permanen.</p>
                     <div className="modal-actions">
                         <button className="btn-secondary" onClick={() => setDeleteId(null)}>
                             Batal

@@ -388,9 +388,9 @@ function DragAndDropQuestion({ question, answer, onAnswer }) {
 // ── Type badge ────────────────────────────────────────────────────
 const TYPE_LABELS = {
     QUIZ: { label: 'Pilihan Ganda', icon: '🅰', color: 'badge--quiz' },
-    MATCH: { label: 'Cocokkan', icon: '🔗', color: 'badge--match' },
-    SORTING: { label: 'Urutkan', icon: '↕', color: 'badge--sort' },
-    DRAG_AND_DROP: { label: 'Seret & Lepas', icon: '✋', color: 'badge--dnd' },
+    MATCH: { label: 'Mencocokkan', icon: '🔗', color: 'badge--match' },
+    SORTING: { label: 'Mengurutkan', icon: '↕', color: 'badge--sort' },
+    DRAG_AND_DROP: { label: 'Seret dan Letakkan', icon: '✋', color: 'badge--dnd' },
 }
 
 function TypeBadge({ type }) {
@@ -458,7 +458,7 @@ function QuizStudentPage() {
                 apiFetch(`/topics/${topicId}`),
                 apiFetch(`/quiz/topics/${topicId}/questions`),
             ])
-            setTopicName(topicData.nameTopic ?? `Topik ${topicId}`)
+            setTopicName(topicData.nameTopic ?? `Tema ${topicId}`)
             setTopicIcon(topicData.icon ?? '')
             setQuestions(Array.isArray(questionData) ? questionData : [])
         } catch (err) {
@@ -625,8 +625,6 @@ function QuizStudentPage() {
         const pct = total > 0 ? Math.round((correct / total) * 100) : 0
         const stars = result?.starsEarned ?? 0
         const finalTotalStars = result?.totalStars ?? 0
-        const rankName = result?.rankName ?? ''
-        const rankLabels = { BEGINNER: 'Pemula', INTERMEDIATE: 'Menengah', ADVANCED: 'Mahir', EXPERT: 'Ahli' }
 
         return (
             <div className="quiz-wrapper">
@@ -673,13 +671,6 @@ function QuizStudentPage() {
                         )}
                     </div>
 
-                    {/* Rank badge */}
-                    {rankName && (
-                        <div className="result-rank-badge">
-                            🏅 Rank: <strong>{rankLabels[rankName] ?? rankName}</strong>
-                        </div>
-                    )}
-
                     {/* Per-question answer details */}
                     {answerHistory.length > 0 && (
                         <div className="result-details">
@@ -699,7 +690,7 @@ function QuizStudentPage() {
                             className="quiz-btn quiz-btn--outline"
                             onClick={() => navigate(`/student/siswa/${studentId}/topics`)}
                         >
-                            Pilih Topik Lain
+                            Pilih Tema Lain
                         </button>
                         <button
                             className="quiz-btn quiz-btn--primary"
@@ -809,7 +800,7 @@ function QuizStudentPage() {
                 {submitError && <p className="quiz-submit-error">{submitError}</p>}
 
                 {questions.length === 0 ? (
-                    <p className="quiz-empty">Tidak ada soal pada topik ini.</p>
+                    <p className="quiz-empty">Tidak ada soal pada tema ini.</p>
                 ) : currentQuestion ? (
                     <div className="question-card" key={currentQuestion.questionId}>
                         <div className="question-card__header">

@@ -17,9 +17,9 @@ const navGroups = [
         ],
     },
     {
-        label: 'Profil dan Kemajuan Siswa',
+        label: 'Profil dan Kemajuan Murid',
         children: [
-            { label: 'Daftar Siswa', path: '/admin/siswa' },
+            { label: 'Daftar Murid', path: '/admin/siswa' },
         ],
     },
 ]

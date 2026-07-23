@@ -48,7 +48,7 @@ function DaftarSiswaStudentPage() {
                 <button className="ds-back-btn" onClick={() => navigate('/student')} aria-label="Kembali">
                     ← Kembali
                 </button>
-                <h1 className="ds-title">🏫 Daftar Siswa</h1>
+                <h1 className="ds-title">🏫 Daftar Murid</h1>
             </header>
 
             {/* Search */}
@@ -60,7 +60,7 @@ function DaftarSiswaStudentPage() {
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                 />
-                <span className="ds-count">{filtered.length} siswa</span>
+                <span className="ds-count">{filtered.length} murid</span>
             </div>
 
             {/* Error */}
@@ -71,7 +71,7 @@ function DaftarSiswaStudentPage() {
                 {loading ? (
                     <p className="ds-empty">Memuat data...</p>
                 ) : filtered.length === 0 ? (
-                    <p className="ds-empty">Tidak ada siswa ditemukan.</p>
+                    <p className="ds-empty">Tidak ada murid ditemukan.</p>
                 ) : (
                     filtered.map((siswa, idx) => (
                         <div
@@ -90,9 +90,6 @@ function DaftarSiswaStudentPage() {
                                 <p className="siswa-card__name">{siswa.name}</p>
                                 <div className="siswa-card__meta">
                                     <span className="siswa-card__group">{siswa.group}</span>
-                                    {siswa.rankName && (
-                                        <span className="siswa-card__rank-badge">{siswa.rankName}</span>
-                                    )}
                                 </div>
                             </div>
                             <div className="siswa-card__stats">
